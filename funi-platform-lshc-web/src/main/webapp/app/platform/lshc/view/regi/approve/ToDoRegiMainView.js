@@ -9,6 +9,7 @@ Ext.define('app.platform.lshc.view.regi.approve.ToDoRegiMainView', {
     requires: [
         //房屋列表信息
         'app.platform.lshc.view.regi.manage.HouseListView',
+        
         'app.platform.lshc.view.regi.manage.HouseDetailView'//房屋详情
     ],
     config: {
