@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans.xsd
+                     http://www.springframework.org/schema/tx
+                     http://www.springframework.org/schema/tx/spring-tx.xsd
+                     http://www.springframework.org/schema/context
+                     http://www.springframework.org/schema/context/spring-context.xsd
+                     http://www.springframework.org/schema/aop
+                     http://www.springframework.org/schema/aop/spring-aop.xsd
+                     http://www.springframework.org/schema/jdbc
+                     http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+                     http://www.springframework.org/schema/util
+          			 http://www.springframework.org/schema/util/spring-util-3.2.xsd
+                     http://www.springframework.org/schema/mvc
+  					 http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+  					 http://www.springframework.org/schema/cache 
+                     http://www.springframework.org/schema/cache/spring-cache-3.2.xsd ">
+	<!--mvc:annotation-driven /-->
+	<context:component-scan base-package="com.funi.platform.**" use-default-filters="false">
+		<context:include-filter expression="org.springframework.stereotype.Component" type="annotation"/>
+	</context:component-scan>
+	<bean id="ccsAppInvoker" class="com.funi.framework.app.invocation.support.AppInvokerFactoryBean">
+		<property name="provider" value="ccs"/>
+	</bean>
+    <bean id="messageSource"  class="org.springframework.context.support.ResourceBundleMessageSource">
+    	<property name="basename" value="messages"></property>
+	</bean>
+
+	<bean name="defaultProtocolConfig" class="com.funi.framework.app.rpc.ProtocolFactory">
+		<!-- 线程池大小  -->
+		<property name="threadPoolSize" value="200"/>
+		<!-- protocol 代表协议类型 -->
+		<property name="protocol" value="rmi"/>
+		<!-- port 为端口号 -->
+		<property name="port" value="6029"/>
+	</bean>
+	<bean name="remoteInvokerExporter" class="com.funi.framework.app.rpc.RemoteInvokerExporter">
+		<property name="protocolConfig" ref="defaultProtocolConfig"/>
+		<property name="version" value="1.0.0"/>
+		<property name="invoker" ref="remoteServiceInvoker"/>
+	</bean>
+	<bean name="remoteServiceInvoker" class="com.funi.framework.app.invocation.support.AppRemoteServiceInvoker">
+		<property name="appInvocationProviderList">
+			<list>
+				<!-- 服务调用提供 -->
+				<bean id="userInvocationProvider" class="com.funi.platform.lshc.support.task.TaskProvider"/>
+			</list>
+		</property>
+	</bean>
+
+</beans>

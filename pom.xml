@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>funi-platform-lshc</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <parent>
+        <groupId>com.funi.platform</groupId>
+        <artifactId>funi-platform-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- 指定Maven仓库 -->
+    <repositories>
+        <!-- 公司的maven仓库 -->
+        <repository>
+            <id>funiRepository</id>
+            <name>local private nexus</name>
+            <url>http://gitlab.funi.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- 指定maven plugin仓库 -->
+    <pluginRepositories>
+        <!-- 公司的maven plugin仓库 -->
+        <pluginRepository>
+            <id>funiPluginRepository</id>
+            <name>local private nexus</name>
+            <url>http://gitlab.funi.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <!--工作流-->
+        <!--<dependency>-->
+            <!--<groupId>com.funi.framework</groupId>-->
+            <!--<artifactId>funi-workflow-eic</artifactId>-->
+            <!--<version>1.0.2-SNAPSHOT</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-orm-eic</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-mvc-eic</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-log-eic</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-biz-eic</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-cas-eic</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+        <!--核心服务依赖-->
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-biz-eicapi</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-data-migrate</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-data-template</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-session-memcached</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.funi.framework</groupId>-->
+        <!--<artifactId>funi-mvc-core</artifactId>-->
+        <!--<version>1.0.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-log-core</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.funi.framework</groupId>
+                    <artifactId>funi-log-mongo</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-graphic</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-test</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--切面使用start-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>3.2.9.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>3.2.9.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!--切面使用end-->
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-workflow-eic</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-web</artifactId>
+            <version>1.0.3-SNAPSHOT</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-app-invocation</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.funi.framework</groupId>
+            <artifactId>funi-app-rpc</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+    </dependencies>
+
+
+    <modules>
+        <module>funi-platform-lshc-web</module>
+    </modules>
+
+
+</project>

@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.charge.ChargeHisMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.charge.ChargeHis">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="BILL_ID" jdbcType="VARCHAR" property="billId" />
+    <result column="CONTR_ID" jdbcType="VARCHAR" property="contrId" />
+    <result column="RENT_START_DATE" jdbcType="CHAR" property="rentStartDate" />
+    <result column="RENT_END_DATE" jdbcType="CHAR" property="rentEndDate" />
+    <result column="RENT_AMOUNT" jdbcType="DECIMAL" property="rentAmount" />
+    <result column="BACK_RENT_START_DATE" jdbcType="CHAR" property="backRentStartDate" />
+    <result column="BACK_RENT_END_DATE" jdbcType="CHAR" property="backRentEndDate" />
+    <result column="BACK_RENT_AMOUNT" jdbcType="DECIMAL" property="backRentAmount" />
+    <result column="LATE_FEE_START_DATE" jdbcType="CHAR" property="lateFeeStartDate" />
+    <result column="LATE_FEE_END_DATE" jdbcType="CHAR" property="lateFeeEndDate" />
+    <result column="LATE_FEE_AMOUNT" jdbcType="DECIMAL" property="lateFeeAmount" />
+    <result column="RECEIVABLE_AMOUNT" jdbcType="DECIMAL" property="receivableAmount" />
+    <result column="ACTUAL_AMOUNT" jdbcType="DECIMAL" property="actualAmount" />
+    <result column="PREPAID_AMOUNT" jdbcType="DECIMAL" property="prepaidAmount" />
+    <result column="CHARGE_USER_ID" jdbcType="VARCHAR" property="chargeUserId" />
+    <result column="CHARGE_TIME" jdbcType="CHAR" property="chargeTime" />
+    <result column="BACK_FLAG" jdbcType="CHAR" property="backFlag" />
+    <result column="BACK_USER" jdbcType="VARCHAR" property="backUser" />
+    <result column="BACK_AMOUNT" jdbcType="DECIMAL" property="backAmount" />
+    <result column="BACK_TO_DATE" jdbcType="CHAR" property="backToDate" />
+    <result column="BACK_OPE_USER_ID" jdbcType="VARCHAR" property="backOpeUserId" />
+    <result column="BACK_DATE" jdbcType="CHAR" property="backDate" />
+    <result column="BACK_REASON" jdbcType="VARCHAR" property="backReason" />
+    <result column="CHARGE_REMARK" jdbcType="VARCHAR" property="chargeRemark" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+    <result column="CHARGE_UNIT" jdbcType="VARCHAR" property="chargeUnit" />
+    <result column="AMOUNT_CAPITALIZATION" jdbcType="VARCHAR" property="amountCapitalization" />
+    <result column="CREATE_UNIT_ID" jdbcType="VARCHAR" property="createUnitId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, BILL_ID, CONTR_ID, RENT_START_DATE, RENT_END_DATE, RENT_AMOUNT, BACK_RENT_START_DATE, 
+    BACK_RENT_END_DATE, BACK_RENT_AMOUNT, LATE_FEE_START_DATE, LATE_FEE_END_DATE, LATE_FEE_AMOUNT, 
+    RECEIVABLE_AMOUNT, ACTUAL_AMOUNT, PREPAID_AMOUNT, CHARGE_USER_ID, CHARGE_TIME, BACK_FLAG, 
+    BACK_USER, BACK_AMOUNT, BACK_TO_DATE, BACK_OPE_USER_ID, BACK_DATE, BACK_REASON, CHARGE_REMARK, 
+    IS_DELETED, VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, SYS_CREATE_ID, 
+    SYS_UPDATE_ID, SYS_DELETE_ID,CHARGE_UNIT,AMOUNT_CAPITALIZATION,CREATE_UNIT_ID
+  </sql>
+
+  <resultMap id="ArrearageVoMap" type="com.funi.platform.lshc.vo.ArrearageVo">
+    <result column="contractId" property="contractId" />
+    <result column="bizCreateOrgCode" property="bizCreateOrgCode" />
+    <result column="contractNo" property="contractNo" />
+    <result column="houseCount" property="houseCount" />
+    <result column="organizationName" property="organizationName" />
+    <result column="lesseeName" property="lesseeName" />
+    <result column="rentArea" property="rentArea" />
+    <result column="telephone" property="telephone" />
+    <result column="rentalMonthAmount" property="rentalMonthAmount" />
+    <result column="rentalPaytoDate" property="rentalPaytoDate" />
+    <result column="rentStartDate" property="rentStartDate" />
+    <result column="rentEndDate" property="rentEndDate" />
+    <result column="rentalPaymentType" property="rentalPaymentType" />
+    <result column="backRentAmount" property="backRentAmount" />
+    <collection property="chargeAddressVoList" ofType="com.funi.platform.lshc.vo.ChargeAddressVo" >
+      <result column="livingAreaName" property="livingAreaName" />
+      <result column="houseNo" property="houseNo" />
+    </collection>
+  </resultMap>
+
+  <select id="selectArrearageVoList" parameterType="com.funi.platform.lshc.query.charge.ArrearageQuery" resultMap="ArrearageVoMap">
+      SELECT
+          ( SELECT count( id ) FROM GHOUSE_CONTR_HOUSE WHERE contr_id = t1.ID ) AS houseCount,
+          t2.organization_name AS organizationName,
+          t2.lessee_name AS lesseeName,
+          ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.personal_tel ELSE t2.ORGANIZATION_TEL END ) AS telephone,
+          t1.contract_no AS contractNo,
+          t1.ID AS contractId,
+          t1.CREATE_UNIT_ID AS bizCreateOrgCode,
+          t1.rent_area AS rentArea,
+          t1.rental_month_amount AS rentalMonthAmount,
+          t1.rental_payto_date AS rentalPaytoDate,
+          t1.RENT_END_DATE AS rentEndDate,
+          t1.RENT_START_DATE AS rentStartDate,
+          t1.rental_payment_type as rentalPaymentType,
+          t5.LIVING_AREA_NAME as livingAreaName,
+          t4.house_no as houseNo
+      FROM
+          GHOUSE_CONTR t1
+      LEFT JOIN GHOUSE_LESSEE t2 ON t1.LESSEE_ID = t2.id
+      LEFT JOIN GHOUSE_CONTR_HOUSE t3 ON t3.contr_id = t1.id
+      LEFT JOIN GHOUSE_HOUSE_INFO t4 ON t3.house_id = t4.id
+      LEFT JOIN GHOUSE_ADDR_INFO t5 ON t4.address_id = t5.id
+      WHERE
+      t1.IS_DELETED = 0 AND t1.IS_FINAL=1
+      AND t1.CONTRACT_STATUS IN ( 'VALID', 'INVALID' )
+      and (t1.rental_payto_date &lt; #{arrearageStartDate} or (t1.rental_payto_date is null and t1.rent_start_date &lt; #{arrearageStartDate}))
+      <if test="createUnitId != null and createUnitId != ''">
+        and t1.create_unit_id = #{createUnitId}
+      </if>
+      <if test="keywords != null and keywords != ''">
+        AND ( t2.LESSEE_NAME = #{keywords} OR t4.house_no = #{keywords} OR t5.ADDRESS_DETAIL = #{keywords} )
+      </if>
+      <if test="authorityList != null and authorityList.size > 0">
+        and t1.CREATE_UNIT_ID in
+        <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
+          #{authority.dm}
+        </foreach>
+      </if>
+      <if test="userId != null and userId != ''">
+        and t1.SYS_CREATE_ID=#{userId}
+      </if>
+      order by t1.SYS_CREATE_TIME desc,t1.SYS_UPDATE_TIME desc
+  </select>
+
+  <select id="selectChargeHistoryVoList" parameterType="com.funi.platform.lshc.query.charge.ChargeHistoryQuery" resultType="com.funi.platform.lshc.vo.ChargeHistoryVo">
+      SELECT
+          ( SELECT count( id ) FROM GHOUSE_CONTR_HOUSE WHERE contr_id = t1.CONTR_ID ) AS houseCount,
+          t3.organization_name AS organizationName,
+          t3.lessee_name AS lesseeName,
+          ( CASE WHEN t3.RENTOR_TYPE = '1' THEN t3.personal_tel ELSE t3.ORGANIZATION_TEL END ) AS telephone,
+          t2.contract_no AS contractNo,
+          t2.CREATE_UNIT_ID as bizCreateOrgCode,
+          t1.CONTR_ID AS contractId,
+          t1.id AS historyId,
+          t1.ACTUAL_AMOUNT AS actualAmount,
+          t1.RENT_START_DATE AS rentStartDate,
+          t1.RENT_END_DATE AS rentEndDate,
+          t1.CHARGE_TIME AS chargeTime,
+          t1.CHARGE_USER_ID AS chargeUserId,
+          t1.BACK_FLAG AS backFlag,
+          t1.BACK_OPE_USER_ID AS backOpeUserId,
+          t1.BACK_DATE AS backDate,
+          t1.BACK_REASON AS backReason,
+          t4.BILL_TEMPLET_NAME as billTempletName
+      FROM
+          GHOUSE_CHARGE_HIS t1
+          LEFT JOIN GHOUSE_CONTR t2 ON t1.CONTR_ID = t2.id
+          LEFT JOIN GHOUSE_LESSEE t3 ON t2.LESSEE_ID = t3.id
+          LEFT JOIN GHOUSE_BILL t4 ON t1.BILL_ID=t4.id
+      where t1.IS_DELETED = 0
+          <if test="contractNo != null and contractNo != ''">
+            and t2.contract_no = #{contractNo}
+          </if>
+          <if test="lesseeName != null and lesseeName != ''">
+            and t3.lessee_name = #{lesseeName}
+          </if>
+          <if test="houseNo != null and houseNo != ''">
+            AND t1.CONTR_ID IN (
+              SELECT t1.contr_id FROM GHOUSE_CONTR_HOUSE t1
+              LEFT JOIN GHOUSE_HOUSE_INFO t2 ON t1.house_id = t2.id
+              WHERE
+              t2.HOUSE_NO = #{houseNo}
+            )
+          </if>
+          <if test="chargeStartTime != null and chargeStartTime != ''">
+            and CHARGE_TIME >= #{chargeStartTime}
+          </if>
+          <if test="chargeEndTime != null and chargeEndTime != ''">
+            and CHARGE_TIME &lt;= #{chargeEndTime}
+          </if>
+          <if test="chargeUserId != null and chargeUserId != ''">
+            and t1.CHARGE_USER_ID=#{chargeUserId}
+          </if>
+          <if test="backStartDate != null and backStartDate != ''">
+            and t1.BACK_DATE >= #{backStartDate}
+          </if>
+          <if test="backEndDate != null and backEndDate != ''">
+            and t1.BACK_DATE &lt;= #{backEndDate}
+          </if>
+          <if test="backOpeUserId != null and backOpeUserId != ''">
+            and t1.BACK_OPE_USER_ID=#{backOpeUserId}
+          </if>
+          <if test="backFlag != null and backFlag != ''">
+            and t1.BACK_FLAG = #{backFlag}
+          </if>
+          <if test="authorityList != null and authorityList.size > 0">
+            and t1.CREATE_UNIT_ID in
+            <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
+              #{authority.dm}
+            </foreach>
+          </if>
+          <if test="userId != null and userId != ''">
+            and t1.SYS_CREATE_ID=#{userId}
+          </if>
+        order by t1.SYS_CREATE_TIME desc, t1.SYS_UPDATE_TIME desc
+  </select>
+
+  <select id="selectPrepaidAmount" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+      SELECT
+        *
+      FROM
+        (
+        SELECT
+            nvl( PREPAID_AMOUNT, 0 )
+        FROM
+            GHOUSE_CHARGE_HIS t1
+            LEFT JOIN GHOUSE_BILL t2 ON t1.BILL_ID = t2.id
+        WHERE
+            t1.IS_DELETED = 0
+            AND t2.IS_DELETED = 0
+            AND t2.BILL_STATUS = '0'
+            AND t1.BACK_FLAG = '0'
+            AND t1.CONTR_ID = #{contractId}
+        ORDER BY
+            RENT_END_DATE DESC
+        )
+      WHERE
+        ROWNUM =1
+  </select>
+
+  <select id="selectChargeHisByContractId" resultMap="BaseResultMap" parameterType="com.funi.platform.lshc.dto.ChargeDto">
+    select
+        <include refid="Base_Column_List" />
+    from GHOUSE_CHARGE_HIS
+    where BACK_FLAG = '0'
+      AND CONTR_ID = #{contractId}
+      AND RENT_END_DATE = #{chargeEndDate}
+      AND ACTUAL_AMOUNT = #{actualAmount}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_CHARGE_HIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_CHARGE_HIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.charge.ChargeHis">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_CHARGE_HIS (ID, BILL_ID, CONTR_ID, RENT_START_DATE,
+      RENT_END_DATE, RENT_AMOUNT, BACK_RENT_START_DATE, 
+      BACK_RENT_END_DATE, BACK_RENT_AMOUNT, LATE_FEE_START_DATE, 
+      LATE_FEE_END_DATE, LATE_FEE_AMOUNT, RECEIVABLE_AMOUNT, 
+      ACTUAL_AMOUNT, PREPAID_AMOUNT, CHARGE_USER_ID, 
+      CHARGE_TIME, BACK_FLAG, BACK_USER, 
+      BACK_AMOUNT, BACK_TO_DATE, BACK_OPE_USER_ID, 
+      BACK_DATE, BACK_REASON, CHARGE_REMARK, 
+      IS_DELETED, VERSION, SYS_CREATE_TIME, 
+      SYS_UPDATE_TIME, SYS_DELETE_TIME, SYS_CREATE_ID, 
+      SYS_UPDATE_ID, SYS_DELETE_ID, CHARGE_UNIT,AMOUNT_CAPITALIZATION, CREATE_UNIT_ID)
+    values (#{id,jdbcType=VARCHAR}, #{billId,jdbcType=VARCHAR}, #{contrId,jdbcType=VARCHAR}, #{rentStartDate,jdbcType=CHAR},
+      #{rentEndDate,jdbcType=CHAR}, #{rentAmount,jdbcType=DECIMAL}, #{backRentStartDate,jdbcType=CHAR}, 
+      #{backRentEndDate,jdbcType=CHAR}, #{backRentAmount,jdbcType=DECIMAL}, #{lateFeeStartDate,jdbcType=CHAR}, 
+      #{lateFeeEndDate,jdbcType=CHAR}, #{lateFeeAmount,jdbcType=DECIMAL}, #{receivableAmount,jdbcType=DECIMAL}, 
+      #{actualAmount,jdbcType=DECIMAL}, #{prepaidAmount,jdbcType=DECIMAL}, #{chargeUserId,jdbcType=VARCHAR}, 
+      #{chargeTime,jdbcType=CHAR}, #{backFlag,jdbcType=CHAR}, #{backUser,jdbcType=VARCHAR},
+      #{backAmount,jdbcType=DECIMAL}, #{backToDate,jdbcType=CHAR}, #{backOpeUserId,jdbcType=VARCHAR}, 
+      #{backDate,jdbcType=CHAR}, #{backReason,jdbcType=VARCHAR}, #{chargeRemark,jdbcType=VARCHAR}, 
+      #{isDeleted,jdbcType=DECIMAL}, #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP},
+      #{sysUpdateTime,jdbcType=TIMESTAMP}, #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR},
+      #{sysUpdateId,jdbcType=VARCHAR}, #{sysDeleteId,jdbcType=VARCHAR},
+      #{chargeUnit,jdbcType=VARCHAR}, #{amountCapitalization,jdbcType=VARCHAR}, #{createUnitId,jdbcType=VARCHAR}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.charge.ChargeHis">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_CHARGE_HIS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        ID,
+        <if test="billId != null">
+        BILL_ID,
+      </if>
+      <if test="contrId != null">
+        CONTR_ID,
+      </if>
+      <if test="rentStartDate != null">
+        RENT_START_DATE,
+      </if>
+      <if test="rentEndDate != null">
+        RENT_END_DATE,
+      </if>
+      <if test="rentAmount != null">
+        RENT_AMOUNT,
+      </if>
+      <if test="backRentStartDate != null">
+        BACK_RENT_START_DATE,
+      </if>
+      <if test="backRentEndDate != null">
+        BACK_RENT_END_DATE,
+      </if>
+      <if test="backRentAmount != null">
+        BACK_RENT_AMOUNT,
+      </if>
+      <if test="lateFeeStartDate != null">
+        LATE_FEE_START_DATE,
+      </if>
+      <if test="lateFeeEndDate != null">
+        LATE_FEE_END_DATE,
+      </if>
+      <if test="lateFeeAmount != null">
+        LATE_FEE_AMOUNT,
+      </if>
+      <if test="receivableAmount != null">
+        RECEIVABLE_AMOUNT,
+      </if>
+      <if test="actualAmount != null">
+        ACTUAL_AMOUNT,
+      </if>
+      <if test="prepaidAmount != null">
+        PREPAID_AMOUNT,
+      </if>
+      <if test="chargeUserId != null">
+        CHARGE_USER_ID,
+      </if>
+      <if test="chargeTime != null">
+        CHARGE_TIME,
+      </if>
+      <if test="backFlag != null">
+        BACK_FLAG,
+      </if>
+      <if test="backUser != null">
+        BACK_USER,
+      </if>
+      <if test="backAmount != null">
+        BACK_AMOUNT,
+      </if>
+      <if test="backToDate != null">
+        BACK_TO_DATE,
+      </if>
+      <if test="backOpeUserId != null">
+        BACK_OPE_USER_ID,
+      </if>
+      <if test="backDate != null">
+        BACK_DATE,
+      </if>
+      <if test="backReason != null">
+        BACK_REASON,
+      </if>
+      <if test="chargeRemark != null">
+        CHARGE_REMARK,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+      <if test="chargeUnit != null">
+        CHARGE_UNIT,
+      </if>
+      <if test="amountCapitalization != null">
+        AMOUNT_CAPITALIZATION,
+      </if>
+      <if test="createUnitId != null">
+        CREATE_UNIT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        #{id,jdbcType=VARCHAR},
+        <if test="billId != null">
+        #{billId,jdbcType=VARCHAR},
+      </if>
+      <if test="contrId != null">
+        #{contrId,jdbcType=VARCHAR},
+      </if>
+      <if test="rentStartDate != null">
+        #{rentStartDate,jdbcType=CHAR},
+      </if>
+      <if test="rentEndDate != null">
+        #{rentEndDate,jdbcType=CHAR},
+      </if>
+      <if test="rentAmount != null">
+        #{rentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="backRentStartDate != null">
+        #{backRentStartDate,jdbcType=CHAR},
+      </if>
+      <if test="backRentEndDate != null">
+        #{backRentEndDate,jdbcType=CHAR},
+      </if>
+      <if test="backRentAmount != null">
+        #{backRentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="lateFeeStartDate != null">
+        #{lateFeeStartDate,jdbcType=CHAR},
+      </if>
+      <if test="lateFeeEndDate != null">
+        #{lateFeeEndDate,jdbcType=CHAR},
+      </if>
+      <if test="lateFeeAmount != null">
+        #{lateFeeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="receivableAmount != null">
+        #{receivableAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null">
+        #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="prepaidAmount != null">
+        #{prepaidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="chargeUserId != null">
+        #{chargeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeTime != null">
+        #{chargeTime,jdbcType=CHAR},
+      </if>
+      <if test="backFlag != null">
+        #{backFlag,jdbcType=CHAR},
+      </if>
+      <if test="backUser != null">
+        #{backUser,jdbcType=VARCHAR},
+      </if>
+      <if test="backAmount != null">
+        #{backAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="backToDate != null">
+        #{backToDate,jdbcType=CHAR},
+      </if>
+      <if test="backOpeUserId != null">
+        #{backOpeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="backDate != null">
+        #{backDate,jdbcType=CHAR},
+      </if>
+      <if test="backReason != null">
+        #{backReason,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeRemark != null">
+        #{chargeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeUnit != null">
+        #{chargeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="amountCapitalization != null">
+        #{amountCapitalization,jdbcType=VARCHAR},
+      </if>
+      <if test="createUnitId != null">
+        #{createUnitId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.charge.ChargeHis">
+    update GHOUSE_CHARGE_HIS
+    <set>
+      <if test="billId != null">
+        BILL_ID = #{billId,jdbcType=VARCHAR},
+      </if>
+      <if test="contrId != null">
+        CONTR_ID = #{contrId,jdbcType=VARCHAR},
+      </if>
+      <if test="rentStartDate != null">
+        RENT_START_DATE = #{rentStartDate,jdbcType=CHAR},
+      </if>
+      <if test="rentEndDate != null">
+        RENT_END_DATE = #{rentEndDate,jdbcType=CHAR},
+      </if>
+      <if test="rentAmount != null">
+        RENT_AMOUNT = #{rentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="backRentStartDate != null">
+        BACK_RENT_START_DATE = #{backRentStartDate,jdbcType=CHAR},
+      </if>
+      <if test="backRentEndDate != null">
+        BACK_RENT_END_DATE = #{backRentEndDate,jdbcType=CHAR},
+      </if>
+      <if test="backRentAmount != null">
+        BACK_RENT_AMOUNT = #{backRentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="lateFeeStartDate != null">
+        LATE_FEE_START_DATE = #{lateFeeStartDate,jdbcType=CHAR},
+      </if>
+      <if test="lateFeeEndDate != null">
+        LATE_FEE_END_DATE = #{lateFeeEndDate,jdbcType=CHAR},
+      </if>
+      <if test="lateFeeAmount != null">
+        LATE_FEE_AMOUNT = #{lateFeeAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="receivableAmount != null">
+        RECEIVABLE_AMOUNT = #{receivableAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null">
+        ACTUAL_AMOUNT = #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="prepaidAmount != null">
+        PREPAID_AMOUNT = #{prepaidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="chargeUserId != null">
+        CHARGE_USER_ID = #{chargeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeTime != null">
+        CHARGE_TIME = #{chargeTime,jdbcType=CHAR},
+      </if>
+      <if test="backFlag != null">
+        BACK_FLAG = #{backFlag,jdbcType=CHAR},
+      </if>
+      <if test="backUser != null">
+        BACK_USER = #{backUser,jdbcType=VARCHAR},
+      </if>
+      <if test="backAmount != null">
+        BACK_AMOUNT = #{backAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="backToDate != null">
+        BACK_TO_DATE = #{backToDate,jdbcType=CHAR},
+      </if>
+      <if test="backOpeUserId != null">
+        BACK_OPE_USER_ID = #{backOpeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="backDate != null">
+        BACK_DATE = #{backDate,jdbcType=CHAR},
+      </if>
+      <if test="backReason != null">
+        BACK_REASON = #{backReason,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeRemark != null">
+        CHARGE_REMARK = #{chargeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeUnit != null">
+        CHARGE_UNIT = #{chargeUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="amountCapitalization != null">
+        AMOUNT_CAPITALIZATION = #{amountCapitalization,jdbcType=VARCHAR},
+      </if>
+      <if test="createUnitId != null">
+        CREATE_UNIT_ID = #{createUnitId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.charge.ChargeHis">
+    update GHOUSE_CHARGE_HIS
+    set BILL_ID = #{billId,jdbcType=VARCHAR},
+      CONTR_ID = #{contrId,jdbcType=VARCHAR},
+      RENT_START_DATE = #{rentStartDate,jdbcType=CHAR},
+      RENT_END_DATE = #{rentEndDate,jdbcType=CHAR},
+      RENT_AMOUNT = #{rentAmount,jdbcType=DECIMAL},
+      BACK_RENT_START_DATE = #{backRentStartDate,jdbcType=CHAR},
+      BACK_RENT_END_DATE = #{backRentEndDate,jdbcType=CHAR},
+      BACK_RENT_AMOUNT = #{backRentAmount,jdbcType=DECIMAL},
+      LATE_FEE_START_DATE = #{lateFeeStartDate,jdbcType=CHAR},
+      LATE_FEE_END_DATE = #{lateFeeEndDate,jdbcType=CHAR},
+      LATE_FEE_AMOUNT = #{lateFeeAmount,jdbcType=DECIMAL},
+      RECEIVABLE_AMOUNT = #{receivableAmount,jdbcType=DECIMAL},
+      ACTUAL_AMOUNT = #{actualAmount,jdbcType=DECIMAL},
+      PREPAID_AMOUNT = #{prepaidAmount,jdbcType=DECIMAL},
+      CHARGE_USER_ID = #{chargeUserId,jdbcType=VARCHAR},
+      CHARGE_TIME = #{chargeTime,jdbcType=CHAR},
+      BACK_FLAG = #{backFlag,jdbcType=CHAR},
+      BACK_USER = #{backUser,jdbcType=VARCHAR},
+      BACK_AMOUNT = #{backAmount,jdbcType=DECIMAL},
+      BACK_TO_DATE = #{backToDate,jdbcType=CHAR},
+      BACK_OPE_USER_ID = #{backOpeUserId,jdbcType=VARCHAR},
+      BACK_DATE = #{backDate,jdbcType=CHAR},
+      BACK_REASON = #{backReason,jdbcType=VARCHAR},
+      CHARGE_REMARK = #{chargeRemark,jdbcType=VARCHAR},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      CHARGE_UNIT = #{chargeUnit,jdbcType=VARCHAR},
+      AMOUNT_CAPITALIZATION = #{amountCapitalization,jdbcType=VARCHAR},
+      CREATE_UNIT_ID = #{createUnitId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateLastRentDate">
+    update ghouse_contr set rental_payto_date=#{lastRentDate} where id=#{contractId}
+  </update>
+</mapper>

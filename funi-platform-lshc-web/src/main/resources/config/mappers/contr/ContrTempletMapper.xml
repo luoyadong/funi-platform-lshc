@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.contr.ContrTempletMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.contr.ContrTemplet">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="contract_templet_name" jdbcType="VARCHAR" property="contractTempletName" />
+    <result column="unit_id" jdbcType="CHAR" property="unitId" />
+    <result column="templet_content" jdbcType="VARCHAR" property="templetContent" />
+    <result column="valid_flg" jdbcType="CHAR" property="validFlg" />
+    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="version" jdbcType="DECIMAL" property="version" />
+    <result column="sys_create_time" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="sys_update_time" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="sys_delete_time" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="sys_create_id" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="sys_update_id" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="sys_delete_id" jdbcType="VARCHAR" property="sysDeleteId" />
+    <result column="temp_url" jdbcType="VARCHAR" property="tempUrl" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, contract_templet_name, unit_id, templet_content, valid_flg, is_deleted, version,
+    sys_create_time, sys_update_time, sys_delete_time, sys_create_id, sys_update_id,
+    sys_delete_id,temp_url
+  </sql>
+
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.contr.ContrTemplet">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into ghouse_contr_templet (id, contract_templet_name, unit_id,
+      templet_content, valid_flg, is_deleted,
+      version, sys_create_time, sys_update_time,
+      sys_delete_time, sys_create_id, sys_update_id,
+      sys_delete_id,TEMP_URL)
+    values (#{id,jdbcType=VARCHAR}, #{contractTempletName,jdbcType=VARCHAR}, #{unitId,jdbcType=CHAR}, 
+      #{templetContent,jdbcType=VARCHAR}, #{validFlg,jdbcType=CHAR}, #{isDeleted,jdbcType=DECIMAL}, 
+      #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, 
+      #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, 
+      #{sysDeleteId,jdbcType=VARCHAR},#{tempUrl,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectByQuery" parameterType="com.funi.platform.lshc.query.ContrTempQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ghouse_contr_templet
+    <where>
+      <if test="keyword != null and keyword != ''">
+        and CONTRACT_TEMPLET_NAME like '%'||#{keyword}||'%'
+      </if>
+      <if test="validFlg != null and validFlg != ''">
+        and VALID_FLG = #{validFlg}
+      </if>
+    </where>
+    order by sys_create_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ghouse_contr_templet
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <update id="updateStatus" parameterType="com.funi.platform.lshc.entity.contr.ContrTemplet">
+  update ghouse_contr_templet
+  set
+  VALID_FLG = #{validFlg,jdbcType=CHAR}
+    <where>
+      <if test="id != null">
+        AND ID = #{id,jdbcType=VARCHAR}
+      </if>
+   </where>
+
+  </update>
+
+</mapper>

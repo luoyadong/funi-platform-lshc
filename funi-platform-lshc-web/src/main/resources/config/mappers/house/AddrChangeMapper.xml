@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.house.AddrChangeMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.house.AddrChange">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="ADDRESS_ID" jdbcType="VARCHAR" property="addressId" />
+    <result column="BEFORE_ADDRESS" jdbcType="VARCHAR" property="beforeAddress" />
+    <result column="AFTER_ADDRESS" jdbcType="VARCHAR" property="afterAddress" />
+    <result column="AFTER_STREET_NAME" jdbcType="VARCHAR" property="afterStreetName" />
+    <result column="AFTER_STREET_NO" jdbcType="VARCHAR" property="afterStreetNo" />
+    <result column="CHANGE_USER" jdbcType="VARCHAR" property="changeUser" />
+    <result column="CHANGE_DATE" jdbcType="CHAR" property="changeDate" />
+    <result column="CHANGE_REMARK" jdbcType="VARCHAR" property="changeRemark" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, ADDRESS_ID, BEFORE_ADDRESS, AFTER_ADDRESS, AFTER_STREET_NAME, AFTER_STREET_NO,
+    CHANGE_USER, CHANGE_DATE, CHANGE_REMARK, IS_DELETED, VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, 
+    SYS_DELETE_TIME, SYS_CREATE_ID, SYS_UPDATE_ID, SYS_DELETE_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_ADDR_CHANGE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <resultMap id="AddrChangeVoMap" type="com.funi.platform.lshc.vo.AddrChangeVo">
+    <result column="beforeAddress" property="beforeAddress" />
+    <result column="afterAddress" property="afterAddress" />
+    <result column="changeUser" property="changeUser" />
+    <result column="changeDate" property="changeDate" />
+    <result column="changeRemark" property="changeRemark" />
+    <collection property="linkFileVoList" ofType="com.funi.platform.lshc.vo.LinkFileVo" >
+      <result column="fileId" property="fileId" />
+      <result column="linkFileName" property="linkFileName" />
+      <result column="linkFileType" property="linkFileType" />
+      <result column="linkOrder" property="linkOrder" />
+      <result column="linkFileUrl" property="linkFileUrl" />
+    </collection>
+  </resultMap>
+
+  <select id="selectAddressChangeList" parameterType="com.funi.platform.lshc.query.address.AddressChangeQuery" resultMap="AddrChangeVoMap">
+    select
+       t1.BEFORE_ADDRESS as beforeAddress,
+       t1.AFTER_ADDRESS as afterAddress,
+       t1.CHANGE_USER as changeUser,
+       t1.CHANGE_DATE as changeDate,
+       t1.CHANGE_REMARK as changeRemark,
+       t2.id as fileId,
+       t2.LINK_FILE_NAME as linkFileName,
+       t2.LINK_FILE_TYPE as linkFileType,
+       t2.LINK_ORDER as linkOrder,
+       t2.LINK_FILE_URL as linkFileUrl
+    from GHOUSE_ADDR_CHANGE t1 left join GHOUSE_LINK_FILE t2 on t1.id=t2.LINK_ID
+      where t1.ADDRESS_ID=#{id} and t2.LINK_TYPE='001'
+      order by t1.SYS_CREATE_TIME desc,t1.SYS_UPDATE_TIME desc
+  </select>
+  <!-- 通过房屋id查找变更信息-->
+  <select id="selectAddressChangeListByHouseId" resultMap="AddrChangeVoMap">
+    select
+       t1.BEFORE_ADDRESS as beforeAddress,
+       t1.AFTER_ADDRESS as afterAddress,
+       t1.CHANGE_USER as changeUser,
+       t1.CHANGE_DATE as changeDate,
+       t1.CHANGE_REMARK as changeRemark,
+       t2.id as fileId,
+       t2.LINK_FILE_NAME as linkFileName,
+       t2.LINK_FILE_TYPE as linkFileType,
+       t2.LINK_ORDER as linkOrder,
+       t2.LINK_FILE_URL as linkFileUrl
+    from GHOUSE_ADDR_CHANGE t1 left join GHOUSE_LINK_FILE t2 on t1.id=t2.LINK_ID
+    join GHOUSE_HOUSE_INFO gi on gi.ADDRESS_ID=t1.ADDRESS_ID
+       where gi.id=#{houseId} and t2.LINK_TYPE='001'
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_ADDR_CHANGE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.house.AddrChange">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_ADDR_CHANGE (ID, ADDRESS_ID, BEFORE_ADDRESS, AFTER_ADDRESS,
+      AFTER_STREET_NAME, AFTER_STREET_NO, CHANGE_USER,
+      CHANGE_DATE, CHANGE_REMARK, IS_DELETED, 
+      VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, 
+      SYS_DELETE_TIME, SYS_CREATE_ID, SYS_UPDATE_ID, 
+      SYS_DELETE_ID)
+    values (#{id,jdbcType=VARCHAR}, #{addressId,jdbcType=VARCHAR}, #{beforeAddress,jdbcType=VARCHAR}, #{afterAddress,jdbcType=VARCHAR},
+      #{afterStreetName,jdbcType=VARCHAR}, #{afterStreetNo,jdbcType=VARCHAR}, #{changeUser,jdbcType=VARCHAR},
+      #{changeDate,jdbcType=CHAR}, #{changeRemark,jdbcType=VARCHAR}, #{isDeleted,jdbcType=DECIMAL}, 
+      #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP},
+      #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR},
+      #{sysDeleteId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.house.AddrChange">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_ADDR_CHANGE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      ID,
+      <if test="addressId != null">
+        ADDRESS_ID,
+      </if>
+      <if test="beforeAddress != null">
+        BEFORE_ADDRESS,
+      </if>
+      <if test="afterAddress != null">
+        AFTER_ADDRESS,
+      </if>
+      <if test="afterStreetName != null">
+        AFTER_STREET_NAME,
+      </if>
+      <if test="afterStreetNo != null">
+        AFTER_STREET_NO,
+      </if>
+      <if test="changeUser != null">
+        CHANGE_USER,
+      </if>
+      <if test="changeDate != null">
+        CHANGE_DATE,
+      </if>
+      <if test="changeRemark != null">
+        CHANGE_REMARK,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        #{id,jdbcType=VARCHAR},
+      <if test="addressId != null">
+        #{addressId,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeAddress != null">
+        #{beforeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="afterAddress != null">
+        #{afterAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="afterStreetName != null">
+        #{afterStreetName,jdbcType=VARCHAR},
+      </if>
+      <if test="afterStreetNo != null">
+        #{afterStreetNo,jdbcType=VARCHAR},
+      </if>
+      <if test="changeUser != null">
+        #{changeUser,jdbcType=VARCHAR},
+      </if>
+      <if test="changeDate != null">
+        #{changeDate,jdbcType=CHAR},
+      </if>
+      <if test="changeRemark != null">
+        #{changeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.house.AddrChange">
+    update GHOUSE_ADDR_CHANGE
+    <set>
+      <if test="addressId != null">
+        ADDRESS_ID = #{addressId,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeAddress != null">
+        BEFORE_ADDRESS = #{beforeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="afterAddress != null">
+        AFTER_ADDRESS = #{afterAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="afterStreetName != null">
+        AFTER_STREET_NAME = #{afterStreetName,jdbcType=VARCHAR},
+      </if>
+      <if test="afterStreetNo != null">
+        AFTER_STREET_NO = #{afterStreetNo,jdbcType=VARCHAR},
+      </if>
+      <if test="changeUser != null">
+        CHANGE_USER = #{changeUser,jdbcType=VARCHAR},
+      </if>
+      <if test="changeDate != null">
+        CHANGE_DATE = #{changeDate,jdbcType=CHAR},
+      </if>
+      <if test="changeRemark != null">
+        CHANGE_REMARK = #{changeRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.house.AddrChange">
+    update GHOUSE_ADDR_CHANGE
+    set ADDRESS_ID = #{addressId,jdbcType=VARCHAR},
+      BEFORE_ADDRESS = #{beforeAddress,jdbcType=VARCHAR},
+      AFTER_ADDRESS = #{afterAddress,jdbcType=VARCHAR},
+      AFTER_STREET_NAME = #{afterStreetName,jdbcType=VARCHAR},
+      AFTER_STREET_NO = #{afterStreetNo,jdbcType=VARCHAR},
+      CHANGE_USER = #{changeUser,jdbcType=VARCHAR},
+      CHANGE_DATE = #{changeDate,jdbcType=CHAR},
+      CHANGE_REMARK = #{changeRemark,jdbcType=VARCHAR},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

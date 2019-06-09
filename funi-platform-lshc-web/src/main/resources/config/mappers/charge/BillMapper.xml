@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.charge.BillMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.charge.Bill">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="BILL_NO" jdbcType="VARCHAR" property="billNo" />
+    <result column="BILL_NO_HEADER" jdbcType="VARCHAR" property="billNoHeader" />
+    <result column="BILL_NO_SEQ" jdbcType="CHAR" property="billNoSeq" />
+    <result column="BILL_TEMPLET_ID" jdbcType="VARCHAR" property="billTempletId" />
+    <result column="BILL_TEMPLET_NAME" jdbcType="VARCHAR" property="billTempletName" />
+    <result column="BILL_RECEIVE_USER" jdbcType="VARCHAR" property="billReceiveUser" />
+    <result column="BILL_RECEIVE_DATE" jdbcType="CHAR" property="billReceiveDate" />
+    <result column="BILL_USER_ID" jdbcType="VARCHAR" property="billUserId" />
+    <result column="BILL_STATUS" jdbcType="CHAR" property="billStatus" />
+    <result column="BILL_HANDLE_STATUS" jdbcType="CHAR" property="billHandleStatus" />
+    <result column="BILL_CHARGE_STATUS" jdbcType="CHAR" property="billChargeStatus" />
+    <result column="BILL_TYPE" jdbcType="CHAR" property="billType" />
+    <result column="BILL_OUT_USER_ID" jdbcType="VARCHAR" property="billOutUserId" />
+    <result column="BILL_OUT_TIME" jdbcType="TIMESTAMP" property="billOutTime" />
+    <result column="BILL_PRINT_USER_ID" jdbcType="VARCHAR" property="billPrintUserId" />
+    <result column="BILL_PRINT_TIME" jdbcType="TIMESTAMP" property="billPrintTime" />
+    <result column="REVOKE_USER_ID" jdbcType="VARCHAR" property="revokeUserId" />
+    <result column="REVOKE_TIME" jdbcType="CHAR" property="revokeTime" />
+    <result column="BILL_INVALID_USER_ID" jdbcType="VARCHAR" property="billInvalidUserId" />
+    <result column="BILL_INVALID_REASON" jdbcType="VARCHAR" property="billInvalidReason" />
+    <result column="BILL_INVALID_TIME" jdbcType="TIMESTAMP" property="billInvalidTime" />
+    <result column="BILL_REMARK" jdbcType="VARCHAR" property="billRemark" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, BILL_NO, BILL_NO_HEADER, BILL_NO_SEQ, BILL_TEMPLET_ID, BILL_RECEIVE_USER, BILL_RECEIVE_DATE, 
+    BILL_USER_ID, BILL_STATUS, BILL_HANDLE_STATUS, BILL_CHARGE_STATUS, BILL_TYPE, BILL_OUT_USER_ID, 
+    BILL_OUT_TIME, BILL_PRINT_USER_ID, BILL_PRINT_TIME, REVOKE_USER_ID, REVOKE_TIME, 
+    BILL_INVALID_USER_ID, BILL_INVALID_REASON, BILL_INVALID_TIME, BILL_REMARK, IS_DELETED, 
+    VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, SYS_CREATE_ID, SYS_UPDATE_ID, 
+    SYS_DELETE_ID,BILL_TEMPLET_NAME
+  </sql>
+
+  <select id="selectNextBillSerial" resultType="java.lang.Integer">
+    SELECT seq_bill_serial.nextval FROM DUAL
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_BILL
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_BILL
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.charge.Bill">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_BILL (ID, BILL_NO, BILL_NO_HEADER, BILL_NO_SEQ,
+      BILL_TEMPLET_ID, BILL_RECEIVE_USER, BILL_RECEIVE_DATE, 
+      BILL_USER_ID, BILL_STATUS, BILL_HANDLE_STATUS, 
+      BILL_CHARGE_STATUS, BILL_TYPE, BILL_OUT_USER_ID, 
+      BILL_OUT_TIME, BILL_PRINT_USER_ID, BILL_PRINT_TIME, 
+      REVOKE_USER_ID, REVOKE_TIME, BILL_INVALID_USER_ID, 
+      BILL_INVALID_REASON, BILL_INVALID_TIME, BILL_REMARK, 
+      IS_DELETED, VERSION, SYS_CREATE_TIME, 
+      SYS_UPDATE_TIME, SYS_DELETE_TIME, SYS_CREATE_ID, 
+      SYS_UPDATE_ID, SYS_DELETE_ID,BILL_TEMPLET_NAME)
+    values (#{id,jdbcType=VARCHAR}, #{billNo,jdbcType=VARCHAR}, #{billNoHeader,jdbcType=VARCHAR}, #{billNoSeq,jdbcType=CHAR},
+      #{billTempletId,jdbcType=VARCHAR}, #{billReceiveUser,jdbcType=VARCHAR}, #{billReceiveDate,jdbcType=CHAR}, 
+      #{billUserId,jdbcType=VARCHAR}, #{billStatus,jdbcType=CHAR}, #{billHandleStatus,jdbcType=CHAR}, 
+      #{billChargeStatus,jdbcType=CHAR}, #{billType,jdbcType=CHAR}, #{billOutUserId,jdbcType=VARCHAR}, 
+      #{billOutTime,jdbcType=TIMESTAMP}, #{billPrintUserId,jdbcType=VARCHAR}, #{billPrintTime,jdbcType=TIMESTAMP}, 
+      #{revokeUserId,jdbcType=VARCHAR}, #{revokeTime,jdbcType=CHAR}, #{billInvalidUserId,jdbcType=VARCHAR},
+      #{billInvalidReason,jdbcType=VARCHAR}, #{billInvalidTime,jdbcType=TIMESTAMP}, #{billRemark,jdbcType=VARCHAR}, 
+      #{isDeleted,jdbcType=DECIMAL}, #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP},
+      #{sysUpdateTime,jdbcType=TIMESTAMP}, #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR},
+      #{sysUpdateId,jdbcType=VARCHAR}, #{sysDeleteId,jdbcType=VARCHAR}, #{billTempletName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.charge.Bill">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_BILL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      ID,
+      <if test="billNo != null">
+        BILL_NO,
+      </if>
+      <if test="billNoHeader != null">
+        BILL_NO_HEADER,
+      </if>
+      <if test="billNoSeq != null">
+        BILL_NO_SEQ,
+      </if>
+      <if test="billTempletId != null">
+        BILL_TEMPLET_ID,
+      </if>
+      <if test="billReceiveUser != null">
+        BILL_RECEIVE_USER,
+      </if>
+      <if test="billReceiveDate != null">
+        BILL_RECEIVE_DATE,
+      </if>
+      <if test="billUserId != null">
+        BILL_USER_ID,
+      </if>
+      <if test="billStatus != null">
+        BILL_STATUS,
+      </if>
+      <if test="billHandleStatus != null">
+        BILL_HANDLE_STATUS,
+      </if>
+      <if test="billChargeStatus != null">
+        BILL_CHARGE_STATUS,
+      </if>
+      <if test="billType != null">
+        BILL_TYPE,
+      </if>
+      <if test="billOutUserId != null">
+        BILL_OUT_USER_ID,
+      </if>
+      <if test="billOutTime != null">
+        BILL_OUT_TIME,
+      </if>
+      <if test="billPrintUserId != null">
+        BILL_PRINT_USER_ID,
+      </if>
+      <if test="billPrintTime != null">
+        BILL_PRINT_TIME,
+      </if>
+      <if test="revokeUserId != null">
+        REVOKE_USER_ID,
+      </if>
+      <if test="revokeTime != null">
+        REVOKE_TIME,
+      </if>
+      <if test="billInvalidUserId != null">
+        BILL_INVALID_USER_ID,
+      </if>
+      <if test="billInvalidReason != null">
+        BILL_INVALID_REASON,
+      </if>
+      <if test="billInvalidTime != null">
+        BILL_INVALID_TIME,
+      </if>
+      <if test="billRemark != null">
+        BILL_REMARK,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+      <if test="billTempletName != null">
+        BILL_TEMPLET_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=VARCHAR},
+      <if test="billNo != null">
+        #{billNo,jdbcType=VARCHAR},
+      </if>
+      <if test="billNoHeader != null">
+        #{billNoHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="billNoSeq != null">
+        #{billNoSeq,jdbcType=CHAR},
+      </if>
+      <if test="billTempletId != null">
+        #{billTempletId,jdbcType=VARCHAR},
+      </if>
+      <if test="billReceiveUser != null">
+        #{billReceiveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="billReceiveDate != null">
+        #{billReceiveDate,jdbcType=CHAR},
+      </if>
+      <if test="billUserId != null">
+        #{billUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billStatus != null">
+        #{billStatus,jdbcType=CHAR},
+      </if>
+      <if test="billHandleStatus != null">
+        #{billHandleStatus,jdbcType=CHAR},
+      </if>
+      <if test="billChargeStatus != null">
+        #{billChargeStatus,jdbcType=CHAR},
+      </if>
+      <if test="billType != null">
+        #{billType,jdbcType=CHAR},
+      </if>
+      <if test="billOutUserId != null">
+        #{billOutUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billOutTime != null">
+        #{billOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="billPrintUserId != null">
+        #{billPrintUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billPrintTime != null">
+        #{billPrintTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="revokeUserId != null">
+        #{revokeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="revokeTime != null">
+        #{revokeTime,jdbcType=CHAR},
+      </if>
+      <if test="billInvalidUserId != null">
+        #{billInvalidUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billInvalidReason != null">
+        #{billInvalidReason,jdbcType=VARCHAR},
+      </if>
+      <if test="billInvalidTime != null">
+        #{billInvalidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="billRemark != null">
+        #{billRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+      <if test="billTempletName != null">
+        #{billTempletName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.charge.Bill">
+    update GHOUSE_BILL
+    <set>
+      <if test="billNo != null">
+        BILL_NO = #{billNo,jdbcType=VARCHAR},
+      </if>
+      <if test="billNoHeader != null">
+        BILL_NO_HEADER = #{billNoHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="billNoSeq != null">
+        BILL_NO_SEQ = #{billNoSeq,jdbcType=CHAR},
+      </if>
+      <if test="billTempletId != null">
+        BILL_TEMPLET_ID = #{billTempletId,jdbcType=VARCHAR},
+      </if>
+      <if test="billReceiveUser != null">
+        BILL_RECEIVE_USER = #{billReceiveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="billReceiveDate != null">
+        BILL_RECEIVE_DATE = #{billReceiveDate,jdbcType=CHAR},
+      </if>
+      <if test="billUserId != null">
+        BILL_USER_ID = #{billUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billStatus != null">
+        BILL_STATUS = #{billStatus,jdbcType=CHAR},
+      </if>
+      <if test="billHandleStatus != null">
+        BILL_HANDLE_STATUS = #{billHandleStatus,jdbcType=CHAR},
+      </if>
+      <if test="billChargeStatus != null">
+        BILL_CHARGE_STATUS = #{billChargeStatus,jdbcType=CHAR},
+      </if>
+      <if test="billType != null">
+        BILL_TYPE = #{billType,jdbcType=CHAR},
+      </if>
+      <if test="billOutUserId != null">
+        BILL_OUT_USER_ID = #{billOutUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billOutTime != null">
+        BILL_OUT_TIME = #{billOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="billPrintUserId != null">
+        BILL_PRINT_USER_ID = #{billPrintUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billPrintTime != null">
+        BILL_PRINT_TIME = #{billPrintTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="revokeUserId != null">
+        REVOKE_USER_ID = #{revokeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="revokeTime != null">
+        REVOKE_TIME = #{revokeTime,jdbcType=CHAR},
+      </if>
+      <if test="billInvalidUserId != null">
+        BILL_INVALID_USER_ID = #{billInvalidUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="billInvalidReason != null">
+        BILL_INVALID_REASON = #{billInvalidReason,jdbcType=VARCHAR},
+      </if>
+      <if test="billInvalidTime != null">
+        BILL_INVALID_TIME = #{billInvalidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="billRemark != null">
+        BILL_REMARK = #{billRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+      <if test="billTempletName != null">
+        BILL_TEMPLET_NAME = #{billTempletName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.charge.Bill">
+    update GHOUSE_BILL
+    set BILL_NO = #{billNo,jdbcType=VARCHAR},
+      BILL_NO_HEADER = #{billNoHeader,jdbcType=VARCHAR},
+      BILL_NO_SEQ = #{billNoSeq,jdbcType=CHAR},
+      BILL_TEMPLET_ID = #{billTempletId,jdbcType=VARCHAR},
+      BILL_RECEIVE_USER = #{billReceiveUser,jdbcType=VARCHAR},
+      BILL_RECEIVE_DATE = #{billReceiveDate,jdbcType=CHAR},
+      BILL_USER_ID = #{billUserId,jdbcType=VARCHAR},
+      BILL_STATUS = #{billStatus,jdbcType=CHAR},
+      BILL_HANDLE_STATUS = #{billHandleStatus,jdbcType=CHAR},
+      BILL_CHARGE_STATUS = #{billChargeStatus,jdbcType=CHAR},
+      BILL_TYPE = #{billType,jdbcType=CHAR},
+      BILL_OUT_USER_ID = #{billOutUserId,jdbcType=VARCHAR},
+      BILL_OUT_TIME = #{billOutTime,jdbcType=TIMESTAMP},
+      BILL_PRINT_USER_ID = #{billPrintUserId,jdbcType=VARCHAR},
+      BILL_PRINT_TIME = #{billPrintTime,jdbcType=TIMESTAMP},
+      REVOKE_USER_ID = #{revokeUserId,jdbcType=VARCHAR},
+      REVOKE_TIME = #{revokeTime,jdbcType=CHAR},
+      BILL_INVALID_USER_ID = #{billInvalidUserId,jdbcType=VARCHAR},
+      BILL_INVALID_REASON = #{billInvalidReason,jdbcType=VARCHAR},
+      BILL_INVALID_TIME = #{billInvalidTime,jdbcType=TIMESTAMP},
+      BILL_REMARK = #{billRemark,jdbcType=VARCHAR},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      BILL_TEMPLET_NAME = #{billTempletName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

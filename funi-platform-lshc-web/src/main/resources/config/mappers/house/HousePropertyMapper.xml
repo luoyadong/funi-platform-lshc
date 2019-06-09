@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.house.HousePropertyMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.house.HouseProperty">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="HOUSE_ID" jdbcType="VARCHAR" property="houseId" />
+    <result column="PROPERTY_NO" jdbcType="VARCHAR" property="propertyNo" />
+    <result column="PROPERTY_CERTIFICATE_NO" jdbcType="VARCHAR" property="propertyCertificateNo" />
+    <result column="PROPERTY_USER_NAME" jdbcType="VARCHAR" property="propertyUserName" />
+    <result column="PROPERTY_USER_ID_NUMBER" jdbcType="VARCHAR" property="propertyUserIdNumber" />
+    <result column="PROPERTY_USER_TEL" jdbcType="VARCHAR" property="propertyUserTel" />
+    <result column="COMMON_FLAG" jdbcType="CHAR" property="commonFlag" />
+    <result column="COMMON_USER_NAME" jdbcType="VARCHAR" property="commonUserName" />
+    <result column="COMMON_USER_ID_NUMBER" jdbcType="VARCHAR" property="commonUserIdNumber" />
+    <result column="COMMON_USER_TEL" jdbcType="VARCHAR" property="commonUserTel" />
+    <result column="PRIVATE_BULID_AREA" jdbcType="DECIMAL" property="privateBulidArea" />
+    <result column="PUBLIC_BULID_AREA" jdbcType="DECIMAL" property="publicBulidArea" />
+    <result column="LAND_CERTIFICATE_NO" jdbcType="VARCHAR" property="landCertificateNo" />
+    <result column="LAND_USE_YEAR_LIMIT" jdbcType="DECIMAL" property="landUseYearLimit" />
+    <result column="LAND_USE_START_DATE" jdbcType="CHAR" property="landUseStartDate" />
+    <result column="LAND_USE_END_DATE" jdbcType="CHAR" property="landUseEndDate" />
+    <result column="LAND_USE_TYPE" jdbcType="CHAR" property="landUseType" />
+    <result column="LAND_USE_AREA" jdbcType="DECIMAL" property="landUseArea" />
+    <result column="OWNERSHIP_REMARK" jdbcType="VARCHAR" property="ownershipRemark" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, HOUSE_ID, PROPERTY_NO, PROPERTY_CERTIFICATE_NO, PROPERTY_USER_NAME, PROPERTY_USER_ID_NUMBER, 
+    PROPERTY_USER_TEL, COMMON_FLAG, COMMON_USER_NAME, COMMON_USER_ID_NUMBER, COMMON_USER_TEL, 
+    PRIVATE_BULID_AREA, PUBLIC_BULID_AREA, LAND_CERTIFICATE_NO, LAND_USE_YEAR_LIMIT, 
+    LAND_USE_START_DATE, LAND_USE_END_DATE, LAND_USE_TYPE, LAND_USE_AREA, OWNERSHIP_REMARK, 
+    IS_DELETED, VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, SYS_CREATE_ID, 
+    SYS_UPDATE_ID, SYS_DELETE_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_HOUSE_PROPERTY
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_HOUSE_PROPERTY
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.house.HouseProperty">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_HOUSE_PROPERTY (ID, HOUSE_ID, PROPERTY_NO, PROPERTY_CERTIFICATE_NO,
+      PROPERTY_USER_NAME, PROPERTY_USER_ID_NUMBER, 
+      PROPERTY_USER_TEL, COMMON_FLAG, COMMON_USER_NAME, 
+      COMMON_USER_ID_NUMBER, COMMON_USER_TEL, PRIVATE_BULID_AREA, 
+      PUBLIC_BULID_AREA, LAND_CERTIFICATE_NO, LAND_USE_YEAR_LIMIT, 
+      LAND_USE_START_DATE, LAND_USE_END_DATE, LAND_USE_TYPE, 
+      LAND_USE_AREA, OWNERSHIP_REMARK, IS_DELETED, 
+      VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, 
+      SYS_DELETE_TIME, SYS_CREATE_ID, SYS_UPDATE_ID, 
+      SYS_DELETE_ID)
+    values (#{id,jdbcType=VARCHAR}, #{houseId,jdbcType=VARCHAR}, #{propertyNo,jdbcType=VARCHAR}, #{propertyCertificateNo,jdbcType=VARCHAR},
+      #{propertyUserName,jdbcType=VARCHAR}, #{propertyUserIdNumber,jdbcType=VARCHAR}, 
+      #{propertyUserTel,jdbcType=VARCHAR}, #{commonFlag,jdbcType=CHAR}, #{commonUserName,jdbcType=VARCHAR}, 
+      #{commonUserIdNumber,jdbcType=VARCHAR}, #{commonUserTel,jdbcType=VARCHAR}, #{privateBulidArea,jdbcType=DECIMAL}, 
+      #{publicBulidArea,jdbcType=DECIMAL}, #{landCertificateNo,jdbcType=VARCHAR}, #{landUseYearLimit,jdbcType=DECIMAL}, 
+      #{landUseStartDate,jdbcType=CHAR}, #{landUseEndDate,jdbcType=CHAR}, #{landUseType,jdbcType=CHAR}, 
+      #{landUseArea,jdbcType=DECIMAL}, #{ownershipRemark,jdbcType=VARCHAR}, #{isDeleted,jdbcType=DECIMAL}, 
+      #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, 
+      #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, 
+      #{sysDeleteId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.house.HouseProperty">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_HOUSE_PROPERTY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      ID,
+      <if test="houseId != null">
+        HOUSE_ID,
+      </if>
+      <if test="propertyNo != null">
+        PROPERTY_NO,
+      </if>
+      <if test="propertyCertificateNo != null">
+        PROPERTY_CERTIFICATE_NO,
+      </if>
+      <if test="propertyUserName != null">
+        PROPERTY_USER_NAME,
+      </if>
+      <if test="propertyUserIdNumber != null">
+        PROPERTY_USER_ID_NUMBER,
+      </if>
+      <if test="propertyUserTel != null">
+        PROPERTY_USER_TEL,
+      </if>
+      <if test="commonFlag != null">
+        COMMON_FLAG,
+      </if>
+      <if test="commonUserName != null">
+        COMMON_USER_NAME,
+      </if>
+      <if test="commonUserIdNumber != null">
+        COMMON_USER_ID_NUMBER,
+      </if>
+      <if test="commonUserTel != null">
+        COMMON_USER_TEL,
+      </if>
+      <if test="privateBulidArea != null">
+        PRIVATE_BULID_AREA,
+      </if>
+      <if test="publicBulidArea != null">
+        PUBLIC_BULID_AREA,
+      </if>
+      <if test="landCertificateNo != null">
+        LAND_CERTIFICATE_NO,
+      </if>
+      <if test="landUseYearLimit != null">
+        LAND_USE_YEAR_LIMIT,
+      </if>
+      <if test="landUseStartDate != null">
+        LAND_USE_START_DATE,
+      </if>
+      <if test="landUseEndDate != null">
+        LAND_USE_END_DATE,
+      </if>
+      <if test="landUseType != null">
+        LAND_USE_TYPE,
+      </if>
+      <if test="landUseArea != null">
+        LAND_USE_AREA,
+      </if>
+      <if test="ownershipRemark != null">
+        OWNERSHIP_REMARK,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=VARCHAR},
+      <if test="houseId != null">
+        #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyNo != null">
+        #{propertyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyCertificateNo != null">
+        #{propertyCertificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUserName != null">
+        #{propertyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUserIdNumber != null">
+        #{propertyUserIdNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUserTel != null">
+        #{propertyUserTel,jdbcType=VARCHAR},
+      </if>
+      <if test="commonFlag != null">
+        #{commonFlag,jdbcType=CHAR},
+      </if>
+      <if test="commonUserName != null">
+        #{commonUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="commonUserIdNumber != null">
+        #{commonUserIdNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="commonUserTel != null">
+        #{commonUserTel,jdbcType=VARCHAR},
+      </if>
+      <if test="privateBulidArea != null">
+        #{privateBulidArea,jdbcType=DECIMAL},
+      </if>
+      <if test="publicBulidArea != null">
+        #{publicBulidArea,jdbcType=DECIMAL},
+      </if>
+      <if test="landCertificateNo != null">
+        #{landCertificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="landUseYearLimit != null">
+        #{landUseYearLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="landUseStartDate != null">
+        #{landUseStartDate,jdbcType=CHAR},
+      </if>
+      <if test="landUseEndDate != null">
+        #{landUseEndDate,jdbcType=CHAR},
+      </if>
+      <if test="landUseType != null">
+        #{landUseType,jdbcType=CHAR},
+      </if>
+      <if test="landUseArea != null">
+        #{landUseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="ownershipRemark != null">
+        #{ownershipRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.house.HouseProperty">
+    update GHOUSE_HOUSE_PROPERTY
+    <set>
+      <if test="houseId != null">
+        HOUSE_ID = #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyNo != null">
+        PROPERTY_NO = #{propertyNo,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyCertificateNo != null">
+        PROPERTY_CERTIFICATE_NO = #{propertyCertificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUserName != null">
+        PROPERTY_USER_NAME = #{propertyUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUserIdNumber != null">
+        PROPERTY_USER_ID_NUMBER = #{propertyUserIdNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyUserTel != null">
+        PROPERTY_USER_TEL = #{propertyUserTel,jdbcType=VARCHAR},
+      </if>
+      <if test="commonFlag != null">
+        COMMON_FLAG = #{commonFlag,jdbcType=CHAR},
+      </if>
+      <if test="commonUserName != null">
+        COMMON_USER_NAME = #{commonUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="commonUserIdNumber != null">
+        COMMON_USER_ID_NUMBER = #{commonUserIdNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="commonUserTel != null">
+        COMMON_USER_TEL = #{commonUserTel,jdbcType=VARCHAR},
+      </if>
+      <if test="privateBulidArea != null">
+        PRIVATE_BULID_AREA = #{privateBulidArea,jdbcType=DECIMAL},
+      </if>
+      <if test="publicBulidArea != null">
+        PUBLIC_BULID_AREA = #{publicBulidArea,jdbcType=DECIMAL},
+      </if>
+      <if test="landCertificateNo != null">
+        LAND_CERTIFICATE_NO = #{landCertificateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="landUseYearLimit != null">
+        LAND_USE_YEAR_LIMIT = #{landUseYearLimit,jdbcType=DECIMAL},
+      </if>
+      <if test="landUseStartDate != null">
+        LAND_USE_START_DATE = #{landUseStartDate,jdbcType=CHAR},
+      </if>
+      <if test="landUseEndDate != null">
+        LAND_USE_END_DATE = #{landUseEndDate,jdbcType=CHAR},
+      </if>
+      <if test="landUseType != null">
+        LAND_USE_TYPE = #{landUseType,jdbcType=CHAR},
+      </if>
+      <if test="landUseArea != null">
+        LAND_USE_AREA = #{landUseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="ownershipRemark != null">
+        OWNERSHIP_REMARK = #{ownershipRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.house.HouseProperty">
+    update GHOUSE_HOUSE_PROPERTY
+    set HOUSE_ID = #{houseId,jdbcType=VARCHAR},
+      PROPERTY_NO = #{propertyNo,jdbcType=VARCHAR},
+      PROPERTY_CERTIFICATE_NO = #{propertyCertificateNo,jdbcType=VARCHAR},
+      PROPERTY_USER_NAME = #{propertyUserName,jdbcType=VARCHAR},
+      PROPERTY_USER_ID_NUMBER = #{propertyUserIdNumber,jdbcType=VARCHAR},
+      PROPERTY_USER_TEL = #{propertyUserTel,jdbcType=VARCHAR},
+      COMMON_FLAG = #{commonFlag,jdbcType=CHAR},
+      COMMON_USER_NAME = #{commonUserName,jdbcType=VARCHAR},
+      COMMON_USER_ID_NUMBER = #{commonUserIdNumber,jdbcType=VARCHAR},
+      COMMON_USER_TEL = #{commonUserTel,jdbcType=VARCHAR},
+      PRIVATE_BULID_AREA = #{privateBulidArea,jdbcType=DECIMAL},
+      PUBLIC_BULID_AREA = #{publicBulidArea,jdbcType=DECIMAL},
+      LAND_CERTIFICATE_NO = #{landCertificateNo,jdbcType=VARCHAR},
+      LAND_USE_YEAR_LIMIT = #{landUseYearLimit,jdbcType=DECIMAL},
+      LAND_USE_START_DATE = #{landUseStartDate,jdbcType=CHAR},
+      LAND_USE_END_DATE = #{landUseEndDate,jdbcType=CHAR},
+      LAND_USE_TYPE = #{landUseType,jdbcType=CHAR},
+      LAND_USE_AREA = #{landUseArea,jdbcType=DECIMAL},
+      OWNERSHIP_REMARK = #{ownershipRemark,jdbcType=VARCHAR},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

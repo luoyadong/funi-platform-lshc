@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.sys.LinkFileMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.sys.LinkFile">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="LINK_TYPE" jdbcType="VARCHAR" property="linkType" />
+    <result column="LINK_ID" jdbcType="VARCHAR" property="linkId" />
+    <result column="LINK_SHOW_NAME" jdbcType="VARCHAR" property="linkShowName" />
+    <result column="LINK_ORDER" jdbcType="DECIMAL" property="linkOrder" />
+    <result column="LINK_FILE_NAME" jdbcType="VARCHAR" property="linkFileName" />
+    <result column="LINK_FILE_TYPE" jdbcType="VARCHAR" property="linkFileType" />
+    <result column="LINK_FILE_URL" jdbcType="VARCHAR" property="linkFileUrl" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, LINK_TYPE, LINK_ID, LINK_SHOW_NAME, LINK_ORDER, LINK_FILE_NAME, LINK_FILE_TYPE, 
+    LINK_FILE_URL, IS_DELETED, VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, 
+    SYS_CREATE_ID, SYS_UPDATE_ID, SYS_DELETE_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_LINK_FILE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectListByBiz" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from GHOUSE_LINK_FILE
+    where LINK_ID = #{bizId} and LINK_TYPE=#{fileType}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_LINK_FILE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.sys.LinkFile">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_LINK_FILE (ID, LINK_TYPE, LINK_ID, LINK_SHOW_NAME,
+      LINK_ORDER, LINK_FILE_NAME, LINK_FILE_TYPE, 
+      LINK_FILE_URL, IS_DELETED, VERSION, 
+      SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, 
+      SYS_CREATE_ID, SYS_UPDATE_ID, SYS_DELETE_ID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{linkType,jdbcType=VARCHAR}, #{linkId,jdbcType=VARCHAR}, #{linkShowName,jdbcType=VARCHAR},
+      #{linkOrder,jdbcType=DECIMAL}, #{linkFileName,jdbcType=VARCHAR}, #{linkFileType,jdbcType=VARCHAR}, 
+      #{linkFileUrl,jdbcType=VARCHAR}, #{isDeleted,jdbcType=DECIMAL}, #{version,jdbcType=DECIMAL}, 
+      #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, #{sysDeleteTime,jdbcType=TIMESTAMP}, 
+      #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, #{sysDeleteId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.sys.LinkFile">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_LINK_FILE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      ID,
+      <if test="linkType != null">
+        LINK_TYPE,
+      </if>
+      <if test="linkId != null">
+        LINK_ID,
+      </if>
+      <if test="linkShowName != null">
+        LINK_SHOW_NAME,
+      </if>
+      <if test="linkOrder != null">
+        LINK_ORDER,
+      </if>
+      <if test="linkFileName != null">
+        LINK_FILE_NAME,
+      </if>
+      <if test="linkFileType != null">
+        LINK_FILE_TYPE,
+      </if>
+      <if test="linkFileUrl != null">
+        LINK_FILE_URL,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=VARCHAR},
+      <if test="linkType != null">
+        #{linkType,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId != null">
+        #{linkId,jdbcType=VARCHAR},
+      </if>
+      <if test="linkShowName != null">
+        #{linkShowName,jdbcType=VARCHAR},
+      </if>
+      <if test="linkOrder != null">
+        #{linkOrder,jdbcType=DECIMAL},
+      </if>
+      <if test="linkFileName != null">
+        #{linkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="linkFileType != null">
+        #{linkFileType,jdbcType=VARCHAR},
+      </if>
+      <if test="linkFileUrl != null">
+        #{linkFileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.sys.LinkFile">
+    update GHOUSE_LINK_FILE
+    <set>
+      <if test="linkType != null">
+        LINK_TYPE = #{linkType,jdbcType=VARCHAR},
+      </if>
+      <if test="linkId != null">
+        LINK_ID = #{linkId,jdbcType=VARCHAR},
+      </if>
+      <if test="linkShowName != null">
+        LINK_SHOW_NAME = #{linkShowName,jdbcType=VARCHAR},
+      </if>
+      <if test="linkOrder != null">
+        LINK_ORDER = #{linkOrder,jdbcType=DECIMAL},
+      </if>
+      <if test="linkFileName != null">
+        LINK_FILE_NAME = #{linkFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="linkFileType != null">
+        LINK_FILE_TYPE = #{linkFileType,jdbcType=VARCHAR},
+      </if>
+      <if test="linkFileUrl != null">
+        LINK_FILE_URL = #{linkFileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.sys.LinkFile">
+    update GHOUSE_LINK_FILE
+    set LINK_TYPE = #{linkType,jdbcType=VARCHAR},
+      LINK_ID = #{linkId,jdbcType=VARCHAR},
+      LINK_SHOW_NAME = #{linkShowName,jdbcType=VARCHAR},
+      LINK_ORDER = #{linkOrder,jdbcType=DECIMAL},
+      LINK_FILE_NAME = #{linkFileName,jdbcType=VARCHAR},
+      LINK_FILE_TYPE = #{linkFileType,jdbcType=VARCHAR},
+      LINK_FILE_URL = #{linkFileUrl,jdbcType=VARCHAR},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="copyFile">
+    insert into ghouse_link_file (id, link_type, link_id, link_show_name,
+      link_order, link_file_name, link_file_type,
+      link_file_url, is_deleted, version,
+      sys_create_time, sys_update_time, sys_delete_time,
+      sys_create_id, sys_update_id, sys_delete_id
+      )
+      select sys_guid(),link_type, #{newLinkId}, link_show_name,
+      link_order, link_file_name, link_file_type,
+      link_file_url, is_deleted, version,
+      sys_create_time, sys_update_time, sys_delete_time,
+      sys_create_id, sys_update_id, sys_delete_id    from ghouse_link_file
+      where link_id=#{linkId}
+  </insert>
+</mapper>

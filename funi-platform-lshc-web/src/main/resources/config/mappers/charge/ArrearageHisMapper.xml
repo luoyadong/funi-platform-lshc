@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.charge.ArrearageHisMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.charge.ArrearageHis">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CONTR_ID" jdbcType="VARCHAR" property="contrId" />
+    <result column="LESSEE_NAME" jdbcType="VARCHAR" property="lesseeName" />
+    <result column="HOUSE_ADDRESS" jdbcType="VARCHAR" property="houseAddress" />
+    <result column="HOUSE_COUNT" jdbcType="DECIMAL" property="houseCount" />
+    <result column="RENT_DUE_DATE" jdbcType="CHAR" property="rentDueDate" />
+    <result column="RENT_START_DATE" jdbcType="CHAR" property="rentStartDate" />
+    <result column="RENT_END_DATE" jdbcType="CHAR" property="rentEndDate" />
+    <result column="RENT_AMOUNT" jdbcType="DECIMAL" property="rentAmount" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, CONTR_ID, LESSEE_NAME, HOUSE_ADDRESS, HOUSE_COUNT, RENT_DUE_DATE, RENT_START_DATE, 
+    RENT_END_DATE, RENT_AMOUNT, IS_DELETED, VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, 
+    SYS_DELETE_TIME, SYS_CREATE_ID, SYS_UPDATE_ID, SYS_DELETE_ID
+  </sql>
+  <select id="selectArrearageHisByContractId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from GHOUSE_ARREARAGE_HIS
+    where CONTR_ID = #{contractId}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_ARREARAGE_HIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_ARREARAGE_HIS
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.charge.ArrearageHis">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_ARREARAGE_HIS (CONTR_ID, LESSEE_NAME, HOUSE_ADDRESS, 
+      HOUSE_COUNT, RENT_DUE_DATE, RENT_START_DATE, 
+      RENT_END_DATE, RENT_AMOUNT, IS_DELETED, 
+      VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, 
+      SYS_DELETE_TIME, SYS_CREATE_ID, SYS_UPDATE_ID, 
+      SYS_DELETE_ID)
+    values (#{contrId,jdbcType=VARCHAR}, #{lesseeName,jdbcType=VARCHAR}, #{houseAddress,jdbcType=VARCHAR}, 
+      #{houseCount,jdbcType=DECIMAL}, #{rentDueDate,jdbcType=CHAR}, #{rentStartDate,jdbcType=CHAR}, 
+      #{rentEndDate,jdbcType=CHAR}, #{rentAmount,jdbcType=DECIMAL}, #{isDeleted,jdbcType=DECIMAL}, 
+      #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, 
+      #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, 
+      #{sysDeleteId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.charge.ArrearageHis">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_ARREARAGE_HIS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="contrId != null">
+        CONTR_ID,
+      </if>
+      <if test="lesseeName != null">
+        LESSEE_NAME,
+      </if>
+      <if test="houseAddress != null">
+        HOUSE_ADDRESS,
+      </if>
+      <if test="houseCount != null">
+        HOUSE_COUNT,
+      </if>
+      <if test="rentDueDate != null">
+        RENT_DUE_DATE,
+      </if>
+      <if test="rentStartDate != null">
+        RENT_START_DATE,
+      </if>
+      <if test="rentEndDate != null">
+        RENT_END_DATE,
+      </if>
+      <if test="rentAmount != null">
+        RENT_AMOUNT,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="contrId != null">
+        #{contrId,jdbcType=VARCHAR},
+      </if>
+      <if test="lesseeName != null">
+        #{lesseeName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseAddress != null">
+        #{houseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="houseCount != null">
+        #{houseCount,jdbcType=DECIMAL},
+      </if>
+      <if test="rentDueDate != null">
+        #{rentDueDate,jdbcType=CHAR},
+      </if>
+      <if test="rentStartDate != null">
+        #{rentStartDate,jdbcType=CHAR},
+      </if>
+      <if test="rentEndDate != null">
+        #{rentEndDate,jdbcType=CHAR},
+      </if>
+      <if test="rentAmount != null">
+        #{rentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.charge.ArrearageHis">
+    update GHOUSE_ARREARAGE_HIS
+    <set>
+      <if test="contrId != null">
+        CONTR_ID = #{contrId,jdbcType=VARCHAR},
+      </if>
+      <if test="lesseeName != null">
+        LESSEE_NAME = #{lesseeName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseAddress != null">
+        HOUSE_ADDRESS = #{houseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="houseCount != null">
+        HOUSE_COUNT = #{houseCount,jdbcType=DECIMAL},
+      </if>
+      <if test="rentDueDate != null">
+        RENT_DUE_DATE = #{rentDueDate,jdbcType=CHAR},
+      </if>
+      <if test="rentStartDate != null">
+        RENT_START_DATE = #{rentStartDate,jdbcType=CHAR},
+      </if>
+      <if test="rentEndDate != null">
+        RENT_END_DATE = #{rentEndDate,jdbcType=CHAR},
+      </if>
+      <if test="rentAmount != null">
+        RENT_AMOUNT = #{rentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.charge.ArrearageHis">
+    update GHOUSE_ARREARAGE_HIS
+    set CONTR_ID = #{contrId,jdbcType=VARCHAR},
+      LESSEE_NAME = #{lesseeName,jdbcType=VARCHAR},
+      HOUSE_ADDRESS = #{houseAddress,jdbcType=VARCHAR},
+      HOUSE_COUNT = #{houseCount,jdbcType=DECIMAL},
+      RENT_DUE_DATE = #{rentDueDate,jdbcType=CHAR},
+      RENT_START_DATE = #{rentStartDate,jdbcType=CHAR},
+      RENT_END_DATE = #{rentEndDate,jdbcType=CHAR},
+      RENT_AMOUNT = #{rentAmount,jdbcType=DECIMAL},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

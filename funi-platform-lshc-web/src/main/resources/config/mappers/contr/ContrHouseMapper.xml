@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.contr.ContrHouseMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.contr.ContrHouse">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="contr_id" jdbcType="VARCHAR" property="contrId" />
+    <result column="house_id" jdbcType="VARCHAR" property="houseId" />
+    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="version" jdbcType="DECIMAL" property="version" />
+    <result column="sys_create_time" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="sys_update_time" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="sys_delete_time" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="sys_create_id" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="sys_update_id" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="sys_delete_id" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, contr_id, house_id, is_deleted, version, sys_create_time, sys_update_time, sys_delete_time,
+    sys_create_id, sys_update_id, sys_delete_id
+  </sql>
+
+  <insert id="batchInsert" parameterType="com.funi.platform.lshc.entity.contr.ContrHouse">
+    insert into ghouse_contr_house (id, contr_id, house_id,
+      is_deleted, version, sys_create_time,
+      sys_update_time, sys_delete_time, sys_create_id,
+      sys_update_id, sys_delete_id,is_final)
+    <foreach collection="list"  separator=" union all "  item="item">
+      select
+      #{item.id}, #{contractId}, #{item.houseId},
+      #{item.isDeleted,jdbcType=DECIMAL}, #{item.version,jdbcType=DECIMAL}, #{item.sysCreateTime},
+      #{item.sysUpdateTime}, #{item.sysDeleteTime}, #{item.sysCreateId},
+      #{item.sysUpdateId}, #{item.sysDeleteId},0  from dual
+    </foreach>
+  </insert>
+
+<insert id="insertFinal" >
+    insert into ghouse_contr_house (id, contr_id, house_id,
+      is_deleted, version, sys_create_time,
+      sys_update_time, sys_delete_time, sys_create_id,
+      sys_update_id, sys_delete_id,is_final)
+
+      select sys_guid(), #{contractId}, house_id,
+      h.is_deleted,h. version, sysdate,
+      null, null, #{userId},
+      null, null,#{isFinal}
+      from ghouse_contr_house h
+      inner join ghouse_contr c on h.contr_id=c.id
+      where c.is_final=#{isFinalW} and h.is_final=#{isFinalW}  and c.service_num=#{serviceNum}
+</insert>
+
+<select id="selectByContractId"  resultType="com.funi.platform.lshc.dto.HouseDto">
+    select
+     hou.id as houseId,hou.house_no as houseNo,region.name as regionName,ai.living_area_name as village ,
+     hou.address_building addressBuilding,hou.address_unit addressUnit,hou.address_floor addressFloor,hou.address_room_no  addressRoomNo,
+     hou.build_structure buildStructure,
+        nvl2(hou.address_building，hou.address_building||'栋','') ||
+        nvl2(hou.address_unit，hou.address_unit||'单元','')   ||
+        nvl2(hou.address_floor，hou.address_floor||'层','')    ||
+        nvl2(hou.address_room_no，hou.address_room_no||'号','')  as houseCode,
+        ai.street_name as address,hou.bulid_area as houseArea,hou.rent_area as rentArea,
+        nvl2(hou.bedroom_quantity，hou.bedroom_quantity||'室','')    ||
+        nvl2(hou.livingroom_quantity，hou.livingroom_quantity||'厅','')    ||
+        nvl2(hou.bathroom_quantity，hou.bathroom_quantity||'卫','')    as huxing,
+        o.org_name as manageOrganization ,hou.manage_type as manageType,
+        hou.hourse_use_type as houseUseType
+      from ghouse_contr_house ch
+      inner join ghouse_house_info hou on hou.id=ch.house_id
+      inner join ghouse_addr_info ai on hou.address_id = ai.id
+      inner join A1_D region ON ai.ZONE_ID = region.REGION_CODE
+      inner join cf_organization o on hou.create_unit_id = o.org_code
+      where hou.is_deleted=0 and o.is_deleted=0   and ch.is_deleted=0
+      and ch.contr_id = #{contractId} and ch.is_final=#{flag}
+  </select>
+
+  <select id="selectBoByContractId" resultMap="BaseResultMap">
+      select
+        contr_id, house_id
+        from  ghouse_contr_house
+      where is_deleted=0 and  contr_id = #{contractId} and is_final=#{flag}
+  </select>
+
+    <select id="selectBoByServiceNum" resultMap="BaseResultMap">
+        select
+        ch.contr_id, ch.house_id
+        from  ghouse_contr_house  ch
+        inner join ghouse_contr c on ch.contr_id = c.id
+        where c.is_deleted=0 and  c.service_num = #{serviceNum} and c.is_final=#{flag} and ch.is_final=#{flag}
+    </select>
+
+</mapper>

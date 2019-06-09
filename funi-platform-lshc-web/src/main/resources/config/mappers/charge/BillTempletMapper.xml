@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.charge.BillTempletMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.charge.BillTemplet">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="BILL_TEMPLET_NAME" jdbcType="VARCHAR" property="billTempletName" />
+    <result column="BILL_TYPE" jdbcType="CHAR" property="billType" />
+    <result column="BILL_PROPERTY" jdbcType="CHAR" property="billProperty" />
+    <result column="MAX_ROWS" jdbcType="DECIMAL" property="maxRows" />
+    <result column="TEMPLET_REMARKS" jdbcType="VARCHAR" property="templetRemarks" />
+    <result column="BILL_CONTENT" jdbcType="VARCHAR" property="billContent" />
+    <result column="USER_FLAG" jdbcType="CHAR" property="userFlag" />
+    <result column="SYS_FLAG" jdbcType="CHAR" property="sysFlag" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="TMP_NAME" jdbcType="VARCHAR" property="tmpName" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, BILL_TEMPLET_NAME, BILL_TYPE, BILL_PROPERTY, MAX_ROWS, TEMPLET_REMARKS, BILL_CONTENT,
+    USER_FLAG, SYS_FLAG, IS_DELETED, VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, 
+    SYS_CREATE_ID, SYS_UPDATE_ID, SYS_DELETE_ID,TMP_NAME
+  </sql>
+  <select id="selectBillTempList" parameterType="com.funi.platform.lshc.query.BillTempQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from GHOUSE_BILL_TEMPLET
+    <where>
+      <if test="keyword != null and keyword != ''">
+        and BILL_TEMPLET_NAME like '%'||#{keyword}||'%'
+      </if>
+      <if test="billType != null and billType != ''">
+        and BILL_TYPE = #{billType}
+      </if>
+      <if test="billProperty != null and  billProperty != ''">
+        and BILL_PROPERTY = #{billProperty}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectEnabledBillTempletList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from GHOUSE_BILL_TEMPLET
+    <where>
+      IS_DELETED = 0
+      and USER_FLAG='1'
+    </where>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_BILL_TEMPLET
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_BILL_TEMPLET
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.charge.BillTemplet">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_BILL_TEMPLET (ID, BILL_TEMPLET_NAME, BILL_TYPE, BILL_PROPERTY,
+      MAX_ROWS, TEMPLET_REMARKS, BILL_CONTENT,
+      USER_FLAG, SYS_FLAG, IS_DELETED, 
+      VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, 
+      SYS_DELETE_TIME, SYS_CREATE_ID, SYS_UPDATE_ID, 
+      SYS_DELETE_ID,TMP_NAME)
+    values (#{id,jdbcType=VARCHAR}, #{billTempletName,jdbcType=VARCHAR}, #{billType,jdbcType=CHAR}, #{billProperty,jdbcType=CHAR},
+      #{maxRows,jdbcType=DECIMAL}, #{templetRemarks,jdbcType=VARCHAR}, #{billContent,jdbcType=VARCHAR}, 
+      #{userFlag,jdbcType=CHAR}, #{sysFlag,jdbcType=CHAR}, #{isDeleted,jdbcType=DECIMAL}, 
+      #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP},
+      #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR},
+      #{sysDeleteId,jdbcType=VARCHAR},#{tmpName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.charge.BillTemplet">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_BILL_TEMPLET
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        ID,
+        <if test="billTempletName != null">
+        BILL_TEMPLET_NAME,
+      </if>
+      <if test="billType != null">
+        BILL_TYPE,
+      </if>
+      <if test="billProperty != null">
+        BILL_PROPERTY,
+      </if>
+      <if test="maxRows != null">
+        MAX_ROWS,
+      </if>
+      <if test="templetRemarks != null">
+        TEMPLET_REMARKS,
+      </if>
+      <if test="billContent != null">
+        BILL_CONTENT,
+      </if>
+      <if test="userFlag != null">
+        USER_FLAG,
+      </if>
+      <if test="sysFlag != null">
+        SYS_FLAG,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        #{id,jdbcType=VARCHAR},
+        <if test="billTempletName != null">
+        #{billTempletName,jdbcType=VARCHAR},
+      </if>
+      <if test="billType != null">
+        #{billType,jdbcType=CHAR},
+      </if>
+      <if test="billProperty != null">
+        #{billProperty,jdbcType=CHAR},
+      </if>
+      <if test="maxRows != null">
+        #{maxRows,jdbcType=DECIMAL},
+      </if>
+      <if test="templetRemarks != null">
+        #{templetRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="billContent != null">
+        #{billContent,jdbcType=VARCHAR},
+      </if>
+      <if test="userFlag != null">
+        #{userFlag,jdbcType=CHAR},
+      </if>
+      <if test="sysFlag != null">
+        #{sysFlag,jdbcType=CHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.charge.BillTemplet">
+    update GHOUSE_BILL_TEMPLET
+    <set>
+      <if test="billTempletName != null">
+        BILL_TEMPLET_NAME = #{billTempletName,jdbcType=VARCHAR},
+      </if>
+      <if test="billType != null">
+        BILL_TYPE = #{billType,jdbcType=CHAR},
+      </if>
+      <if test="billProperty != null">
+        BILL_PROPERTY = #{billProperty,jdbcType=CHAR},
+      </if>
+      <if test="maxRows != null">
+        MAX_ROWS = #{maxRows,jdbcType=DECIMAL},
+      </if>
+      <if test="templetRemarks != null">
+        TEMPLET_REMARKS = #{templetRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="billContent != null">
+        BILL_CONTENT = #{billContent,jdbcType=VARCHAR},
+      </if>
+      <if test="userFlag != null">
+        USER_FLAG = #{userFlag,jdbcType=CHAR},
+      </if>
+      <if test="sysFlag != null">
+        SYS_FLAG = #{sysFlag,jdbcType=CHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpName != null">
+        TMP_NAME = #{tmpName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+    and VERSION =  #{version} - 1
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.charge.BillTemplet">
+    update GHOUSE_BILL_TEMPLET
+    set BILL_TEMPLET_NAME = #{billTempletName,jdbcType=VARCHAR},
+      BILL_TYPE = #{billType,jdbcType=CHAR},
+      BILL_PROPERTY = #{billProperty,jdbcType=CHAR},
+      MAX_ROWS = #{maxRows,jdbcType=DECIMAL},
+      TEMPLET_REMARKS = #{templetRemarks,jdbcType=VARCHAR},
+      BILL_CONTENT = #{billContent,jdbcType=VARCHAR},
+      USER_FLAG = #{userFlag,jdbcType=CHAR},
+      SYS_FLAG = #{sysFlag,jdbcType=CHAR},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateAllUseFlag" parameterType="com.funi.platform.lshc.entity.charge.BillTemplet">
+    update GHOUSE_BILL_TEMPLET
+    set
+    USER_FLAG = #{userFlag,jdbcType=CHAR}
+  </update>
+</mapper>

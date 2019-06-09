@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.charge.DepositMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.charge.Deposit">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CONTR_ID" jdbcType="VARCHAR" property="contrId" />
+    <result column="DEPOSIT_AMOUNT" jdbcType="DECIMAL" property="depositAmount" />
+    <result column="CHARGE_USER_ID" jdbcType="VARCHAR" property="chargeUserId" />
+    <result column="CHARGE_TIME" jdbcType="TIMESTAMP" property="chargeTime" />
+    <result column="REFUND_USER_ID" jdbcType="VARCHAR" property="refundUserId" />
+    <result column="REFUND_TIME" jdbcType="TIMESTAMP" property="refundTime" />
+    <result column="REFUND_REASON" jdbcType="VARCHAR" property="refundReason" />
+    <result column="IS_DELETED" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="SYS_CREATE_TIME" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="SYS_UPDATE_TIME" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="SYS_DELETE_TIME" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="SYS_CREATE_ID" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="SYS_UPDATE_ID" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="SYS_DELETE_ID" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+
+    <resultMap id="DepositVoMap" type="com.funi.platform.lshc.vo.DepositVo">
+        <result column="contractId" property="contractId" />
+        <result column="contractNo" property="contractNo" />
+        <result column="houseCount" property="houseCount" />
+        <result column="depositAmount" property="depositAmount" />
+        <result column="organizationName" property="organizationName" />
+        <result column="lesseeName" property="lesseeName" />
+        <result column="telephone" property="telephone" />
+        <result column="chargeUserId" property="chargeUserId" />
+        <result column="chargeTime" property="chargeTime" />
+        <result column="refundUserId" property="refundUserId" />
+        <result column="refundTime" property="refundTime" />
+        <result column="refundReason" property="refundReason" />
+        <result column="depositStatus" property="depositStatus" />
+        <result column="bizCreateOrgCode" property="bizCreateOrgCode"/>
+        <collection property="chargeAddressVoList" ofType="com.funi.platform.lshc.vo.ChargeAddressVo" >
+            <result column="livingAreaName" property="livingAreaName" />
+            <result column="houseNo" property="houseNo" />
+        </collection>
+    </resultMap>
+
+    <select id="selectDepositVoList" parameterType="com.funi.platform.lshc.query.charge.DepositQuery" resultMap="DepositVoMap">
+        SELECT
+            ( SELECT count( id ) FROM GHOUSE_CONTR_HOUSE WHERE contr_id = t1.ID ) AS houseCount,
+            t1.DEPOSIT_AMOUNT AS depositAmount,
+            t1.CREATE_UNIT_ID AS bizCreateOrgCode,
+            t2.organization_name AS organizationName,
+            t2.lessee_name AS lesseeName,
+            ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.personal_tel ELSE t2.ORGANIZATION_TEL END ) AS telephone,
+            t1.contract_no AS contractNo,
+            t1.ID AS contractId,
+            t5.LIVING_AREA_NAME AS livingAreaName,
+            t1.DEPOSIT_STATUS as depositStatus,
+            t6.CHARGE_USER_ID AS chargeUserId,
+            t6.CHARGE_TIME AS chargeTime,
+            t6.REFUND_USER_ID AS refundUserId,
+            t6.REFUND_TIME AS refundTime,
+            t6.REFUND_REASON AS refundReason,
+            t4.house_no AS houseNo
+        FROM
+            GHOUSE_CONTR t1
+            LEFT JOIN GHOUSE_LESSEE t2 ON t1.LESSEE_ID = t2.id
+            LEFT JOIN GHOUSE_CONTR_HOUSE t3 ON t3.contr_id = t1.id
+            LEFT JOIN GHOUSE_HOUSE_INFO t4 ON t3.house_id = t4.id
+            LEFT JOIN GHOUSE_ADDR_INFO t5 ON t4.address_id = t5.id
+            LEFT JOIN GHOUSE_DEPOSIT t6 ON t1.id = t6.contr_id
+        WHERE
+            t1.IS_DELETED = 0 AND t1.IS_FINAL=1
+            AND t1.CONTRACT_STATUS IN ( 'VALID', 'INVALID' )
+            <if test="addressDetail != null and addressDetail != ''">
+                AND t5.ADDRESS_DETAIL like '%' || #{addressDetail} || '%'
+            </if>
+            <if test="lesseeName != null and lesseeName != ''">
+                AND t2.lessee_name like '%' || #{lesseeName} || '%'
+            </if>
+            <if test="contractNo != null and contractNo != ''">
+                AND t1.contract_no like '%' || #{contractNo} || '%'
+            </if>
+            <if test="hourseUseType != null and hourseUseType != ''">
+                AND t4.HOURSE_USE_TYPE = #{hourseUseType}
+            </if>
+            <if test="createUnitId != null and createUnitId != ''">
+                AND t1.CREATE_UNIT_ID = #{createUnitId}
+            </if>
+            <choose>
+                <when test="depositStatus == 3">
+                    AND t1.DEPOSIT_STATUS is null
+                </when>
+                <when test="depositStatus == 1">
+                    AND t1.DEPOSIT_STATUS = #{depositStatus}
+                </when>
+                <when test="depositStatus == 2">
+                    AND t1.DEPOSIT_STATUS = #{depositStatus}
+                </when>
+            </choose>
+            <if test="chargeUserId != null and chargeUserId != ''">
+                AND t6.CHARGE_USER_ID like '%' || #{chargeUserId} || '%'
+            </if>
+            <if test="chargeStartTime != null and chargeStartTime != ''">
+                AND t6.CHARGE_TIME >= TO_TIMESTAMP(#{chargeStartTime},'YYYY-MM-DD HH24:MI:SS:FF6')
+            </if>
+            <if test="chargeEndTime != null and chargeEndTime != ''">
+                AND t6.CHARGE_TIME &lt;= TO_TIMESTAMP('${chargeEndTime} 23:59:59','YYYY-MM-DD HH24:MI:SS:FF6')
+            </if>
+            <if test="refundUserId != null and refundUserId != ''">
+                AND t6.REFUND_USER_ID like '%' || #{refundUserId} || '%'
+            </if>
+            <if test="refundStartTime != null and refundStartTime != ''">
+                AND t6.REFUND_TIME >= TO_TIMESTAMP(#{refundStartTime},'YYYY-MM-DD HH24:MI:SS:FF6')
+            </if>
+            <if test="refundEndTime != null and refundEndTime != ''">
+                AND t6.REFUND_TIME &lt;= TO_TIMESTAMP('${refundEndTime} 23:59:59','YYYY-MM-DD HH24:MI:SS:FF6')
+            </if>
+            <if test="authorityList != null and authorityList.size > 0">
+                and t1.CREATE_UNIT_ID in
+                <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
+                    #{authority.dm}
+                </foreach>
+            </if>
+            <if test="userId != null and userId != ''">
+                and t1.SYS_CREATE_ID=#{userId}
+            </if>
+        order by t1.SYS_CREATE_TIME desc,t1.SYS_UPDATE_TIME desc
+    </select>
+
+  <select id="selectChargeList" resultType="com.funi.platform.lshc.vo.ChargeVo" parameterType="com.funi.platform.lshc.query.charge.ChargeQuery">
+      SELECT
+          t1.id AS contractId,
+          t1.CREATE_UNIT_ID as bizCreateOrgCode,
+          t1.contract_no AS contractNo,
+          t1.RENT_START_DATE AS rentStartDate,
+          t1.RENT_END_DATE AS rentEndDate,
+          ( SELECT count( id ) FROM GHOUSE_CONTR_HOUSE WHERE contr_id = t1.id ) AS houseCount,
+          ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.lessee_name ELSE t2.ORGANIZATION_NAME END ) AS lesseeName,
+          ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.unique_id ELSE t2.ORGANIZATION_ID END ) AS uniqueId,
+          ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.lessee_name ELSE t2.ORGANIZATION_CONTRACT END ) AS organizationContract,
+          ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.personal_tel ELSE t2.ORGANIZATION_TEL END ) AS telephone,
+          ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.PERSONAL_PERMANENT_ADDRESS ELSE t2.ORGANIZATION_ADDRESS END ) AS organizationAddress,
+          t1.rental_payto_date AS rentalPaytoDate,
+          t1.rental_month_amount AS rentalMonthAmount
+      FROM
+          GHOUSE_CONTR t1
+          LEFT JOIN GHOUSE_LESSEE t2 ON t1.LESSEE_ID = t2.id
+      WHERE
+          t1.IS_DELETED = 0 AND t1.IS_FINAL=1
+          AND t1.CONTRACT_STATUS in ('VALID', 'OVERDUE')
+          <if test="lesseeName != null and lesseeName != ''">
+            AND t2.lessee_name = #{lesseeName}
+          </if>
+          <if test="uniqueId != null and uniqueId != ''">
+            AND t2.unique_id = #{uniqueId}
+          </if>
+          <if test="organizationName != null and organizationName != ''">
+            AND t2.ORGANIZATION_NAME = #{organizationName}
+          </if>
+          <if test="houseNo != null and houseNo != ''">
+            AND t1.id IN (
+              SELECT t1.contr_id FROM GHOUSE_CONTR_HOUSE t1
+              LEFT JOIN GHOUSE_HOUSE_INFO t2 ON t1.house_id = t2.id
+              WHERE
+              t2.HOUSE_NO = #{houseNo}
+            )
+          </if>
+          <if test="authorityList != null and authorityList.size > 0">
+              and t1.create_unit_id in
+              <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
+                  #{authority.dm}
+              </foreach>
+          </if>
+          <if test="userId != null and userId != ''">
+              and t1.SYS_CREATE_ID=#{userId}
+          </if>
+      order by t1.SYS_CREATE_TIME desc,t1.SYS_UPDATE_TIME desc
+  </select>
+
+    <select id="selectChargeHouseVoList" parameterType="java.lang.String" resultType="com.funi.platform.lshc.vo.ChargeHouseVo">
+        SELECT
+            t2.HOUSE_NO AS houseNo,
+            t3.LIVING_AREA_NAME AS livingAreaName,
+            NVL(t2.ADDRESS_BUILDING,'') || '栋' || NVL(t2.ADDRESS_UNIT,'') || '单元' || NVL(t2.ADDRESS_FLOOR,'') || '层' || NVL(t2.ADDRESS_ROOM_NO,'') || '号' AS houseAddress ,
+            t2.rent_area AS rentArea,
+            t2.HOURSE_USE_TYPE AS hourseUseType,
+            t4.org_name AS createUnitId
+        FROM
+            GHOUSE_CONTR_HOUSE t1
+            LEFT JOIN GHOUSE_HOUSE_INFO t2 ON t1.house_id = t2.id
+            LEFT JOIN GHOUSE_ADDR_INFO t3 ON t2.ADDRESS_ID = t3.id
+            LEFT JOIN cf_organization t4 on t2.create_unit_id=t4.ORG_CODE
+        WHERE
+            t1.contr_id = #{contractId}
+        order by t1.SYS_CREATE_TIME desc,t1.SYS_UPDATE_TIME desc
+    </select>
+
+  <resultMap id="ChargeDetailVoMap" type="com.funi.platform.lshc.vo.ChargeDetailVo">
+    <result column="contractId" property="contractId" />
+    <result column="contractNo" property="contractNo" />
+    <result column="lesseeName" property="lesseeName" />
+    <result column="rentArea" property="rentArea" />
+    <result column="rentalMonthAmount" property="rentalMonthAmount" />
+    <result column="rentStartDate" property="rentStartDate" />
+    <result column="rentEndDate" property="rentEndDate" />
+    <result column="rentalPaytoDate" property="rentalPaytoDate" />
+    <result column="backRentAmount" property="backRentAmount" />
+    <result column="backRentStartDate" property="backRentStartDate" />
+    <result column="backRentEndDate" property="backRentEndDate" />
+    <result column="latefeePayment" property="latefeePayment" />
+    <result column="latefeePaymentType" property="latefeePaymentType" />
+    <result column="latefeePaymentValue1" property="latefeePaymentValue1" />
+    <result column="latefeePaymentValue2" property="latefeePaymentValue2" />
+    <result column="lateFeeAmount" property="lateFeeAmount" />
+    <result column="rentalPaymentType" property="rentalPaymentType" />
+    <collection property="chargeAddressVoList" ofType="com.funi.platform.lshc.vo.ChargeAddressVo" >
+      <result column="regionName" property="regionName" />
+      <result column="addressDetail" property="addressDetail" />
+      <result column="addressBuilding" property="addressBuilding" />
+      <result column="addressUnit" property="addressUnit" />
+      <result column="addressFloor" property="addressFloor" />
+      <result column="addressRoomNo" property="addressRoomNo" />
+      <result column="livingAreaName" property="livingAreaName" />
+      <result column="houseNo" property="houseNo" />
+    </collection>
+  </resultMap>
+
+    <select id="selectChargeDetailVo" parameterType="java.lang.String" resultMap="ChargeDetailVoMap">
+        SELECT
+            t1.id AS contractId,
+            t1.CONTRACT_NO AS contractNo,
+            ( CASE WHEN t2.RENTOR_TYPE = '1' THEN t2.lessee_name ELSE t2.ORGANIZATION_NAME END ) AS lesseeName,
+            t1.RENT_AREA AS rentArea,
+            t1.RENTAL_MONTH_AMOUNT AS rentalMonthAmount,
+            t1.RENT_START_DATE AS rentStartDate,
+            t1.RENT_END_DATE AS rentEndDate,
+            t1.RENTAL_PAYTO_DATE AS rentalPaytoDate,
+            t1.LATEFEE_PAYMENT AS latefeePayment,
+            t1.LATEFEE_PAYMENT_TYPE AS latefeePaymentType,
+            t1.LATEFEE_PAYMENT_VALUE1 AS latefeePaymentValue1,
+            t1.LATEFEE_PAYMENT_VALUE2 AS latefeePaymentValue2,
+            t1.rental_payment_type as rentalPaymentType,
+            t6.name AS regionName,
+            t5.address_detail AS addressDetail,
+            t4.ADDRESS_BUILDING AS addressBuilding,
+            t4.ADDRESS_UNIT AS addressUnit,
+            t4.ADDRESS_FLOOR AS addressFloor,
+            t4.ADDRESS_ROOM_NO AS addressRoomNo,
+            t5.LIVING_AREA_NAME AS livingAreaName,
+            t4.HOUSE_NO AS houseNo
+        FROM
+            GHOUSE_CONTR t1
+            LEFT JOIN GHOUSE_LESSEE t2 ON t1.LESSEE_ID = t2.id
+            LEFT JOIN GHOUSE_CONTR_HOUSE t3 ON t3.contr_id = t1.id
+            LEFT JOIN GHOUSE_HOUSE_INFO t4 ON t3.house_id = t4.id
+            LEFT JOIN GHOUSE_ADDR_INFO t5 ON t4.address_id = t5.id
+            LEFT JOIN A1_D t6 ON t5.zone_id = t6.region_code
+        WHERE
+            t1.IS_DELETED = 0  AND t1.IS_FINAL=1
+            AND t1.CONTRACT_STATUS IN ( 'VALID', 'INVALID' )
+            <if test="contractIdList!=null and contractIdList!=''">
+                <if test="contractIdList.size()>0">
+                    and t1.id in
+                    <foreach collection="contractIdList" index="index" item="item" open="(" close=")" separator=",">
+                        #{item}
+                    </foreach>
+                </if>
+            </if>
+    </select>
+
+  <sql id="Base_Column_List">
+    ID, CONTR_ID, DEPOSIT_AMOUNT, CHARGE_USER_ID, CHARGE_TIME, REFUND_USER_ID, REFUND_TIME,
+    REFUND_REASON, IS_DELETED, VERSION, SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, 
+    SYS_CREATE_ID, SYS_UPDATE_ID, SYS_DELETE_ID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from GHOUSE_DEPOSIT
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByContractId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from GHOUSE_DEPOSIT
+        where CONTR_ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <update id="updateContractDepositStatus">
+        update GHOUSE_CONTR set DEPOSIT_STATUS = #{depositStatus} where id=#{contractId}
+    </update>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from GHOUSE_DEPOSIT
+    where ID = #{contractId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.charge.Deposit">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+        SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_DEPOSIT (ID, CONTR_ID, DEPOSIT_AMOUNT, CHARGE_USER_ID,
+      CHARGE_TIME, REFUND_USER_ID, REFUND_TIME, 
+      REFUND_REASON, IS_DELETED, VERSION, 
+      SYS_CREATE_TIME, SYS_UPDATE_TIME, SYS_DELETE_TIME, 
+      SYS_CREATE_ID, SYS_UPDATE_ID, SYS_DELETE_ID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{contrId,jdbcType=VARCHAR}, #{depositAmount,jdbcType=DECIMAL}, #{chargeUserId,jdbcType=VARCHAR},
+      #{chargeTime,jdbcType=TIMESTAMP}, #{refundUserId,jdbcType=VARCHAR}, #{refundTime,jdbcType=TIMESTAMP}, 
+      #{refundReason,jdbcType=VARCHAR}, #{isDeleted,jdbcType=DECIMAL}, #{version,jdbcType=DECIMAL}, 
+      #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, #{sysDeleteTime,jdbcType=TIMESTAMP},
+      #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, #{sysDeleteId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.charge.Deposit">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+        SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into GHOUSE_DEPOSIT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        ID,
+      <if test="contrId != null">
+        CONTR_ID,
+      </if>
+        <if test="depositAmount != null">
+            DEPOSIT_AMOUNT,
+        </if>
+      <if test="chargeUserId != null">
+        CHARGE_USER_ID,
+      </if>
+      <if test="chargeTime != null">
+        CHARGE_TIME,
+      </if>
+      <if test="refundUserId != null">
+        REFUND_USER_ID,
+      </if>
+      <if test="refundTime != null">
+        REFUND_TIME,
+      </if>
+      <if test="refundReason != null">
+        REFUND_REASON,
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME,
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME,
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME,
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID,
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID,
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+        #{id,jdbcType=VARCHAR},
+      <if test="contrId != null">
+        #{contrId,jdbcType=VARCHAR},
+      </if>
+        <if test="depositAmount != null">
+            #{depositAmount,jdbcType=DECIMAL},
+        </if>
+      <if test="chargeUserId != null">
+        #{chargeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeTime != null">
+        #{chargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundUserId != null">
+        #{refundUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundTime != null">
+        #{refundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundReason != null">
+        #{refundReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.charge.Deposit">
+    update GHOUSE_DEPOSIT
+    <set>
+      <if test="contrId != null">
+        CONTR_ID = #{contrId,jdbcType=VARCHAR},
+      </if>
+        <if test="depositAmount != null">
+            DEPOSIT_AMOUNT = #{depositAmount,jdbcType=DECIMAL},
+        </if>
+      <if test="chargeUserId != null">
+        CHARGE_USER_ID = #{chargeUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeTime != null">
+        CHARGE_TIME = #{chargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundUserId != null">
+        REFUND_USER_ID = #{refundUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundTime != null">
+        REFUND_TIME = #{refundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundReason != null">
+        REFUND_REASON = #{refundReason,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="sysCreateTime != null">
+        SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysUpdateTime != null">
+        SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysDeleteTime != null">
+        SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysCreateId != null">
+        SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUpdateId != null">
+        SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysDeleteId != null">
+        SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.charge.Deposit">
+    update GHOUSE_DEPOSIT
+    set CONTR_ID = #{contrId,jdbcType=VARCHAR},
+      DEPOSIT_AMOUNT = #{depositAmount,jdbcType=DECIMAL},
+      CHARGE_USER_ID = #{chargeUserId,jdbcType=VARCHAR},
+      CHARGE_TIME = #{chargeTime,jdbcType=TIMESTAMP},
+      REFUND_USER_ID = #{refundUserId,jdbcType=VARCHAR},
+      REFUND_TIME = #{refundTime,jdbcType=TIMESTAMP},
+      REFUND_REASON = #{refundReason,jdbcType=VARCHAR},
+      IS_DELETED = #{isDeleted,jdbcType=DECIMAL},
+      VERSION = #{version,jdbcType=DECIMAL},
+      SYS_CREATE_TIME = #{sysCreateTime,jdbcType=TIMESTAMP},
+      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP},
+      SYS_DELETE_TIME = #{sysDeleteTime,jdbcType=TIMESTAMP},
+      SYS_CREATE_ID = #{sysCreateId,jdbcType=VARCHAR},
+      SYS_UPDATE_ID = #{sysUpdateId,jdbcType=VARCHAR},
+      SYS_DELETE_ID = #{sysDeleteId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

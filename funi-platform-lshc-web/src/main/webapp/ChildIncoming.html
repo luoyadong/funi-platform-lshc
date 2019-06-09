@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>子账户入账</title>
+    <script type="text/javascript" src="/psfs/app/platform/us/jquery/jquery-1.11.3.min.js"></script>
+</head>
+<style type="text/css">
+    input {
+        width: 200px;
+    }
+</style>
+<body>
+
+<form id="pushForm">
+    <table>
+        <tr>
+            <td>入账银行端口(支持多家银行)</td>
+            <td>
+                <select name="bankPort" id="bankPort">
+                    <option selected value="7102">预售资金测试银行</option>
+                    <option value="7103">工商银行</option>
+                    <option value="7104">中国银行</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>入账类型</td>
+            <td>
+            <select name="inType" id="inTypeId">
+                <option selected value="0">自有资金入账</option>
+                <option value="1">贷款资金入账</option>
+                <option value="2">主账户入账</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td>资金类型</td>
+            <td>
+                <select name="fundType">
+                    <option selected value="001">定金</option>
+                    <option value="002">首付</option>
+                    <option value="003">一次性付款</option>
+                    <option value="004">贷款资金</option>
+                    <option value="005">分期付款资金</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>主账户业务件编号</td>
+            <td><input name="masterBizNo" type="text"></td>
+        </tr>
+        <tr>
+            <td>资金监管编号</td>
+            <td><input name="supNo" type="text"></td>
+        </tr>
+        <tr>
+            <td>监管主账号（此为入账必填项）</td>
+            <td><input name="masterAccountNo" type="text"></td>
+        </tr>
+        <tr id="childAccountId">
+            <td>子账号</td>
+            <td><input name="childAccountNo" type="text"></td>
+        </tr>
+        <tr id="contId">
+            <td>合同号（不填表示不明入账）</td>
+            <td><input name="preSellFundSupervisionContractNo" type="text"></td>
+        </tr>
+        <tr>
+            <td>打款金额</td>
+            <td><input name="occurFund" type="text"></td>
+        </tr>
+        <tr>
+            <td>打款人开户行</td>
+            <td><input name="sourceAccountBankName" type="text"></td>
+        </tr>
+        <tr>
+            <td>打款人账户号</td>
+            <td><input name="sourceAccountNo" type="text"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" id="push" style="width: 200px" value="打款"></td>
+        </tr>
+    </table>
+</form>
+<script language="JavaScript">
+
+    $(function () {
+        $("#inTypeId").change(function(){
+            var fundType=$("#inTypeId").val();
+            if("2" == fundType){
+                $("#childAccountId").hide();
+                $("#contId").hide();
+            }else{
+                $("#childAccountId").show();
+                $("#contId").show();
+            }
+        });
+
+        $("#push").click(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/psfs/SystemController/fundInComing",
+                data: $('#pushForm').serialize(),
+                success: function (result) {
+                    alert(result.message);
+                },
+                error: function (data) {
+                    alert("推送失败");
+                }
+
+            })
+        })});
+</script>
+</body>
+</html>

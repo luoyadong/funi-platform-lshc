@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.contr.ResidentMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.contr.Resident">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="resident_name" jdbcType="VARCHAR" property="residentName" />
+    <result column="resident_sex" jdbcType="CHAR" property="residentSex" />
+    <result column="resident_id_card_no" jdbcType="VARCHAR" property="residentIdCardNo" />
+    <result column="resident_tel_no" jdbcType="VARCHAR" property="residentTelNo" />
+    <result column="resident_comment" jdbcType="VARCHAR" property="residentComment" />
+    <result column="contr_id" jdbcType="VARCHAR" property="contrId" />
+    <result column="live_flg" jdbcType="CHAR" property="liveFlg" />
+    <result column="check_in_date" jdbcType="CHAR" property="checkInDate" />
+    <result column="check_out_date" jdbcType="CHAR" property="checkOutDate" />
+    <result column="operator_user_id" jdbcType="VARCHAR" property="operatorUserId" />
+    <result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="version" jdbcType="DECIMAL" property="version" />
+    <result column="sys_create_time" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="sys_update_time" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="sys_delete_time" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="sys_create_id" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="sys_update_id" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="sys_delete_id" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, resident_name, resident_sex, resident_id_card_no, resident_tel_no, resident_comment,
+    contr_id, live_flg, check_in_date, check_out_date, operator_user_id, operator_time,
+    is_deleted, version, sys_create_time, sys_update_time, sys_delete_time, sys_create_id,
+    sys_update_id, sys_delete_id
+  </sql>
+
+  <insert id="batchInsert">
+    insert into ghouse_resident (id, resident_name, resident_sex,
+      resident_id_card_no, resident_tel_no, resident_comment,
+      contr_id, live_flg, check_in_date,
+      check_out_date, operator_user_id, operator_time,
+      is_deleted, version, sys_create_time,
+      sys_update_time, sys_delete_time, sys_create_id,
+      sys_update_id, sys_delete_id,is_final)
+    <foreach collection="list"  separator=" union all "  item="item">
+      select
+      #{item.id}, #{item.residentName}, #{item.residentSex,jdbcType=CHAR},
+      #{item.residentIdCardNo}, #{item.residentTelNo}, #{item.residentComment},
+      #{contractId}, #{item.liveFlg,jdbcType=CHAR}, #{item.checkInDate,jdbcType=CHAR},
+      #{item.checkOutDate,jdbcType=CHAR}, #{item.operatorUserId}, #{item.operatorTime},
+      #{item.isDeleted,jdbcType=DECIMAL}, #{item.version,jdbcType=DECIMAL}, #{item.sysCreateTime},
+      #{item.sysUpdateTime}, #{item.sysDeleteTime}, #{item.sysCreateId},
+      #{item.sysUpdateId}, #{item.sysDeleteId},0  from dual
+    </foreach>
+  </insert>
+
+  <insert id="insertFinal">
+   insert into ghouse_resident (id, resident_name, resident_sex,
+      resident_id_card_no, resident_tel_no, resident_comment,
+      contr_id, live_flg, check_in_date,
+      check_out_date, operator_user_id, operator_time,
+      is_deleted, version, sys_create_time,
+      sys_update_time, sys_delete_time, sys_create_id,
+      sys_update_id, sys_delete_id,is_final)
+       select
+        sys_guid(), resident_name, resident_sex,
+      resident_id_card_no, resident_tel_no, resident_comment,
+      #{contractId}, live_flg, check_in_date,
+      check_out_date, operator_user_id, operator_time,
+      0, c.version, sysdate,
+      null, null, #{userId},
+      null, null,#{isFinal}
+      from ghouse_resident r
+      inner join ghouse_contr c on r.contr_id = c.id
+      where  c.is_final=#{isFinalW} and r.is_final=#{isFinalW} and c.service_num=#{serviceNum}
+  </insert>
+
+  <select id="selectByContractId"  resultMap="BaseResultMap">
+    select
+       resident_name, resident_sex, resident_id_card_no, resident_tel_no, resident_comment,
+      contr_id, live_flg, check_in_date, check_out_date, operator_user_id, operator_time
+    from ghouse_resident r
+    inner join ghouse_contr c on r.contr_id = c.id
+    where r.contr_id = #{contractId} and r.is_final=#{flag} and c.is_final=#{flag}
+  </select>
+
+  <select id="selectByQuery" resultType="com.funi.platform.lshc.dto.ResidentDto">
+      select
+          distinct
+        r.resident_name as residentName,decode(r.resident_sex,'1','男','2','女','未知') as residentSex,r.resident_tel_no as residentTelNo,
+        r.resident_id_card_no as residentIdCardNo,c.contract_no as contractNo,
+        nvl2(hou.address_building，hou.address_building||'栋','') ||
+        nvl2(hou.address_building，hou.address_unit||'单元','')   ||
+        nvl2(hou.address_building，hou.address_floor||'层','')    ||
+        nvl2(hou.address_building，hou.address_room_no||'号','')  as houseCode,
+        region.name regionName,ai.living_area_name livingAreaName,hou.HOUSE_NO as houseNoSys,ai.address_detail address
+        ,c.rent_start_date rentStartDate,c.rent_end_date rentEndDate,c.contract_invalid_date contractInvalidDate
+        from ghouse_resident r
+        inner join ghouse_contr c on r.contr_id = c.id
+        inner join ghouse_contr_house ch  on c.id = ch.contr_id
+        inner join ghouse_house_info hou on hou.id=ch.house_id
+        inner join ghouse_addr_info ai on hou.address_id = ai.id
+        inner join A1_D region on ai.zone_id = region.region_code
+      where r.is_final=1 and c.is_final=1 and r.is_deleted=0 and c.is_deleted=0
+        and ch.is_final=1
+        <if test="villageId!=null">
+            and ai.id=#{villageId}
+        </if>
+        <if test="name!=null">
+           and r.resident_name=#{name}
+        </if>
+      <if test="contractNo!=null">
+          and c.contract_no=#{contractNo}
+      </if>
+      order by c.contract_no desc
+  </select>
+
+</mapper>

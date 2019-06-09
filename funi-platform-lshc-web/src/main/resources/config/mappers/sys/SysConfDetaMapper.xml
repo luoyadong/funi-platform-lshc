@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.sys.SysConfDetaMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.sys.SysConfDeta">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="config_type_code" jdbcType="VARCHAR" property="configTypeCode" />
+    <result column="config_detail_name" jdbcType="VARCHAR" property="configDetailName" />
+    <result column="config_detail_order" jdbcType="DECIMAL" property="configDetailOrder" />
+    <result column="sys_flag" jdbcType="CHAR" property="sysFlag" />
+    <result column="detail_description" jdbcType="VARCHAR" property="detailDescription" />
+    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, config_type_code, config_detail_name, config_detail_order, sys_flag, detail_description,
+    is_deleted, version, sys_create_time, sys_update_time, sys_delete_time, sys_create_id,
+    sys_update_id, sys_delete_id
+  </sql>
+
+ <select id="selectById" resultMap="BaseResultMap">
+   select <include refid="Base_Column_List"/>
+   from ghouse_sys_conf_deta where is_deleted=0 and id=#{id}
+ </select>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.sys.SysConfDeta">
+
+    insert into ghouse_sys_conf_deta (id, config_type_code, config_detail_name,
+      config_detail_order, sys_flag, detail_description,
+      is_deleted, version, sys_create_time,
+      sys_update_time, sys_delete_time, sys_create_id,
+      sys_update_id, sys_delete_id)
+    values (#{id,jdbcType=VARCHAR}, #{configTypeCode,jdbcType=VARCHAR}, #{configDetailName,jdbcType=VARCHAR},
+      #{configDetailOrder,jdbcType=DECIMAL}, #{sysFlag,jdbcType=CHAR}, #{detailDescription,jdbcType=VARCHAR}, 
+      #{isDeleted,jdbcType=DECIMAL}, #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP},
+      #{sysUpdateTime,jdbcType=TIMESTAMP}, #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR},
+      #{sysUpdateId,jdbcType=VARCHAR}, #{sysDeleteId,jdbcType=VARCHAR})
+  </insert>
+
+
+  <update id="modify" parameterType="com.funi.platform.lshc.entity.sys.SysConfDeta">
+    update GHOUSE_SYS_CONF_DETA
+    set
+      config_detail_name = #{configDetailName,jdbcType=VARCHAR},
+      config_detail_order = #{configDetailOrder,jdbcType=DECIMAL},
+      config_type_code=#{configTypeCode}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="remove">
+    update  GHOUSE_SYS_CONF_DETA set is_deleted=1 where id in
+    <foreach collection="list"    separator=","  item="id" open="(" close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <select id="selectByQuery" resultType="com.funi.platform.lshc.dto.BizParameterDto">
+    select
+        d.id, d.config_detail_name parameterName ,d.config_detail_order parameterOrder,t.config_type_name bizTypeName
+        from ghouse_sys_conf_deta d
+        inner join ghouse_sys_conf_type t on d.config_type_code = t.config_type_code
+    where d.is_deleted=0 and t.is_deleted=0
+    <if test="type!=null">
+      and t.config_type_code =#{type}
+    </if>
+  </select>
+
+  <select id="selectAllType" resultType="com.funi.platform.lshc.dto.ComboboxDto">
+    select config_type_code as value, config_type_name as name
+    from ghouse_sys_conf_type where is_deleted=0
+  </select>
+
+<select id="selectSysConfDetaByType" resultType="com.funi.platform.lshc.dto.ComboboxDto">
+    select id as value, config_detail_name as name
+    from ghouse_sys_conf_deta where is_deleted=0 and config_type_code=#{type}
+    order by CONFIG_DETAIL_ORDER
+  </select>
+
+    <select id="selectSysConfDetaNameByType" resultType="com.funi.platform.lshc.dto.ComboboxDto">
+    select config_detail_name as value, config_detail_name as name
+    from ghouse_sys_conf_deta where is_deleted=0 and config_type_code=#{type}
+    order by CONFIG_DETAIL_ORDER
+  </select>
+</mapper>

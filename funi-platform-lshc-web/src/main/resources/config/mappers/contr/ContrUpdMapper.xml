@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.contr.ContrUpdMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.contr.ContrUpd">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="contract_no_bef" jdbcType="VARCHAR" property="contractNoBef" />
+    <result column="contract_no_aft" jdbcType="VARCHAR" property="contractNoAft" />
+    <result column="update_reason" jdbcType="VARCHAR" property="updateReason" />
+    <result column="update_review_date" jdbcType="CHAR" property="updateReviewDate" />
+    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="version" jdbcType="DECIMAL" property="version" />
+    <result column="sys_create_time" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="sys_update_time" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="sys_delete_time" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="sys_create_id" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="sys_update_id" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="sys_delete_id" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, contract_no_bef, contract_no_aft, update_reason, update_review_date, is_deleted,
+    version, sys_create_time, sys_update_time, sys_delete_time, sys_create_id, sys_update_id,
+    sys_delete_id
+  </sql>
+
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.contr.ContrUpd">
+    insert into ghouse_contr_upd (id, contract_no_bef, contract_no_aft,
+      update_reason, update_review_date, is_deleted,
+      version, sys_create_time, sys_update_time,
+      sys_delete_time, sys_create_id, sys_update_id,
+      sys_delete_id)
+    values (#{id,jdbcType=VARCHAR}, #{contractNoBef,jdbcType=VARCHAR}, #{contractNoAft,jdbcType=VARCHAR}, 
+      #{updateReason,jdbcType=VARCHAR}, #{updateReviewDate,jdbcType=CHAR}, #{isDeleted,jdbcType=DECIMAL}, 
+      #{version,jdbcType=DECIMAL}, #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, 
+      #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, 
+      #{sysDeleteId,jdbcType=VARCHAR})
+  </insert>
+
+</mapper>

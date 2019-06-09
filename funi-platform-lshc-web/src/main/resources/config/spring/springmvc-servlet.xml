@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                     http://www.springframework.org/schema/beans/spring-beans.xsd
+                     http://www.springframework.org/schema/task
+                     http://www.springframework.org/schema/task/spring-task-3.1.xsd"
+                    xmlns:task="http://www.springframework.org/schema/task"
+>
+
+    <!-- 不进行拦截的 -->
+    <!--<mvc:resources location="/app" mapping="/**/*" />-->
+    <!--<mvc:resources location="/images" mapping="/images/**/*" />-->
+    <!-- 支持上传文件 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+    <bean id="uploadFileHandlerFactory" class="com.funi.framework.mvc.eic.support.UploadFileHandlerFactory"/>
+    <bean id="excelImporter" class="com.funi.framework.data.migrate.excel.ExcelImporter"/>
+    <bean id="excelExporter" class="com.funi.framework.data.migrate.excel.ExcelExporter"/>
+    <task:annotation-driven/>
+</beans>

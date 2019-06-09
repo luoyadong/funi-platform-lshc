@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.contr.LesseeMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.contr.Lessee">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="lessee_name" jdbcType="VARCHAR" property="lesseeName" />
+    <result column="unique_id" jdbcType="VARCHAR" property="uniqueId" />
+    <result column="organization_id" jdbcType="VARCHAR" property="organizationId" />
+    <result column="organization_name" jdbcType="VARCHAR" property="organizationName" />
+    <result column="organization_contract" jdbcType="VARCHAR" property="organizationContract" />
+    <result column="organization_tel" jdbcType="VARCHAR" property="organizationTel" />
+    <result column="organization_id_no" jdbcType="VARCHAR" property="organizationIdNo" />
+    <result column="organization_address" jdbcType="VARCHAR" property="organizationAddress" />
+    <result column="personal_sex" jdbcType="CHAR" property="personalSex" />
+    <result column="personal_tel" jdbcType="VARCHAR" property="personalTel" />
+    <result column="personal_career" jdbcType="VARCHAR" property="personalCareer" />
+    <result column="personal_work_unit" jdbcType="VARCHAR" property="personalWorkUnit" />
+    <result column="personal_annual_income" jdbcType="DECIMAL" property="personalAnnualIncome" />
+    <result column="subsistence_allowances_flg" jdbcType="CHAR" property="subsistenceAllowancesFlg" />
+    <result column="personal_permanent_address" jdbcType="VARCHAR" property="personalPermanentAddress" />
+    <result column="organization_lessee_name" jdbcType="VARCHAR" property="organizationLesseeName" />
+    <result column="organization_lessee_id_no" jdbcType="VARCHAR" property="organizationLesseeIdNo" />
+    <result column="organization_lessee_tel" jdbcType="VARCHAR" property="organizationLesseeTel" />
+    <result column="rentor_type" jdbcType="VARCHAR" property="rentorType" />
+    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
+    <result column="version" jdbcType="DECIMAL" property="version" />
+    <result column="sys_create_time" jdbcType="TIMESTAMP" property="sysCreateTime" />
+    <result column="sys_update_time" jdbcType="TIMESTAMP" property="sysUpdateTime" />
+    <result column="sys_delete_time" jdbcType="TIMESTAMP" property="sysDeleteTime" />
+    <result column="sys_create_id" jdbcType="VARCHAR" property="sysCreateId" />
+    <result column="sys_update_id" jdbcType="VARCHAR" property="sysUpdateId" />
+    <result column="sys_delete_id" jdbcType="VARCHAR" property="sysDeleteId" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, lessee_name, unique_id, organization_id, organization_name, organization_contract,
+    organization_tel, organization_id_no, organization_address, personal_sex, personal_tel,
+    personal_career, personal_work_unit, personal_annual_income, subsistence_allowances_flg,
+    personal_permanent_address, organization_lessee_name, organization_lessee_id_no, rentor_type,
+    organization_lessee_tel, is_deleted, version, sys_create_time, sys_update_time, sys_delete_time,
+    sys_create_id, sys_update_id, sys_delete_id
+  </sql>
+
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.contr.Lessee">
+    insert into ghouse_lessee (id, lessee_name, unique_id,
+      organization_id, organization_name, organization_contract,
+      organization_tel, organization_id_no, organization_address,
+      personal_sex, personal_tel, personal_career,
+      personal_work_unit, personal_annual_income,
+      subsistence_allowances_flg, personal_permanent_address,
+      organization_lessee_name, organization_lessee_id_no,rentor_type,
+      organization_lessee_tel, is_deleted, version,
+      sys_create_time, sys_update_time, sys_delete_time,
+      sys_create_id, sys_update_id, sys_delete_id,is_final
+      )
+    values (#{id,jdbcType=VARCHAR}, #{lesseeName,jdbcType=VARCHAR}, #{uniqueId,jdbcType=VARCHAR},
+      #{organizationId,jdbcType=VARCHAR}, #{organizationName,jdbcType=VARCHAR}, #{organizationContract,jdbcType=VARCHAR},
+      #{organizationTel,jdbcType=VARCHAR}, #{organizationIdNo,jdbcType=VARCHAR}, #{organizationAddress,jdbcType=VARCHAR},
+      #{personalSex,jdbcType=CHAR}, #{personalTel,jdbcType=VARCHAR}, #{personalCareer,jdbcType=VARCHAR},
+      #{personalWorkUnit,jdbcType=VARCHAR}, #{personalAnnualIncome,jdbcType=DECIMAL},
+      #{subsistenceAllowancesFlg,jdbcType=CHAR}, #{personalPermanentAddress,jdbcType=VARCHAR},
+      #{organizationLesseeName,jdbcType=VARCHAR}, #{organizationLesseeIdNo,jdbcType=VARCHAR},#{rentorType},
+      #{organizationLesseeTel,jdbcType=VARCHAR}, #{isDeleted,jdbcType=DECIMAL}, #{version,jdbcType=DECIMAL},
+      #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, #{sysDeleteTime,jdbcType=TIMESTAMP},
+      #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, #{sysDeleteId,jdbcType=VARCHAR},0
+      )
+  </insert>
+
+  <insert id="insertFinal" parameterType="com.funi.platform.lshc.entity.contr.Lessee">
+    insert into ghouse_lessee (id, lessee_name, unique_id,
+    organization_id, organization_name, organization_contract,
+    organization_tel, organization_id_no, organization_address,
+    personal_sex, personal_tel, personal_career,
+    personal_work_unit, personal_annual_income,
+    subsistence_allowances_flg, personal_permanent_address,
+    organization_lessee_name, organization_lessee_id_no,rentor_type,
+    organization_lessee_tel, is_deleted, version,
+    sys_create_time, sys_update_time, sys_delete_time,
+    sys_create_id, sys_update_id, sys_delete_id,is_final
+    )
+    select #{id}, lessee_name, unique_id,
+    organization_id, organization_name, organization_contract,
+    organization_tel, organization_id_no, organization_address,
+    personal_sex, personal_tel, personal_career,
+    personal_work_unit, personal_annual_income,
+    subsistence_allowances_flg, personal_permanent_address,
+    organization_lessee_name, organization_lessee_id_no,rentor_type,
+    organization_lessee_tel, c.is_deleted, c.version,
+    sysdate, null, null,
+    #{userId}, null, null,#{isFinal}
+    from ghouse_lessee l
+    inner join ghouse_contr c on l.id = c.lessee_id
+    where c.service_num=#{serviceNum} and c.is_final=#{isFinalW} and l.is_final=#{isFinalW}
+  </insert>
+
+  <select id="selectByContractId"  resultMap="BaseResultMap">
+    select
+      lessee_name, unique_id, organization_id, organization_name, organization_contract,
+    organization_tel, organization_id_no, organization_address, personal_sex, personal_tel,
+    personal_career, personal_work_unit, personal_annual_income, subsistence_allowances_flg,
+    personal_permanent_address, organization_lessee_name, organization_lessee_id_no, rentor_type,
+    organization_lessee_tel
+    from ghouse_lessee l
+    inner join ghouse_contr c on l.id = c.lessee_id
+    where c.id = #{contractId} and l.is_final=#{flag} and c.is_final=#{flag}
+  </select>
+
+</mapper>
