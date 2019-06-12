@@ -3,7 +3,9 @@ Ext.define('app.platform.lshc.view.main.Main', {
     extend: 'Ext.Viewport',
     layout: 'border',
     uses : ['app.platform.lshc.view.ux.ButtonTransparent'],
-
+    requires: [
+        "app.platform.lshc.view.regi.home.HomeMainView"
+    ],
     config: {
         username:'',
         orgName:''
@@ -83,6 +85,11 @@ Ext.define('app.platform.lshc.view.main.Main', {
                 },{
                     itemId: 'centerBox', region: "center", layout: 'fit', border: true, margin: '0 0 0 0', collapsible: false,
                     xtype: 'tabpanel',
+                    items: [
+                        {
+                            xtype: "lshc-regi-home-HomeMainView"
+                        }
+                    ],
                     listeners:{
                         'tabchange':function(tabPanel, newCard, oldCard, eOpts){
                         }
