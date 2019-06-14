@@ -17,7 +17,7 @@ public abstract class DateUtils {
     public static long millionSecondsOfDay = 86400000;
 
     public static final String FORMAT_DATE_STR = "yyyy-MM-dd";
-
+    public static final String FORMAT_FUll_DATE_STR = "yyyyMMddHHmmsss";
     static {
         SDF=new SimpleDateFormat("yyyy-MM-dd");
     }

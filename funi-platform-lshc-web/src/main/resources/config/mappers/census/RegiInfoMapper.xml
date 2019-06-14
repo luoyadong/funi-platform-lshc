@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.census.RegiInfoMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.census.RegiInfo">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="HOUSE_ID" jdbcType="VARCHAR" property="houseId" />
+    <result column="SYS_CODE" jdbcType="VARCHAR" property="sysCode" />
+    <result column="HOUSE_STATUS" jdbcType="VARCHAR" property="houseStatus" />
+    <result column="APPROVAL_STATUS" jdbcType="VARCHAR" property="approvalStatus" />
+    <result column="REGION" jdbcType="VARCHAR" property="region" />
+    <result column="STREET" jdbcType="VARCHAR" property="street" />
+    <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
+    <result column="MAP_CODE" jdbcType="VARCHAR" property="mapCode" />
+    <result column="ESTATE_UNIT_NAME" jdbcType="VARCHAR" property="estateUnitName" />
+    <result column="ADDRESS_CITY" jdbcType="VARCHAR" property="addressCity" />
+    <result column="ADDRESS_REGION" jdbcType="VARCHAR" property="addressRegion" />
+    <result column="ADDRESS_COUNTY" jdbcType="VARCHAR" property="addressCounty" />
+    <result column="APT" jdbcType="VARCHAR" property="apt" />
+    <result column="BUILD_NO" jdbcType="VARCHAR" property="buildNo" />
+    <result column="UNIT_NO" jdbcType="VARCHAR" property="unitNo" />
+    <result column="LAYER" jdbcType="VARCHAR" property="layer" />
+    <result column="ROOM_NO" jdbcType="VARCHAR" property="roomNo" />
+    <result column="RIGHT_ADDR" jdbcType="VARCHAR" property="rightAddr" />
+    <result column="HOUSE_AREA" jdbcType="DECIMAL" property="houseArea" />
+    <result column="INNER_HOUSE_AREA" jdbcType="DECIMAL" property="innerHouseArea" />
+    <result column="HOUSE_ROOM" jdbcType="VARCHAR" property="houseRoom" />
+    <result column="HOUSE_HALL" jdbcType="VARCHAR" property="houseHall" />
+    <result column="HOUSE_BATHROOM" jdbcType="VARCHAR" property="houseBathroom" />
+    <result column="IS_REGI" jdbcType="VARCHAR" property="isRegi" />
+    <result column="RIGHT_NO" jdbcType="VARCHAR" property="rightNo" />
+    <result column="BUILD_DATE" jdbcType="VARCHAR" property="buildDate" />
+    <result column="HOUSE_TYPE" jdbcType="VARCHAR" property="houseType" />
+    <result column="HOUSE_STRUCTURE" jdbcType="VARCHAR" property="houseStructure" />
+    <result column="HOUSE_USE" jdbcType="VARCHAR" property="houseUse" />
+    <result column="LAND_STATUS" jdbcType="VARCHAR" property="landStatus" />
+    <result column="PRE_SALE_NO" jdbcType="VARCHAR" property="preSaleNo" />
+    <result column="FIT_STATUS" jdbcType="VARCHAR" property="fitStatus" />
+    <result column="IS_CHECK_IN" jdbcType="VARCHAR" property="isCheckIn" />
+    <result column="PERSON_NUM" jdbcType="DECIMAL" property="personNum" />
+    <result column="IS_RENT" jdbcType="VARCHAR" property="isRent" />
+    <result column="RENT_START_DATE" jdbcType="VARCHAR" property="rentStartDate" />
+    <result column="RENT_END_DATE" jdbcType="VARCHAR" property="rentEndDate" />
+    <result column="ORG_CODE" jdbcType="VARCHAR" property="orgCode" />
+    <result column="ORG_NAME" jdbcType="VARCHAR" property="orgName" />
+    <result column="UNIT_NAME" jdbcType="VARCHAR" property="unitName" />
+    <result column="APPLY_USER" jdbcType="VARCHAR" property="applyUser" />
+    <result column="REPORT_DATE" jdbcType="TIMESTAMP" property="reportDate" />
+    <result column="COMMON" jdbcType="VARCHAR" property="common" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_ID" jdbcType="VARCHAR" property="createId" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
+    <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
+    <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, HOUSE_ID, SYS_CODE, HOUSE_STATUS, APPROVAL_STATUS, REGION, STREET, PROJECT_NAME,
+    MAP_CODE, ESTATE_UNIT_NAME, ADDRESS_CITY, ADDRESS_REGION, ADDRESS_COUNTY, APT, BUILD_NO,
+    UNIT_NO, LAYER, ROOM_NO, RIGHT_ADDR, HOUSE_AREA, INNER_HOUSE_AREA, HOUSE_ROOM, HOUSE_HALL,
+    HOUSE_BATHROOM, IS_REGI, RIGHT_NO, BUILD_DATE, HOUSE_TYPE, HOUSE_STRUCTURE, HOUSE_USE,
+    LAND_STATUS, PRE_SALE_NO, FIT_STATUS, IS_CHECK_IN, PERSON_NUM, IS_RENT, RENT_START_DATE,
+    RENT_END_DATE, ORG_CODE, ORG_NAME, UNIT_NAME, APPLY_USER, REPORT_DATE, COMMON, VERSION,
+    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from LSHC_REGI_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from LSHC_REGI_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_REGI_INFO (ID, HOUSE_ID, SYS_CODE, HOUSE_STATUS,
+    APPROVAL_STATUS, REGION, STREET,
+    PROJECT_NAME, MAP_CODE, ESTATE_UNIT_NAME,
+    ADDRESS_CITY, ADDRESS_REGION, ADDRESS_COUNTY,
+    APT, BUILD_NO, UNIT_NO,
+    LAYER, ROOM_NO, RIGHT_ADDR,
+    HOUSE_AREA, INNER_HOUSE_AREA, HOUSE_ROOM,
+    HOUSE_HALL, HOUSE_BATHROOM, IS_REGI,
+    RIGHT_NO, BUILD_DATE, HOUSE_TYPE,
+    HOUSE_STRUCTURE, HOUSE_USE, LAND_STATUS,
+    PRE_SALE_NO, FIT_STATUS, IS_CHECK_IN,
+    PERSON_NUM, IS_RENT, RENT_START_DATE,
+    RENT_END_DATE, ORG_CODE, ORG_NAME,
+    UNIT_NAME, APPLY_USER, REPORT_DATE,
+    COMMON, VERSION, CREATE_TIME,
+    CREATE_ID, UPDATE_TIME, UPDATE_ID,
+    DELETED, ISVALIDE)
+    values (#{id,jdbcType=VARCHAR},#{houseId,jdbcType=VARCHAR}, #{sysCode,jdbcType=VARCHAR}, #{houseStatus,jdbcType=VARCHAR},
+    #{approvalStatus,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR},
+    #{projectName,jdbcType=VARCHAR}, #{mapCode,jdbcType=VARCHAR}, #{estateUnitName,jdbcType=VARCHAR},
+    #{addressCity,jdbcType=VARCHAR}, #{addressRegion,jdbcType=VARCHAR}, #{addressCounty,jdbcType=VARCHAR},
+    #{apt,jdbcType=VARCHAR}, #{buildNo,jdbcType=VARCHAR}, #{unitNo,jdbcType=VARCHAR},
+    #{layer,jdbcType=VARCHAR}, #{roomNo,jdbcType=VARCHAR}, #{rightAddr,jdbcType=VARCHAR},
+    #{houseArea,jdbcType=DECIMAL}, #{innerHouseArea,jdbcType=DECIMAL}, #{houseRoom,jdbcType=VARCHAR},
+    #{houseHall,jdbcType=VARCHAR}, #{houseBathroom,jdbcType=VARCHAR}, #{isRegi,jdbcType=VARCHAR},
+    #{rightNo,jdbcType=VARCHAR}, #{buildDate,jdbcType=VARCHAR}, #{houseType,jdbcType=VARCHAR},
+    #{houseStructure,jdbcType=VARCHAR}, #{houseUse,jdbcType=VARCHAR}, #{landStatus,jdbcType=VARCHAR},
+    #{preSaleNo,jdbcType=VARCHAR}, #{fitStatus,jdbcType=VARCHAR}, #{isCheckIn,jdbcType=VARCHAR},
+    #{personNum,jdbcType=DECIMAL}, #{isRent,jdbcType=VARCHAR}, #{rentStartDate,jdbcType=VARCHAR},
+    #{rentEndDate,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR},
+    #{unitName,jdbcType=VARCHAR}, #{applyUser,jdbcType=VARCHAR}, #{reportDate,jdbcType=TIMESTAMP},
+    #{common,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+    #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
+    #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_REGI_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="houseId != null">
+        HOUSE_ID,
+      </if>
+      <if test="sysCode != null">
+        SYS_CODE,
+      </if>
+      <if test="houseStatus != null">
+        HOUSE_STATUS,
+      </if>
+      <if test="approvalStatus != null">
+        APPROVAL_STATUS,
+      </if>
+      <if test="region != null">
+        REGION,
+      </if>
+      <if test="street != null">
+        STREET,
+      </if>
+      <if test="projectName != null">
+        PROJECT_NAME,
+      </if>
+      <if test="mapCode != null">
+        MAP_CODE,
+      </if>
+      <if test="estateUnitName != null">
+        ESTATE_UNIT_NAME,
+      </if>
+      <if test="addressCity != null">
+        ADDRESS_CITY,
+      </if>
+      <if test="addressRegion != null">
+        ADDRESS_REGION,
+      </if>
+      <if test="addressCounty != null">
+        ADDRESS_COUNTY,
+      </if>
+      <if test="apt != null">
+        APT,
+      </if>
+      <if test="buildNo != null">
+        BUILD_NO,
+      </if>
+      <if test="unitNo != null">
+        UNIT_NO,
+      </if>
+      <if test="layer != null">
+        LAYER,
+      </if>
+      <if test="roomNo != null">
+        ROOM_NO,
+      </if>
+      <if test="rightAddr != null">
+        RIGHT_ADDR,
+      </if>
+      <if test="houseArea != null">
+        HOUSE_AREA,
+      </if>
+      <if test="innerHouseArea != null">
+        INNER_HOUSE_AREA,
+      </if>
+      <if test="houseRoom != null">
+        HOUSE_ROOM,
+      </if>
+      <if test="houseHall != null">
+        HOUSE_HALL,
+      </if>
+      <if test="houseBathroom != null">
+        HOUSE_BATHROOM,
+      </if>
+      <if test="isRegi != null">
+        IS_REGI,
+      </if>
+      <if test="rightNo != null">
+        RIGHT_NO,
+      </if>
+      <if test="buildDate != null">
+        BUILD_DATE,
+      </if>
+      <if test="houseType != null">
+        HOUSE_TYPE,
+      </if>
+      <if test="houseStructure != null">
+        HOUSE_STRUCTURE,
+      </if>
+      <if test="houseUse != null">
+        HOUSE_USE,
+      </if>
+      <if test="landStatus != null">
+        LAND_STATUS,
+      </if>
+      <if test="preSaleNo != null">
+        PRE_SALE_NO,
+      </if>
+      <if test="fitStatus != null">
+        FIT_STATUS,
+      </if>
+      <if test="isCheckIn != null">
+        IS_CHECK_IN,
+      </if>
+      <if test="personNum != null">
+        PERSON_NUM,
+      </if>
+      <if test="isRent != null">
+        IS_RENT,
+      </if>
+      <if test="rentStartDate != null">
+        RENT_START_DATE,
+      </if>
+      <if test="rentEndDate != null">
+        RENT_END_DATE,
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE,
+      </if>
+      <if test="orgName != null">
+        ORG_NAME,
+      </if>
+      <if test="unitName != null">
+        UNIT_NAME,
+      </if>
+      <if test="applyUser != null">
+        APPLY_USER,
+      </if>
+      <if test="reportDate != null">
+        REPORT_DATE,
+      </if>
+      <if test="common != null">
+        COMMON,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="createId != null">
+        CREATE_ID,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID,
+      </if>
+      <if test="deleted != null">
+        DELETED,
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="houseId != null">
+        #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCode != null">
+        #{sysCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStatus != null">
+        #{houseStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalStatus != null">
+        #{approvalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="mapCode != null">
+        #{mapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="estateUnitName != null">
+        #{estateUnitName,jdbcType=VARCHAR},
+      </if>
+      <if test="addressCity != null">
+        #{addressCity,jdbcType=VARCHAR},
+      </if>
+      <if test="addressRegion != null">
+        #{addressRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="addressCounty != null">
+        #{addressCounty,jdbcType=VARCHAR},
+      </if>
+      <if test="apt != null">
+        #{apt,jdbcType=VARCHAR},
+      </if>
+      <if test="buildNo != null">
+        #{buildNo,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNo != null">
+        #{unitNo,jdbcType=VARCHAR},
+      </if>
+      <if test="layer != null">
+        #{layer,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNo != null">
+        #{roomNo,jdbcType=VARCHAR},
+      </if>
+      <if test="rightAddr != null">
+        #{rightAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="houseArea != null">
+        #{houseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="innerHouseArea != null">
+        #{innerHouseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="houseRoom != null">
+        #{houseRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="houseHall != null">
+        #{houseHall,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBathroom != null">
+        #{houseBathroom,jdbcType=VARCHAR},
+      </if>
+      <if test="isRegi != null">
+        #{isRegi,jdbcType=VARCHAR},
+      </if>
+      <if test="rightNo != null">
+        #{rightNo,jdbcType=VARCHAR},
+      </if>
+      <if test="buildDate != null">
+        #{buildDate,jdbcType=VARCHAR},
+      </if>
+      <if test="houseType != null">
+        #{houseType,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStructure != null">
+        #{houseStructure,jdbcType=VARCHAR},
+      </if>
+      <if test="houseUse != null">
+        #{houseUse,jdbcType=VARCHAR},
+      </if>
+      <if test="landStatus != null">
+        #{landStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="preSaleNo != null">
+        #{preSaleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="fitStatus != null">
+        #{fitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isCheckIn != null">
+        #{isCheckIn,jdbcType=VARCHAR},
+      </if>
+      <if test="personNum != null">
+        #{personNum,jdbcType=DECIMAL},
+      </if>
+      <if test="isRent != null">
+        #{isRent,jdbcType=VARCHAR},
+      </if>
+      <if test="rentStartDate != null">
+        #{rentStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="rentEndDate != null">
+        #{rentEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUser != null">
+        #{applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDate != null">
+        #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="common != null">
+        #{common,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        #{isvalide,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
+    update LSHC_REGI_INFO
+    <set>
+      <if test="houseId != null">
+        HOUSE_ID = #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCode != null">
+        SYS_CODE = #{sysCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStatus != null">
+        HOUSE_STATUS = #{houseStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalStatus != null">
+        APPROVAL_STATUS = #{approvalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        REGION = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        STREET = #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="mapCode != null">
+        MAP_CODE = #{mapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="estateUnitName != null">
+        ESTATE_UNIT_NAME = #{estateUnitName,jdbcType=VARCHAR},
+      </if>
+      <if test="addressCity != null">
+        ADDRESS_CITY = #{addressCity,jdbcType=VARCHAR},
+      </if>
+      <if test="addressRegion != null">
+        ADDRESS_REGION = #{addressRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="addressCounty != null">
+        ADDRESS_COUNTY = #{addressCounty,jdbcType=VARCHAR},
+      </if>
+      <if test="apt != null">
+        APT = #{apt,jdbcType=VARCHAR},
+      </if>
+      <if test="buildNo != null">
+        BUILD_NO = #{buildNo,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNo != null">
+        UNIT_NO = #{unitNo,jdbcType=VARCHAR},
+      </if>
+      <if test="layer != null">
+        LAYER = #{layer,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNo != null">
+        ROOM_NO = #{roomNo,jdbcType=VARCHAR},
+      </if>
+      <if test="rightAddr != null">
+        RIGHT_ADDR = #{rightAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="houseArea != null">
+        HOUSE_AREA = #{houseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="innerHouseArea != null">
+        INNER_HOUSE_AREA = #{innerHouseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="houseRoom != null">
+        HOUSE_ROOM = #{houseRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="houseHall != null">
+        HOUSE_HALL = #{houseHall,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBathroom != null">
+        HOUSE_BATHROOM = #{houseBathroom,jdbcType=VARCHAR},
+      </if>
+      <if test="isRegi != null">
+        IS_REGI = #{isRegi,jdbcType=VARCHAR},
+      </if>
+      <if test="rightNo != null">
+        RIGHT_NO = #{rightNo,jdbcType=VARCHAR},
+      </if>
+      <if test="buildDate != null">
+        BUILD_DATE = #{buildDate,jdbcType=VARCHAR},
+      </if>
+      <if test="houseType != null">
+        HOUSE_TYPE = #{houseType,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStructure != null">
+        HOUSE_STRUCTURE = #{houseStructure,jdbcType=VARCHAR},
+      </if>
+      <if test="houseUse != null">
+        HOUSE_USE = #{houseUse,jdbcType=VARCHAR},
+      </if>
+      <if test="landStatus != null">
+        LAND_STATUS = #{landStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="preSaleNo != null">
+        PRE_SALE_NO = #{preSaleNo,jdbcType=VARCHAR},
+      </if>
+      <if test="fitStatus != null">
+        FIT_STATUS = #{fitStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="isCheckIn != null">
+        IS_CHECK_IN = #{isCheckIn,jdbcType=VARCHAR},
+      </if>
+      <if test="personNum != null">
+        PERSON_NUM = #{personNum,jdbcType=DECIMAL},
+      </if>
+      <if test="isRent != null">
+        IS_RENT = #{isRent,jdbcType=VARCHAR},
+      </if>
+      <if test="rentStartDate != null">
+        RENT_START_DATE = #{rentStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="rentEndDate != null">
+        RENT_END_DATE = #{rentEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null">
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        ORG_NAME = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        UNIT_NAME = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUser != null">
+        APPLY_USER = #{applyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="reportDate != null">
+        REPORT_DATE = #{reportDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="common != null">
+        COMMON = #{common,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        DELETED = #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE = #{isvalide,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
+    update LSHC_REGI_INFO
+    set HOUSE_ID = #{houseId,jdbcType=VARCHAR},
+      SYS_CODE = #{sysCode,jdbcType=VARCHAR},
+      HOUSE_STATUS = #{houseStatus,jdbcType=VARCHAR},
+      APPROVAL_STATUS = #{approvalStatus,jdbcType=VARCHAR},
+      REGION = #{region,jdbcType=VARCHAR},
+      STREET = #{street,jdbcType=VARCHAR},
+      PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      MAP_CODE = #{mapCode,jdbcType=VARCHAR},
+      ESTATE_UNIT_NAME = #{estateUnitName,jdbcType=VARCHAR},
+      ADDRESS_CITY = #{addressCity,jdbcType=VARCHAR},
+      ADDRESS_REGION = #{addressRegion,jdbcType=VARCHAR},
+      ADDRESS_COUNTY = #{addressCounty,jdbcType=VARCHAR},
+      APT = #{apt,jdbcType=VARCHAR},
+      BUILD_NO = #{buildNo,jdbcType=VARCHAR},
+      UNIT_NO = #{unitNo,jdbcType=VARCHAR},
+      LAYER = #{layer,jdbcType=VARCHAR},
+      ROOM_NO = #{roomNo,jdbcType=VARCHAR},
+      RIGHT_ADDR = #{rightAddr,jdbcType=VARCHAR},
+      HOUSE_AREA = #{houseArea,jdbcType=DECIMAL},
+      INNER_HOUSE_AREA = #{innerHouseArea,jdbcType=DECIMAL},
+      HOUSE_ROOM = #{houseRoom,jdbcType=VARCHAR},
+      HOUSE_HALL = #{houseHall,jdbcType=VARCHAR},
+      HOUSE_BATHROOM = #{houseBathroom,jdbcType=VARCHAR},
+      IS_REGI = #{isRegi,jdbcType=VARCHAR},
+      RIGHT_NO = #{rightNo,jdbcType=VARCHAR},
+      BUILD_DATE = #{buildDate,jdbcType=VARCHAR},
+      HOUSE_TYPE = #{houseType,jdbcType=VARCHAR},
+      HOUSE_STRUCTURE = #{houseStructure,jdbcType=VARCHAR},
+      HOUSE_USE = #{houseUse,jdbcType=VARCHAR},
+      LAND_STATUS = #{landStatus,jdbcType=VARCHAR},
+      PRE_SALE_NO = #{preSaleNo,jdbcType=VARCHAR},
+      FIT_STATUS = #{fitStatus,jdbcType=VARCHAR},
+      IS_CHECK_IN = #{isCheckIn,jdbcType=VARCHAR},
+      PERSON_NUM = #{personNum,jdbcType=DECIMAL},
+      IS_RENT = #{isRent,jdbcType=VARCHAR},
+      RENT_START_DATE = #{rentStartDate,jdbcType=VARCHAR},
+      RENT_END_DATE = #{rentEndDate,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      ORG_NAME = #{orgName,jdbcType=VARCHAR},
+      UNIT_NAME = #{unitName,jdbcType=VARCHAR},
+      APPLY_USER = #{applyUser,jdbcType=VARCHAR},
+      REPORT_DATE = #{reportDate,jdbcType=TIMESTAMP},
+      COMMON = #{common,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      DELETED = #{deleted,jdbcType=DECIMAL},
+      ISVALIDE = #{isvalide,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

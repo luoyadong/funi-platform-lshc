@@ -4,7 +4,9 @@ import com.funi.framework.biz.eic.bo.Dict;
 import com.funi.framework.biz.support.CurrentUser;
 import com.funi.framework.biz.support.CurrentUserAccessor;
 import com.funi.platform.lshc.entity.BaseEntity;
+import com.funi.platform.lshc.entity.SuperEntity;
 import com.funi.platform.lshc.query.GhouseBaseQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,20 +42,50 @@ public class BoSupport {
     /**
      * 创建实体
      *
-     * @param baseEntity
+     * @param superEntity
      */
-    @Before("execution(public * com.funi.platform.lshc..service.*Service.create*(..)) && args(baseEntity,..)")
-    public void createBo(BaseEntity baseEntity) {
+    @Before("execution(public * com.funi.platform.lshc..service.*Service.create*(..)) && args(superEntity,..)")
+    public void createBo(SuperEntity superEntity) {
+        buildCreateBo(superEntity);
+    }
+
+    /**
+     * 批量创建创建实体
+     *
+     * @param superEntityList
+     */
+    @Before("execution(public * com.funi.platform.lshc..service.*Service.create*(..)) && args(superEntityList,..)")
+    public void batchCreateBo(List<SuperEntity> superEntityList) {
+        for(SuperEntity superEntity : superEntityList) {
+            buildCreateBo(superEntity);
+        }
+    }
+
+    /**
+     * 为新创建的对象构造审计字段相关属性
+     * @param superEntity
+     */
+    private void buildCreateBo(SuperEntity superEntity) {
+        // 设置ID
+        superEntity.setId(UUID.randomUUID().toString());
+        if(superEntity.getVersion() == null) {
+            // 新创建的数据版本号为0
+            superEntity.setVersion(CensusConstants.DATA_DEFAULT_VERSION);
+        }
+        if (superEntity.getCreateTime() == null) {
+            superEntity.setCreateTime(new Date());
+        }
+        if (superEntity.getDeleted() == null) {
+            // 默认数据未逻辑删除
+            superEntity.setDeleted(CensusConstants.DATA_VALIDE_NOT_DELETE);
+        }
         CurrentUser currentUser = getCurrentUser();
-        baseEntity.setId(UUID.randomUUID().toString());
-        if (baseEntity.getSysCreateTime() == null) {
-            baseEntity.setSysCreateTime(new Date());
+        if (currentUser != null && superEntity.getCreateId() == null && isAuthentication()) {
+            superEntity.setCreateId(currentUser.getUserId());
         }
-        if (baseEntity.getIsDeleted() == null) {
-            baseEntity.setIsDeleted(0);
-        }
-        if (currentUser != null && baseEntity.getSysCreateId() == null && isAuthentication()) {
-            baseEntity.setSysCreateId(currentUser.getUserId());
+        if(StringUtils.isBlank(superEntity.getIsvalide())) {
+            // 默认数据有效
+            superEntity.setIsvalide(CensusConstants.DATA_VALIDE_VALID);
         }
     }
 
@@ -116,27 +148,7 @@ public class BoSupport {
         return null != SecurityContextHolder.getContext().getAuthentication() && !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
     }
 
-    /**
-     * 创建实体
-     *
-     * @param baseEntityList
-     */
-    @Before("execution(public * com.funi.platform.lshc..service.*Service.create*(..)) && args(baseEntityList,..)")
-    public void batchCreateBo(List<BaseEntity> baseEntityList) {
-        for(BaseEntity baseEntity:baseEntityList) {
-            CurrentUser currentUser = getCurrentUser();
-            baseEntity.setId(UUID.randomUUID().toString());
-            if (baseEntity.getSysCreateTime() == null) {
-                baseEntity.setSysCreateTime(new Date());
-            }
-            if (baseEntity.getIsDeleted() == null) {
-                baseEntity.setIsDeleted(0);
-            }
-            if (currentUser != null && baseEntity.getSysCreateId() == null && isAuthentication()) {
-                baseEntity.setSysCreateId(currentUser.getUserId());
-            }
-        }
-    }
+
 
     @Before("execution(public * com.funi.platform.lshc..service.*Service.find*(..)) && args(ghouseBaseQuery,..)")
     public void findByQuery(GhouseBaseQuery ghouseBaseQuery) {

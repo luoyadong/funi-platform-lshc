@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.census.BuildInfoMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.census.BuildInfo">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="SERIAL_NO" jdbcType="DECIMAL" property="serialNo" />
+    <result column="REGION" jdbcType="VARCHAR" property="region" />
+    <result column="STREET" jdbcType="VARCHAR" property="street" />
+    <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
+    <result column="MAP_CODE" jdbcType="VARCHAR" property="mapCode" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="COMMON" jdbcType="VARCHAR" property="common" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_ID" jdbcType="VARCHAR" property="createId" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
+    <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
+    <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
+  </resultMap>
+  <resultMap id="BuildInfoVoMap" type="com.funi.platform.lshc.vo.census.BuildInfoVo" extends="BaseResultMap">
+    <result column="houseCount" property="serialNo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, SERIAL_NO, REGION, STREET, PROJECT_NAME, MAP_CODE, ADDRESS, COMMON, VERSION,
+    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
+  </sql>
+  <select id="selectBuildInfoByMapCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from LSHC_BUILD_INFO
+    where MAP_CODE = #{mapCode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectBuildInfoVoList" parameterType="com.funi.platform.lshc.query.census.BuildInfoQuery" resultMap="BaseResultMap">
+    SELECT DISTINCT
+        t1.id,
+        t1.SERIAL_NO AS serialNo,
+        t1.REGION AS region,
+        t1.STREET AS street,
+        t1.PROJECT_NAME AS projectName,
+        t1.MAP_CODE AS mapCode,
+        t1.ADDRESS AS address,
+        ( SELECT count( 1 ) FROM LSHC_REGI_INFO t2 WHERE t2.map_code = t1.map_code ) AS houseCount
+    FROM
+        LSHC_BUILD_INFO t1
+        LEFT JOIN LSHC_REGI_INFO t3 ON t1.MAP_CODE = t3.MAP_CODE
+    WHERE
+        t1.ISVALIDE='1' AND t1.DELETED=0 AND t3.ISVALIDE='1' AND t3.DELETED=0
+      <if test="region != null and region != ''">
+        AND t1.REGION = #{region}
+      </if>
+      <if test="street != null and street != ''">
+        AND t1.STREET =  #{street}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        AND ( t1.PROJECT_NAME LIKE '%'||#{keyword}||'%' OR t1.MAP_CODE LIKE '%'||#{keyword}||'%'
+        OR t1.ADDRESS LIKE '%'||#{keyword}||'%' OR t3.RIGHT_NO LIKE '%'||#{keyword}||'%' )
+      </if>
+    ORDER BY t1.SERIAL_NO
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from LSHC_BUILD_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from LSHC_BUILD_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.census.BuildInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_BUILD_INFO (ID, SERIAL_NO, REGION, STREET,
+    PROJECT_NAME, MAP_CODE, ADDRESS,
+    COMMON, VERSION, CREATE_TIME,
+    CREATE_ID, UPDATE_TIME, UPDATE_ID,
+    DELETED, ISVALIDE)
+    values ( #{id,jdbcType=VARCHAR}, #{serialNo,jdbcType=DECIMAL}, #{region,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR},
+    #{projectName,jdbcType=VARCHAR}, #{mapCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+    #{common,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+    #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
+    #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.census.BuildInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_BUILD_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="serialNo != null">
+        SERIAL_NO,
+      </if>
+      <if test="region != null">
+        REGION,
+      </if>
+      <if test="street != null">
+        STREET,
+      </if>
+      <if test="projectName != null">
+        PROJECT_NAME,
+      </if>
+      <if test="mapCode != null">
+        MAP_CODE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="common != null">
+        COMMON,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="createId != null">
+        CREATE_ID,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID,
+      </if>
+      <if test="deleted != null">
+        DELETED,
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="serialNo != null">
+        #{serialNo,jdbcType=DECIMAL},
+      </if>
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="mapCode != null">
+        #{mapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="common != null">
+        #{common,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        #{isvalide,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.BuildInfo">
+    update LSHC_BUILD_INFO
+    <set>
+      <if test="serialNo != null">
+        SERIAL_NO = #{serialNo,jdbcType=DECIMAL},
+      </if>
+      <if test="region != null">
+        REGION = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="street != null">
+        STREET = #{street,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="mapCode != null">
+        MAP_CODE = #{mapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="common != null">
+        COMMON = #{common,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        DELETED = #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE = #{isvalide,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.census.BuildInfo">
+    update LSHC_BUILD_INFO
+    set SERIAL_NO = #{serialNo,jdbcType=DECIMAL},
+      REGION = #{region,jdbcType=VARCHAR},
+      STREET = #{street,jdbcType=VARCHAR},
+      PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      MAP_CODE = #{mapCode,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      COMMON = #{common,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      DELETED = #{deleted,jdbcType=DECIMAL},
+      ISVALIDE = #{isvalide,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

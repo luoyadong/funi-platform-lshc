@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class FileServiceImpl implements FileService {
     @Resource
-    private LinkFileMapper fileMapper;
+    private LinkFileMapper linkFileMapper;
     @Resource
     private FileUploader fileUploader;
 
@@ -27,11 +27,11 @@ public class FileServiceImpl implements FileService {
         Map param = new HashMap<String,String>();
         param.put("bizId",bizId);
         param.put("fileType",fileType);
-        return fileMapper.selectListByBiz(param);
+        return linkFileMapper.selectListByBiz(param);
     }
     @Override
     public void deleteFileByKey(String fileId) {
-        fileMapper.deleteByPrimaryKey(fileId);
+        linkFileMapper.deleteByPrimaryKey(fileId);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FileServiceImpl implements FileService {
         for(LinkFile file:linkFile){
             file.setId(UUID.randomUUID().toString());
             file.setLinkId(linkId);
-            fileMapper.insert(file);
+            linkFileMapper.insert(file);
         }
 
     }

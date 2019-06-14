@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.census.EntInfoMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.census.EntInfo">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="HC_ID" jdbcType="VARCHAR" property="hcId" />
+    <result column="ENT_NAME" jdbcType="VARCHAR" property="entName" />
+    <result column="SEX" jdbcType="VARCHAR" property="sex" />
+    <result column="ENT_TYPE" jdbcType="VARCHAR" property="entType" />
+    <result column="ENT_NATION" jdbcType="VARCHAR" property="entNation" />
+    <result column="ENT_NATIVE" jdbcType="VARCHAR" property="entNative" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="MARRIAGE_STATUS" jdbcType="VARCHAR" property="marriageStatus" />
+    <result column="ID_TYPE" jdbcType="VARCHAR" property="idType" />
+    <result column="CAREER" jdbcType="VARCHAR" property="career" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_ID" jdbcType="VARCHAR" property="createId" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
+    <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
+    <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, HC_ID, ENT_NAME, SEX, ENT_TYPE, ENT_NATION, ENT_NATIVE, TEL, MARRIAGE_STATUS,
+    ID_TYPE, CAREER, VERSION, CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED,
+    ISVALIDE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from LSHC_ENT_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from LSHC_ENT_INFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.census.EntInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_ENT_INFO (ID, HC_ID, ENT_NAME, SEX,
+    ENT_TYPE, ENT_NATION, ENT_NATIVE,
+    TEL, MARRIAGE_STATUS, ID_TYPE,
+    CAREER, VERSION, CREATE_TIME,
+    CREATE_ID, UPDATE_TIME, UPDATE_ID,
+    DELETED, ISVALIDE)
+    values (#{id,jdbcType=VARCHAR}, #{hcId,jdbcType=VARCHAR}, #{entName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
+    #{entType,jdbcType=VARCHAR}, #{entNation,jdbcType=VARCHAR}, #{entNative,jdbcType=VARCHAR},
+    #{tel,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{idType,jdbcType=VARCHAR},
+    #{career,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+    #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
+    #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.census.EntInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_ENT_INFO
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="hcId != null">
+        HC_ID,
+      </if>
+      <if test="entName != null">
+        ENT_NAME,
+      </if>
+      <if test="sex != null">
+        SEX,
+      </if>
+      <if test="entType != null">
+        ENT_TYPE,
+      </if>
+      <if test="entNation != null">
+        ENT_NATION,
+      </if>
+      <if test="entNative != null">
+        ENT_NATIVE,
+      </if>
+      <if test="tel != null">
+        TEL,
+      </if>
+      <if test="marriageStatus != null">
+        MARRIAGE_STATUS,
+      </if>
+      <if test="idType != null">
+        ID_TYPE,
+      </if>
+      <if test="career != null">
+        CAREER,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="createId != null">
+        CREATE_ID,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID,
+      </if>
+      <if test="deleted != null">
+        DELETED,
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="hcId != null">
+        #{hcId,jdbcType=VARCHAR},
+      </if>
+      <if test="entName != null">
+        #{entName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="entType != null">
+        #{entType,jdbcType=VARCHAR},
+      </if>
+      <if test="entNation != null">
+        #{entNation,jdbcType=VARCHAR},
+      </if>
+      <if test="entNative != null">
+        #{entNative,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="marriageStatus != null">
+        #{marriageStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null">
+        #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null">
+        #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        #{isvalide,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.EntInfo">
+    update LSHC_ENT_INFO
+    <set>
+      <if test="hcId != null">
+        HC_ID = #{hcId,jdbcType=VARCHAR},
+      </if>
+      <if test="entName != null">
+        ENT_NAME = #{entName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="entType != null">
+        ENT_TYPE = #{entType,jdbcType=VARCHAR},
+      </if>
+      <if test="entNation != null">
+        ENT_NATION = #{entNation,jdbcType=VARCHAR},
+      </if>
+      <if test="entNative != null">
+        ENT_NATIVE = #{entNative,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        TEL = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="marriageStatus != null">
+        MARRIAGE_STATUS = #{marriageStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null">
+        ID_TYPE = #{idType,jdbcType=VARCHAR},
+      </if>
+      <if test="career != null">
+        CAREER = #{career,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        DELETED = #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE = #{isvalide,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.census.EntInfo">
+    update LSHC_ENT_INFO
+    set HC_ID = #{hcId,jdbcType=VARCHAR},
+      ENT_NAME = #{entName,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=VARCHAR},
+      ENT_TYPE = #{entType,jdbcType=VARCHAR},
+      ENT_NATION = #{entNation,jdbcType=VARCHAR},
+      ENT_NATIVE = #{entNative,jdbcType=VARCHAR},
+      TEL = #{tel,jdbcType=VARCHAR},
+      MARRIAGE_STATUS = #{marriageStatus,jdbcType=VARCHAR},
+      ID_TYPE = #{idType,jdbcType=VARCHAR},
+      CAREER = #{career,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      DELETED = #{deleted,jdbcType=DECIMAL},
+      ISVALIDE = #{isvalide,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

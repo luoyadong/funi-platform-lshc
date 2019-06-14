@@ -1,6 +1,7 @@
 package com.funi.platform.lshc.utils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by sam on 2018/11/14.9:32 PM
@@ -26,5 +27,14 @@ public class NumberUtil {
             bigDecimal = BigDecimal.ZERO;
         }
         return bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    /**
+     * 获得系统随机编号
+     * @return
+     */
+    public static String getSysCode() {
+        int random = (int) ((Math.random() * 9 + 1) * 1000);
+        return DateUtils.format(new Date(), DateUtils.FORMAT_FUll_DATE_STR) + random;
     }
 }
