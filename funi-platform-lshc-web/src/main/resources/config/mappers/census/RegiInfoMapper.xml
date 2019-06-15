@@ -63,6 +63,37 @@
     RENT_END_DATE, ORG_CODE, ORG_NAME, UNIT_NAME, APPLY_USER, REPORT_DATE, COMMON, VERSION,
     CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
+  <resultMap id="ListRegiInfoMap" type="com.funi.platform.lshc.vo.census.ListRegiInfoVo">
+    <result column="id" property="id" />
+    <result column="houseId" property="houseId" />
+    <result column="unitNo" property="unitNo" />
+    <result column="layer" property="layer" />
+    <result column="roomNo" property="roomNo" />
+    <collection property="listFileVoList" ofType="com.funi.platform.lshc.vo.census.ListFileVo" >
+      <result column="fileId" property="fileId" />
+      <result column="fileName" property="fileName" />
+      <result column="url" property="url" />
+    </collection>
+  </resultMap>
+  <select id="selectRegiInfoVoList" parameterType="com.funi.platform.lshc.query.census.RegiInfoQuery" resultMap="ListRegiInfoMap">
+      SELECT
+          t1.id AS ID,
+          t1.HOUSE_ID AS houseId,
+          t1.UNIT_NO AS unitNo,
+          t1.LAYER AS layer,
+          t1.room_no AS roomNo,
+          t2.id as fileId,
+          t2.file_name AS fileName,
+          t2.url AS url
+      FROM
+          LSHC_REGI_INFO t1
+          LEFT JOIN LSHC_FILE t2 ON t1.HOUSE_ID = t2.hc_id
+      WHERE
+          t1.ISVALIDE = '1'
+          AND t1.DELETED = 0
+          AND t2.ISVALIDE = '1'
+          AND t2.DELETED =0
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

@@ -4,6 +4,7 @@ import com.funi.platform.lshc.dto.RegiInfoDto;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import com.funi.platform.lshc.vo.census.RegiInfoVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +27,7 @@ public interface BuildInfoService {
      * @param regiInfoQuery
      * @return
      */
-    List<RegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery);
+    List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery);
 
     /**
      * 创建普查信息

@@ -1,6 +1,10 @@
 package com.funi.platform.lshc.mapper.census;
 
 import com.funi.platform.lshc.entity.census.RegiInfo;
+import com.funi.platform.lshc.query.census.RegiInfoQuery;
+import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
+
+import java.util.List;
 
 public interface RegiInfoMapper {
     int deleteByPrimaryKey(String id);
@@ -15,4 +19,10 @@ public interface RegiInfoMapper {
 
     int updateByPrimaryKey(RegiInfo record);
 
+    /**
+     * 分页查询房屋列表
+     * @param regiInfoQuery
+     * @return
+     */
+    List<ListRegiInfoVo> selectRegiInfoVoList(RegiInfoQuery regiInfoQuery);
 }

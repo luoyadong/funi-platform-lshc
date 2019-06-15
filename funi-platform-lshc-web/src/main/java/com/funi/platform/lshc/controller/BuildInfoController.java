@@ -7,6 +7,7 @@ import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.BuildInfoService;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import com.funi.platform.lshc.vo.census.RegiInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,7 +47,7 @@ public class BuildInfoController extends BaseController {
      */
     @RequestMapping("getRegiInfoVoList")
     @ResponseBody
-    public List<RegiInfoVo> getRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
+    public List<ListRegiInfoVo> getRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
         return buildInfoService.findRegiInfoVoList(regiInfoQuery);
     }
 

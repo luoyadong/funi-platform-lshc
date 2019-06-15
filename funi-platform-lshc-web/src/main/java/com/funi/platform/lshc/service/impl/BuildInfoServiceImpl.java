@@ -18,6 +18,7 @@ import com.funi.platform.lshc.support.CensusConstants;
 import com.funi.platform.lshc.utils.NumberUtil;
 import com.funi.platform.lshc.utils.SuperEntityUtils;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import com.funi.platform.lshc.vo.census.RegiInfoVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -225,8 +226,8 @@ public class BuildInfoServiceImpl implements BuildInfoService {
     }
 
     @Override
-    public List<RegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
-        return null;
+    public List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
+        return regiInfoMapper.selectRegiInfoVoList(regiInfoQuery);
     }
 
     @Override
