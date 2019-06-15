@@ -1,6 +1,7 @@
 package com.funi.platform.lshc.mapper.census;
 
 import com.funi.platform.lshc.entity.census.File;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,4 +24,10 @@ public interface FileMapper {
      * @return
      */
     List<File> selectFileListByHouseId(String houseId);
+
+    /**
+     * 根据房屋编号集合逻辑删除房屋关联的附件信息
+     * @param ids
+     */
+    void batchDeleteFile(@Param("ids") List<String> ids, @Param("userId") String userId);
 }

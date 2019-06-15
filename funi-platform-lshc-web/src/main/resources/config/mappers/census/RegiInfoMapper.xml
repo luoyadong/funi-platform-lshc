@@ -75,6 +75,14 @@
       <result column="url" property="url" />
     </collection>
   </resultMap>
+    <update id="batchDeleteRegiInfo">
+      update  LSHC_REGI_INFO
+      set DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}
+      where house_id in
+      <foreach collection="ids" separator=","  item="id" open="(" close=")">
+        #{id}
+      </foreach>
+    </update>
     <select id="selectRegiInfoByHouseId" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List" />

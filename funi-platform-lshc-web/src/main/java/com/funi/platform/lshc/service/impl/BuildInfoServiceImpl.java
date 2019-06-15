@@ -59,7 +59,7 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         }
         CurrentUser userInfo = getUserInfo();
         new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
-//        regiInfo = getTestRegiInfo(regiInfo);
+        regiInfo = getTestRegiInfo(regiInfo);
         initRegiInfo(regiInfo, userInfo);
         // 保存房屋数据
         regiInfoMapper.insert(regiInfo);
@@ -80,7 +80,7 @@ public class BuildInfoServiceImpl implements BuildInfoService {
 
         // 人口信息
         List<EntInfo> entInfoList = regiInfoDto.getEntInfoList();
-//        entInfoList = getTestEntInfoList();
+        entInfoList = getTestEntInfoList();
         if(CollectionUtils.isNotEmpty(entInfoList)) {
             for(EntInfo entInfo : entInfoList) {
                 new SuperEntityUtils<>().buildCreateEntity(entInfo, userInfo);
@@ -90,7 +90,7 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         }
         // 附件信息
         List<File> fileList = regiInfoDto.getFileList();
-//        fileList = getTestFileList();
+        fileList = getTestFileList();
         if(CollectionUtils.isNotEmpty(fileList)) {
             for(File file : fileList) {
                 new SuperEntityUtils<>().buildCreateEntity(file, userInfo);
@@ -256,7 +256,13 @@ public class BuildInfoServiceImpl implements BuildInfoService {
 
     @Override
     public void batchRemoveRegiInfo(List<String> ids) {
-
+        String userId = getUserInfo().getUserId();
+        // 逻辑删除房屋信息
+        regiInfoMapper.batchDeleteRegiInfo(ids, userId);
+        // 逻辑删除房屋关联的入住人员信息
+        entInfoMapper.batchDeleteEntInfo(ids, userId);
+        // 逻辑删除房屋关联的附件信息
+        fileMapper.batchDeleteFile(ids, userId);
     }
 
     @Override

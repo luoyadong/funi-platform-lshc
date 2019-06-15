@@ -94,6 +94,7 @@ public class BuildInfoController extends BaseController {
             buildInfoService.batchRemoveRegiInfo(ids);
             return ResultVo.newResult("批量删除普查信息成功");
         } catch (Exception e) {
+            e.printStackTrace();
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("删除普查信息失败");
             resultVo.setSuccess(false);
