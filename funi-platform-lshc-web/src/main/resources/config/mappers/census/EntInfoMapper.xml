@@ -26,6 +26,14 @@
     ID_TYPE, CAREER, VERSION, CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED,
     ISVALIDE
   </sql>
+  <select id="selectEntInfoListByHouseId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from LSHC_ENT_INFO
+    where HC_ID = #{hcId,jdbcType=VARCHAR}
+    AND ISVALIDE = '1'
+    AND DELETED = 0
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

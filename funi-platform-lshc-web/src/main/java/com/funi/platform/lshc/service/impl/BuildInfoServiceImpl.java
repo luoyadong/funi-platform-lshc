@@ -19,7 +19,7 @@ import com.funi.platform.lshc.utils.NumberUtil;
 import com.funi.platform.lshc.utils.SuperEntityUtils;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
-import com.funi.platform.lshc.vo.census.RegiInfoVo;
+import com.funi.platform.lshc.vo.census.RegiInfoDetailVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,9 +57,10 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         if (regiInfo == null) {
             regiInfo = new RegiInfo();
         }
-        new SuperEntityUtils<>().buildCreateEntity(regiInfo, getUserInfo());
-        // TODO 测试数据
-        regiInfo = getTestRegiInfo(regiInfo);
+        CurrentUser userInfo = getUserInfo();
+        new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
+//        regiInfo = getTestRegiInfo(regiInfo);
+        initRegiInfo(regiInfo, userInfo);
         // 保存房屋数据
         regiInfoMapper.insert(regiInfo);
 
@@ -71,7 +72,7 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         BuildInfo buildInfo = buildInfoMapper.selectBuildInfoByMapCode(mapCode);
         if (buildInfo == null) {
             buildInfo = new BuildInfo();
-            new SuperEntityUtils<>().buildCreateEntity(buildInfo, getUserInfo());
+            new SuperEntityUtils<>().buildCreateEntity(buildInfo, userInfo);
             buildBuildInfoFromRegiInfo(buildInfo, regiInfo);
             // 保存楼栋数据
             buildInfoMapper.insert(buildInfo);
@@ -79,26 +80,36 @@ public class BuildInfoServiceImpl implements BuildInfoService {
 
         // 人口信息
         List<EntInfo> entInfoList = regiInfoDto.getEntInfoList();
-        // TODO  测试数据
-        entInfoList = getTestEntInfoList();
+//        entInfoList = getTestEntInfoList();
         if(CollectionUtils.isNotEmpty(entInfoList)) {
             for(EntInfo entInfo : entInfoList) {
-                new SuperEntityUtils<>().buildCreateEntity(entInfo, getUserInfo());
+                new SuperEntityUtils<>().buildCreateEntity(entInfo, userInfo);
                 entInfo.setHcId(regiInfo.getHouseId());
                 entInfoMapper.insert(entInfo);
             }
         }
         // 附件信息
         List<File> fileList = regiInfoDto.getFileList();
-        // TODO 测试数据
-        fileList = getTestFileList();
+//        fileList = getTestFileList();
         if(CollectionUtils.isNotEmpty(fileList)) {
             for(File file : fileList) {
-                new SuperEntityUtils<>().buildCreateEntity(file, getUserInfo());
-                buildFileInfo(file, regiInfo);
+                new SuperEntityUtils<>().buildCreateEntity(file, userInfo);
+                buildFileInfo(file, regiInfo, userInfo);
                 fileMapper.insert(file);
             }
         }
+    }
+
+    private void initRegiInfo(RegiInfo regiInfo, CurrentUser userInfo) {
+        // TODO 设置房屋编号，使用序列
+//        regiInfo.setHouseId();
+        // 默认状态是录入
+        regiInfo.setHouseStatus(CensusConstants.HOUSE_STATUS_INPUT);
+        regiInfo.setOrgCode(userInfo.getOrganization().getDm());
+        regiInfo.setOrgName(userInfo.getOrganization().getMc());
+        regiInfo.setUnitName(userInfo.getOrganization().getMc());
+        regiInfo.setApplyUser(userInfo.getName());
+        regiInfo.setReportDate(new Date());
     }
 
     private List<EntInfo> getTestEntInfoList() {
@@ -128,11 +139,10 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         return fileList;
     }
 
-    private void buildFileInfo(File file, RegiInfo regiInfo) {
+    private void buildFileInfo(File file, RegiInfo regiInfo, CurrentUser userInfo) {
         file.setHcId(regiInfo.getHouseId());
         file.setRightNo(regiInfo.getRightNo());
         file.setSubmitDate(new Date());
-        CurrentUser userInfo = getUserInfo();
         file.setUserName(userInfo.getName());
         file.setUnitName(userInfo.getOrganization().getMc());
     }
@@ -231,8 +241,17 @@ public class BuildInfoServiceImpl implements BuildInfoService {
     }
 
     @Override
-    public RegiInfoVo findRegiInfoDetail(String houseId) {
-        return null;
+    public RegiInfoDetailVo findRegiInfoDetail(String houseId) {
+        RegiInfoDetailVo regiInfoDetailVo = new RegiInfoDetailVo();
+        RegiInfo regiInfo = regiInfoMapper.selectRegiInfoByHouseId(houseId);
+        regiInfoDetailVo.setRegiInfo(regiInfo);
+        List<EntInfo> entInfoList = entInfoMapper.selectEntInfoListByHouseId(houseId);
+        regiInfoDetailVo.setEntInfoList(entInfoList);
+        List<File> fileList = fileMapper.selectFileListByHouseId(houseId);
+        regiInfoDetailVo.setFileList(fileList);
+        // TODO 查询处理过程信息
+        // TODO 当前所处的环节
+        return regiInfoDetailVo;
     }
 
     @Override

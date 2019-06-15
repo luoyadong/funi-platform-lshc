@@ -5,7 +5,7 @@ import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
-import com.funi.platform.lshc.vo.census.RegiInfoVo;
+import com.funi.platform.lshc.vo.census.RegiInfoDetailVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +40,7 @@ public interface BuildInfoService {
      * @param houseId
      * @return
      */
-    RegiInfoVo findRegiInfoDetail(String houseId);
+    RegiInfoDetailVo findRegiInfoDetail(String houseId);
 
     /**
      * 根据ID集合批量删除房屋普查记录

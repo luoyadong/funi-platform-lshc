@@ -75,6 +75,12 @@
       <result column="url" property="url" />
     </collection>
   </resultMap>
+    <select id="selectRegiInfoByHouseId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List" />
+        from LSHC_REGI_INFO
+        where HOUSE_ID = #{houseId,jdbcType=VARCHAR}
+    </select>
   <select id="selectRegiInfoVoList" parameterType="com.funi.platform.lshc.query.census.RegiInfoQuery" resultMap="ListRegiInfoMap">
       SELECT
           t1.id AS ID,

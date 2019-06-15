@@ -25,4 +25,11 @@ public interface RegiInfoMapper {
      * @return
      */
     List<ListRegiInfoVo> selectRegiInfoVoList(RegiInfoQuery regiInfoQuery);
+
+    /**
+     * 根据房屋编码查询房屋
+     * @param houseId
+     * @return
+     */
+    RegiInfo selectRegiInfoByHouseId(String houseId);
 }
