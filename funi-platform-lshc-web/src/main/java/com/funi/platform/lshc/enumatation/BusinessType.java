@@ -5,12 +5,12 @@ package com.funi.platform.lshc.enumatation;
  */
 public enum BusinessType {
 
-    cnew("Ghouse_Common_Flow",2,"新增合同","GhouseCommonFlow"),
-    cchange("Ghouse_Common_Flow",2,"变更合同","GhouseCommonFlow"),
-    ccanel("Ghouse_Common_Flow",2,"合同注销","GhouseCommonFlow"),
-    crenew("Ghouse_Common_Flow",2,"续租","GhouseCommonFlow"),
-    repairnew("Ghouse_Maintain_Flow",1,"新增维修","GhouseMaintainFlow")
-    ;
+    pnew("Lshc_Regi",1,"新增普查"," LshcRegi"),
+    cnew("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
+    cchange("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
+    crenew("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
+    repairnew("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
+    ccanel("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx");
 
     private String key;
     private Integer version;
@@ -42,18 +42,14 @@ public enum BusinessType {
 
     public static BusinessType findByWorkName(String workName){
         switch (workName){
-            case  "新增合同":return BusinessType.cnew;
-            case  "变更合同":return BusinessType.cchange;
-            case  "合同注销":return BusinessType.ccanel;
-            case  "续租"    :return BusinessType.crenew;
-            case  "新增维修":return BusinessType.repairnew;
+            case  "新增普查":return BusinessType.pnew;
         }
         return null;
     }
 
     public static BusinessType findByKey(String key){
         switch (key){
-            case  "新增合同":return BusinessType.cnew;
+            case  "新增普查":return BusinessType.pnew;
         }
         return null;
     }

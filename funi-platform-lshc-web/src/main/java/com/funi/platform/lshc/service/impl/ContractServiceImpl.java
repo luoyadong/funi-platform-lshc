@@ -146,7 +146,7 @@ public class ContractServiceImpl implements ContractService {
             }
         }
         //开启工作流
-        workFlowService.start(BusinessType.cnew.getKey(),BusinessType.cnew.getName(),BusinessType.cnew.getVersion().toString(),
+        workFlowService.start(BusinessType.pnew.getKey(),BusinessType.cnew.getName(),BusinessType.cnew.getVersion().toString(),
                 contr.getServiceNum(),GHOUSE_CONTR,userManager.findRegionCode(),
                 userManager.findUser().getId(),null);
     }

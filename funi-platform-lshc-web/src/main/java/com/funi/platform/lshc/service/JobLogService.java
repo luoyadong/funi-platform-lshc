@@ -12,7 +12,7 @@ import java.util.List;
 public interface JobLogService {
 
     /**
-     * 创建受理信息
+     * 创建日志主信息
      * @param jobAccept
      * @return
      */
@@ -30,5 +30,9 @@ public interface JobLogService {
      */
     void modifyCurStatus(JobAccept jobAccept);
 
+    /**
+     * 根据普查id，查询操作日志
+     * @param serviceNum
+     */
     List<WorkLogDto> findByServiceNum(String serviceNum);
 }

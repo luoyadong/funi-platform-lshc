@@ -5,8 +5,10 @@ package com.funi.platform.lshc.enumatation;
  */
 public enum Node {
 
-    N001("审批"),
-    N002("结束");
+    N001("初审"),
+    N002("复审"),
+    N003("审核"),
+    N004("结束");
 
     private String name;
 

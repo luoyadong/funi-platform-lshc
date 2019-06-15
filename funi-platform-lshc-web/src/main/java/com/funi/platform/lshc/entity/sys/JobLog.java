@@ -36,6 +36,11 @@ public class JobLog extends BaseEntity {
      */
     private String jobOpinion;
 
+    /**
+     * 操作人单位
+     */
+    private String unitName;
+
     public String getAuditId() {
         return auditId;
     }
@@ -82,5 +87,13 @@ public class JobLog extends BaseEntity {
 
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 }

@@ -24,4 +24,5 @@ public class JobLogController {
     public List<WorkLogDto> find(String serviceNum){
         return jobLogService.findByServiceNum(serviceNum);
     }
+
 }

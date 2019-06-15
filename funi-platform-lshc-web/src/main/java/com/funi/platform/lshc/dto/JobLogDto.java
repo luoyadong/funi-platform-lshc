@@ -9,7 +9,7 @@ import com.funi.platform.lshc.enumatation.BusinessType;
  */
 public class JobLogDto {
 
-    //受理信息
+    //日志主信息
     private JobAccept jobAccept;
     //日志明细
     private JobLog jobLog;
