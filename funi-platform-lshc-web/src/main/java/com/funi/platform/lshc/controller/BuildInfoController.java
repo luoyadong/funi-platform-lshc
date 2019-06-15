@@ -121,18 +121,17 @@ public class BuildInfoController extends BaseController {
     }
 
     /**
-     * 根据查询条件导出普查信息列表
-     * @param regiInfoQuery
+     * 根据房屋编号导出普查信息列表
+     * @param ids
      * @param response
      */
     @RequestMapping("exportRegiInfoVoList")
-    public void exportRegiInfoVoList(RegiInfoQuery regiInfoQuery, HttpServletResponse response) {
+    public void exportRegiInfoVoList(@RequestBody List<String> ids, HttpServletResponse response) {
         try {
-            buildInfoService.exportRegiInfoVoList(regiInfoQuery, response);
+            buildInfoService.exportRegiInfoVoList(ids, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 }

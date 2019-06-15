@@ -36,6 +36,9 @@ public class EntInfo extends SuperEntity implements Serializable {
     /** 证件类型 */
     private String idType;
 
+    /** 证件号码 */
+    private String idNo;
+
     /** 职业 */
     private String career;
 
@@ -111,6 +114,14 @@ public class EntInfo extends SuperEntity implements Serializable {
 
     public void setIdType(String idType) {
         this.idType = idType;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
     }
 
     public String getCareer() {

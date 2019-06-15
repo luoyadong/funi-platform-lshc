@@ -75,6 +75,60 @@
       <result column="url" property="url" />
     </collection>
   </resultMap>
+  <select id="selectExcelRegiInfoVoList" resultType="com.funi.platform.lshc.vo.census.ExcelRegiInfoVo">
+      SELECT
+        t2.project_name AS projectName,
+        t2.ESTATE_UNIT_NAME AS estateUnitName,
+        t2.map_code AS mapCode,
+        t2.HOUSE_ID AS houseId,
+        t2.region AS region,
+        t2.street AS street,
+        t2.apt AS apt,
+        t2.build_no AS buildNo,
+        t2.UNIT_NO AS unitNo,
+        t2.layer AS layer,
+        t2.room_no AS roomNo,
+        t2.right_no AS rightAddr,
+        t2.HOUSE_AREA AS houseArea,
+        t2.INNER_HOUSE_AREA AS innerHouseArea,
+        t2.HOUSE_ROOM || '室' || t2.HOUSE_HALL || '卫' || t2.HOUSE_BATHROOM || '厅' AS houseStyle,
+        t2.IS_REGI AS isRegi,
+        t2.right_no AS rightNo,
+        t2.build_date AS buildDate,
+        t2.house_type AS houseType,
+        t2.HOUSE_STRUCTURE AS houseStructure,
+        t2.house_use AS houseUse,
+        t2.LAND_STATUS AS landStatus,
+        t2.PRE_SALE_NO AS preSaleNo,
+        t2.fit_status AS fitStatus,
+        t2.IS_CHECK_IN AS isCheckIn,
+        t2.is_rent AS isRent,
+        t2.RENT_START_DATE AS rentStartDate,
+        t2.RENT_END_DATE AS rentEndDate,
+        t2.PERSON_NUM AS personNum,
+        t1.ENT_NAME AS entName,
+        t1.ENT_TYPE AS entType,
+        t1.SEX AS sex,
+        t1.ENT_NATION AS entNation,
+        t1.ENT_NATIVE AS entNative,
+        t1.tel AS tel,
+        t1.marriage_status AS marriageStatus,
+        t1.ID_TYPE AS idType,
+        t1.ID_NO AS idNo,
+        t1.career AS career
+    FROM
+        LSHC_ENT_INFO t1
+        LEFT JOIN LSHC_REGI_INFO t2 ON t1.HC_ID = t2.HOUSE_ID
+    WHERE
+        t1.DELETED = 0
+        AND t1.ISVALIDE = '1'
+        AND t2.DELETED = 0
+        AND t2.ISVALIDE = '1'
+        AND house_id in
+      <foreach collection="list" separator=","  item="id" open="(" close=")">
+        #{id}
+      </foreach>
+  </select>
     <update id="batchDeleteRegiInfo">
       update  LSHC_REGI_INFO
       set DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}

@@ -12,6 +12,7 @@
     <result column="TEL" jdbcType="VARCHAR" property="tel" />
     <result column="MARRIAGE_STATUS" jdbcType="VARCHAR" property="marriageStatus" />
     <result column="ID_TYPE" jdbcType="VARCHAR" property="idType" />
+    <result column="ID_NO" jdbcType="VARCHAR" property="idNo" />
     <result column="CAREER" jdbcType="VARCHAR" property="career" />
     <result column="VERSION" jdbcType="DECIMAL" property="version" />
     <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
@@ -23,7 +24,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     ID, HC_ID, ENT_NAME, SEX, ENT_TYPE, ENT_NATION, ENT_NATIVE, TEL, MARRIAGE_STATUS,
-    ID_TYPE, CAREER, VERSION, CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED,
+    ID_TYPE, ID_NO, CAREER, VERSION, CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED,
     ISVALIDE
   </sql>
     <update id="batchDeleteEntInfo">
@@ -58,13 +59,13 @@
     </selectKey>
     insert into LSHC_ENT_INFO (ID, HC_ID, ENT_NAME, SEX,
     ENT_TYPE, ENT_NATION, ENT_NATIVE,
-    TEL, MARRIAGE_STATUS, ID_TYPE,
+    TEL, MARRIAGE_STATUS, ID_TYPE, ID_NO,
     CAREER, VERSION, CREATE_TIME,
     CREATE_ID, UPDATE_TIME, UPDATE_ID,
     DELETED, ISVALIDE)
     values (#{id,jdbcType=VARCHAR}, #{hcId,jdbcType=VARCHAR}, #{entName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR},
     #{entType,jdbcType=VARCHAR}, #{entNation,jdbcType=VARCHAR}, #{entNative,jdbcType=VARCHAR},
-    #{tel,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{idType,jdbcType=VARCHAR},
+    #{tel,jdbcType=VARCHAR}, #{marriageStatus,jdbcType=VARCHAR}, #{idType,jdbcType=VARCHAR},#{idNo,jdbcType=VARCHAR},
     #{career,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
     #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
     #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR})
@@ -105,6 +106,9 @@
       <if test="idType != null">
         ID_TYPE,
       </if>
+        <if test="idNo != null">
+            ID_NO,
+        </if>
       <if test="career != null">
         CAREER,
       </if>
@@ -217,6 +221,9 @@
       <if test="idType != null">
         ID_TYPE = #{idType,jdbcType=VARCHAR},
       </if>
+        <if test="idNo != null">
+            ID_NO = #{idNo,jdbcType=VARCHAR},
+        </if>
       <if test="career != null">
         CAREER = #{career,jdbcType=VARCHAR},
       </if>
@@ -255,6 +262,7 @@
       TEL = #{tel,jdbcType=VARCHAR},
       MARRIAGE_STATUS = #{marriageStatus,jdbcType=VARCHAR},
       ID_TYPE = #{idType,jdbcType=VARCHAR},
+      ID_NO = #{idNo,jdbcType=VARCHAR},
       CAREER = #{career,jdbcType=VARCHAR},
       VERSION = #{version,jdbcType=DECIMAL},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},

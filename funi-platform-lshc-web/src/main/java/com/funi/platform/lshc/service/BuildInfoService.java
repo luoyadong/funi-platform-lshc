@@ -55,10 +55,10 @@ public interface BuildInfoService {
     void importRegiInfo(MultipartFile uploadFile);
 
     /**
-     * 根据查询条件导出普查信息列表
-     * @param regiInfoQuery
+     * 根据房屋编号导出普查信息列表
+     * @param ids
      * @param response
      */
-    void exportRegiInfoVoList(RegiInfoQuery regiInfoQuery, HttpServletResponse response);
+    void exportRegiInfoVoList(List<String> ids, HttpServletResponse response) throws Exception;
 
 }

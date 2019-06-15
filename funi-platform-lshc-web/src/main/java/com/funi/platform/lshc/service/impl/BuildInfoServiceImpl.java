@@ -15,9 +15,11 @@ import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.BuildInfoService;
 import com.funi.platform.lshc.support.CensusConstants;
+import com.funi.platform.lshc.utils.ExcelUtil;
 import com.funi.platform.lshc.utils.NumberUtil;
 import com.funi.platform.lshc.utils.SuperEntityUtils;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import com.funi.platform.lshc.vo.census.RegiInfoDetailVo;
 import org.apache.commons.collections.CollectionUtils;
@@ -123,6 +125,7 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         entInfo.setTel("13888888888");
         entInfo.setMarriageStatus("0");
         entInfo.setIdType("身份证");
+        entInfo.setIdNo("510107123465977");
         entInfo.setCareer("无业");
         entInfoList.add(entInfo);
         return entInfoList;
@@ -271,8 +274,12 @@ public class BuildInfoServiceImpl implements BuildInfoService {
     }
 
     @Override
-    public void exportRegiInfoVoList(RegiInfoQuery regiInfoQuery, HttpServletResponse response) {
-
+    public void exportRegiInfoVoList(List<String> ids, HttpServletResponse response) throws Exception {
+        List<ExcelRegiInfoVo> excelRegiInfoVoList = regiInfoMapper.selectExcelRegiInfoVoList(ids);
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("没有满足条件的数据");
+        }
+        ExcelUtil.excelExport("普查数据统计表.xls","普查数据", excelRegiInfoVoList, response);
     }
 
 }

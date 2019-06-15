@@ -2,6 +2,7 @@ package com.funi.platform.lshc.mapper.census;
 
 import com.funi.platform.lshc.entity.census.RegiInfo;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
+import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -39,4 +40,11 @@ public interface RegiInfoMapper {
      * @param ids
      */
     void batchDeleteRegiInfo(@Param("ids") List<String> ids, @Param("userId") String userId);
+
+    /**
+     * 根据房屋编号查询楼栋、房屋、人员信息
+     * @param ids
+     * @return
+     */
+    List<ExcelRegiInfoVo> selectExcelRegiInfoVoList(List<String> ids);
 }
