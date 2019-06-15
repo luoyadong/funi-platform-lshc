@@ -1,5 +1,7 @@
 package com.funi.platform.lshc.vo.census;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import java.util.List;
 
 /**
@@ -18,6 +20,19 @@ public class ListRegiInfoVo {
     private String roomNo;
     /** 文件列表*/
     private List<ListFileVo> listFileVoList;
+    /** 图片数量*/
+    private int fileCount;
+
+    public int getFileCount() {
+        if(CollectionUtils.isNotEmpty(listFileVoList)) {
+            return listFileVoList.size();
+        }
+        return 0;
+    }
+
+    public void setFileCount(int fileCount) {
+        this.fileCount = fileCount;
+    }
 
     public String getId() {
         return id;

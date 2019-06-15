@@ -37,10 +37,10 @@ public interface BuildInfoService {
 
     /**
      * 根据房屋编号查询房屋详情
-     * @param houseId
+     * @param hcId
      * @return
      */
-    RegiInfoDetailVo findRegiInfoDetail(String houseId);
+    RegiInfoDetailVo findRegiInfoDetail(String hcId);
 
     /**
      * 根据ID集合批量删除房屋普查记录

@@ -20,10 +20,10 @@ public interface FileMapper {
 
     /**
      * 根据房屋编号查询附件列表
-     * @param houseId
+     * @param hcId
      * @return
      */
-    List<File> selectFileListByHouseId(String houseId);
+    List<File> selectFileListByHouseId(String hcId);
 
     /**
      * 根据房屋编号集合逻辑删除房屋关联的附件信息

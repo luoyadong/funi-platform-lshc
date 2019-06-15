@@ -20,10 +20,10 @@ public interface EntInfoMapper {
 
     /**
      * 根据房屋编号查询入住人员信息
-     * @param houseId
+     * @param hcId
      * @return
      */
-    List<EntInfo> selectEntInfoListByHouseId(String houseId);
+    List<EntInfo> selectEntInfoListByHouseId(String hcId);
 
     /**
      * 根据房屋编号集合逻辑删除房屋关联的忍住人员信息

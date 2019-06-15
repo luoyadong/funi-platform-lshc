@@ -62,10 +62,12 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         CurrentUser userInfo = getUserInfo();
         new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
         regiInfo = getTestRegiInfo(regiInfo);
+        // 校验房屋信息唯一性
+        checkRegiInfoUnique(regiInfo);
         initRegiInfo(regiInfo, userInfo);
         // 保存房屋数据
         regiInfoMapper.insert(regiInfo);
-
+        String hcId = regiInfo.getId();
         // 获得楼栋地图编号
         String mapCode = regiInfo.getMapCode();
         if(StringUtils.isBlank(mapCode)) {
@@ -86,7 +88,7 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         if(CollectionUtils.isNotEmpty(entInfoList)) {
             for(EntInfo entInfo : entInfoList) {
                 new SuperEntityUtils<>().buildCreateEntity(entInfo, userInfo);
-                entInfo.setHcId(regiInfo.getHouseId());
+                entInfo.setHcId(hcId);
                 entInfoMapper.insert(entInfo);
             }
         }
@@ -102,9 +104,15 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         }
     }
 
+    private void checkRegiInfoUnique(RegiInfo regiInfo) {
+        int houseCount = regiInfoMapper.checkRegiInfoUnique(regiInfo);
+        if(houseCount > 0) {
+            throw new RuntimeException("房屋信息重复，请再次确认房屋信息");
+        }
+    }
+
     private void initRegiInfo(RegiInfo regiInfo, CurrentUser userInfo) {
-        // TODO 设置房屋编号，使用序列
-//        regiInfo.setHouseId();
+        regiInfo.setHouseId(regiInfoMapper.generateHouseId());
         // 默认状态是录入
         regiInfo.setHouseStatus(CensusConstants.HOUSE_STATUS_INPUT);
         regiInfo.setOrgCode(userInfo.getOrganization().getDm());
@@ -143,7 +151,7 @@ public class BuildInfoServiceImpl implements BuildInfoService {
     }
 
     private void buildFileInfo(File file, RegiInfo regiInfo, CurrentUser userInfo) {
-        file.setHcId(regiInfo.getHouseId());
+        file.setHcId(regiInfo.getId());
         file.setRightNo(regiInfo.getRightNo());
         file.setSubmitDate(new Date());
         file.setUserName(userInfo.getName());
@@ -193,7 +201,6 @@ public class BuildInfoServiceImpl implements BuildInfoService {
     }
 
     private RegiInfo getTestRegiInfo(RegiInfo regiInfo) {
-        regiInfo.setHouseId(NumberUtil.getSysCode());
         regiInfo.setRegion("高新区");
         regiInfo.setStreet("中和街道");
         regiInfo.setProjectName("龙湖九里晴川");
@@ -227,13 +234,6 @@ public class BuildInfoServiceImpl implements BuildInfoService {
         regiInfo.setIsRent("1");
         regiInfo.setRentStartDate("2017-01");
         regiInfo.setRentEndDate("2018-06");
-        regiInfo.setApprovalStatus("0");
-        regiInfo.setHouseStatus(CensusConstants.HOUSE_STATUS_INPUT);
-        regiInfo.setOrgCode("org123");
-        regiInfo.setOrgName("拉萨机构");
-        regiInfo.setUnitName("填报单位啊");
-        regiInfo.setApplyUser("三张");
-        regiInfo.setReportDate(new Date());
         regiInfo.setCommon("扩展字段");
         return regiInfo;
     }
@@ -244,13 +244,13 @@ public class BuildInfoServiceImpl implements BuildInfoService {
     }
 
     @Override
-    public RegiInfoDetailVo findRegiInfoDetail(String houseId) {
+    public RegiInfoDetailVo findRegiInfoDetail(String hcId) {
         RegiInfoDetailVo regiInfoDetailVo = new RegiInfoDetailVo();
-        RegiInfo regiInfo = regiInfoMapper.selectRegiInfoByHouseId(houseId);
+        RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(hcId);
         regiInfoDetailVo.setRegiInfo(regiInfo);
-        List<EntInfo> entInfoList = entInfoMapper.selectEntInfoListByHouseId(houseId);
+        List<EntInfo> entInfoList = entInfoMapper.selectEntInfoListByHouseId(hcId);
         regiInfoDetailVo.setEntInfoList(entInfoList);
-        List<File> fileList = fileMapper.selectFileListByHouseId(houseId);
+        List<File> fileList = fileMapper.selectFileListByHouseId(hcId);
         regiInfoDetailVo.setFileList(fileList);
         // TODO 查询处理过程信息
         // TODO 当前所处的环节

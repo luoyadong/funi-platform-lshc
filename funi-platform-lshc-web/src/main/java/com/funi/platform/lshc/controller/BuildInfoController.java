@@ -65,7 +65,7 @@ public class BuildInfoController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
             new ResultVo(false);
-            ResultVo resultVo = ResultVo.newResult("添加普查信息失败");
+            ResultVo resultVo = ResultVo.newResult("添加普查信息失败：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }
@@ -73,13 +73,13 @@ public class BuildInfoController extends BaseController {
 
     /**
      * 根据房屋编号查询房屋详情
-     * @param houseId
+     * @param hcId
      * @return
      */
     @RequestMapping("getRegiInfoDetail")
     @ResponseBody
-    public RegiInfoDetailVo getRegiInfoDetail(String houseId) {
-        return buildInfoService.findRegiInfoDetail(houseId);
+    public RegiInfoDetailVo getRegiInfoDetail(String hcId) {
+        return buildInfoService.findRegiInfoDetail(hcId);
     }
 
     /**
