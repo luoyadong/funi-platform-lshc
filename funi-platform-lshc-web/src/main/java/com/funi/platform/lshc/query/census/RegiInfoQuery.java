@@ -8,6 +8,8 @@ import com.funi.platform.lshc.query.BaseQuery;
 public class RegiInfoQuery extends BaseQuery {
     /** 审批状态*/
     private String status;
+    /** */
+    private String mapCode;
 
     public String getStatus() {
         return status;
@@ -17,4 +19,11 @@ public class RegiInfoQuery extends BaseQuery {
         this.status = status;
     }
 
+    public String getMapCode() {
+        return mapCode;
+    }
+
+    public void setMapCode(String mapCode) {
+        this.mapCode = mapCode;
+    }
 }
