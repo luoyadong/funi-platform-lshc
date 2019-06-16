@@ -63,8 +63,9 @@
     RENT_END_DATE, ORG_CODE, ORG_NAME, UNIT_NAME, APPLY_USER, REPORT_DATE, COMMON, VERSION,
     CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
-  <select id="checkRegiInfoUnique" parameterType="com.funi.platform.lshc.entity.census.RegiInfo" resultType="java.lang.Integer">
-    select count(id) from LSHC_REGI_INFO
+
+  <select id="selectRegiInfoByUniqueQuery" parameterType="com.funi.platform.lshc.entity.census.RegiInfo" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from LSHC_REGI_INFO
     <where>
       DELETED = 0
       AND ISVALIDE = '1'

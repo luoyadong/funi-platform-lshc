@@ -110,7 +110,7 @@ public class BuildInfoController extends BaseController {
     @ResponseBody
     public Object importRegiInfo(MultipartFile uploadFile) {
         try {
-            importRegiInfo(uploadFile);
+            buildInfoService.importRegiInfo(uploadFile);
             return ResultVo.newResult("批量导入普查信息成功");
         } catch(Exception e) {
             new ResultVo(false);

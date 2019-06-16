@@ -27,6 +27,20 @@
     ID_TYPE, ID_NO, CAREER, VERSION, CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED,
     ISVALIDE
   </sql>
+    <select id="selectEntInfoByUniqueQuery" parameterType="com.funi.platform.lshc.entity.census.EntInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from LSHC_ENT_INFO
+        where HC_ID = #{hcId,jdbcType=VARCHAR}
+        AND ISVALIDE = '1'
+        AND DELETED = 0
+        <if test="idType != null">
+            AND ID_TYPE = #{idType,jdbcType=VARCHAR}
+        </if>
+        <if test="idNo != null">
+            AND ID_NO = #{idNo,jdbcType=VARCHAR}
+        </if>
+    </select>
     <update id="batchDeleteEntInfo">
         update  LSHC_ENT_INFO
         set DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}

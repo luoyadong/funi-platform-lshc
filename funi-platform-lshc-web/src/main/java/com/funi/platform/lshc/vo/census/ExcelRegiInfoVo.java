@@ -50,9 +50,15 @@ public class ExcelRegiInfoVo {
     /** 套内面积 */
     @Excel(name="套内面积")
     private BigDecimal innerHouseArea;
-    /** 房屋户型 */
-    @Excel(name="房屋户型")
-    private String houseStyle;
+    /** 房屋户型(室) */
+    @Excel(name="室")
+    private String houseRoom;
+    /** 房屋户型(厅) */
+    @Excel(name="厅")
+    private String houseHall;
+    /** 房屋户型(卫) */
+    @Excel(name="卫")
+    private String houseBathroom;
     /** 是否办理产权 */
     @Excel(name="是否办理产权")
     private String isRegi;
@@ -238,12 +244,28 @@ public class ExcelRegiInfoVo {
         this.innerHouseArea = innerHouseArea;
     }
 
-    public String getHouseStyle() {
-        return houseStyle;
+    public String getHouseRoom() {
+        return houseRoom;
     }
 
-    public void setHouseStyle(String houseStyle) {
-        this.houseStyle = houseStyle;
+    public void setHouseRoom(String houseRoom) {
+        this.houseRoom = houseRoom;
+    }
+
+    public String getHouseHall() {
+        return houseHall;
+    }
+
+    public void setHouseHall(String houseHall) {
+        this.houseHall = houseHall;
+    }
+
+    public String getHouseBathroom() {
+        return houseBathroom;
+    }
+
+    public void setHouseBathroom(String houseBathroom) {
+        this.houseBathroom = houseBathroom;
     }
 
     public String getIsRegi() {

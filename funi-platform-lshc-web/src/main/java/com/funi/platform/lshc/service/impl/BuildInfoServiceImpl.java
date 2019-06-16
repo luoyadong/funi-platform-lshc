@@ -2,6 +2,7 @@ package com.funi.platform.lshc.service.impl;
 
 import com.funi.framework.biz.eic.bo.CurrentUser;
 import com.funi.framework.biz.support.CurrentUserAccessor;
+import com.funi.framework.data.migrate.excel.ExcelImporter;
 import com.funi.platform.lshc.dto.RegiInfoDto;
 import com.funi.platform.lshc.entity.census.BuildInfo;
 import com.funi.platform.lshc.entity.census.EntInfo;
@@ -16,7 +17,6 @@ import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.BuildInfoService;
 import com.funi.platform.lshc.support.CensusConstants;
 import com.funi.platform.lshc.utils.ExcelUtil;
-import com.funi.platform.lshc.utils.NumberUtil;
 import com.funi.platform.lshc.utils.SuperEntityUtils;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
@@ -24,10 +24,12 @@ import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import com.funi.platform.lshc.vo.census.RegiInfoDetailVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,14 +62,51 @@ public class BuildInfoServiceImpl implements BuildInfoService {
             regiInfo = new RegiInfo();
         }
         CurrentUser userInfo = getUserInfo();
-        new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
-        regiInfo = getTestRegiInfo(regiInfo);
+
+//        regiInfo = getTestRegiInfo(regiInfo);
         // 校验房屋信息唯一性
         checkRegiInfoUnique(regiInfo);
-        initRegiInfo(regiInfo, userInfo);
+        // 保存房屋信息和楼栋信息
+        saveNewRegiInfo(regiInfo, userInfo);
+        // 房屋主键ID
+        String hcId = regiInfo.getId();
+        // 人口信息
+        List<EntInfo> entInfoList = regiInfoDto.getEntInfoList();
+//        entInfoList = getTestEntInfoList();
+        if(CollectionUtils.isNotEmpty(entInfoList)) {
+            for(EntInfo entInfo: entInfoList) {
+                saveNewEntInfo(entInfo, hcId, userInfo);
+            }
+        }
+        // 附件信息
+        List<File> fileList = regiInfoDto.getFileList();
+//        fileList = getTestFileList();
+        if(CollectionUtils.isNotEmpty(fileList)) {
+            for(File file : fileList) {
+                new SuperEntityUtils<>().buildCreateEntity(file, userInfo);
+                buildFileInfo(file, regiInfo, userInfo);
+                fileMapper.insert(file);
+            }
+        }
+    }
+
+    /**
+     * 保存新增的房屋信息，如果楼栋不存在则保存楼栋信息
+     * @param regiInfo
+     * @param userInfo
+     */
+    private void saveNewRegiInfo(RegiInfo regiInfo, CurrentUser userInfo) {
+        new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
+        regiInfo.setHouseId(regiInfoMapper.generateHouseId());
+        // 默认状态是录入
+        regiInfo.setHouseStatus(CensusConstants.HOUSE_STATUS_INPUT);
+        regiInfo.setOrgCode(userInfo.getOrganization().getDm());
+        regiInfo.setOrgName(userInfo.getOrganization().getMc());
+        regiInfo.setUnitName(userInfo.getOrganization().getMc());
+        regiInfo.setApplyUser(userInfo.getName());
+        regiInfo.setReportDate(new Date());
         // 保存房屋数据
         regiInfoMapper.insert(regiInfo);
-        String hcId = regiInfo.getId();
         // 获得楼栋地图编号
         String mapCode = regiInfo.getMapCode();
         if(StringUtils.isBlank(mapCode)) {
@@ -81,46 +120,31 @@ public class BuildInfoServiceImpl implements BuildInfoService {
             // 保存楼栋数据
             buildInfoMapper.insert(buildInfo);
         }
-
-        // 人口信息
-        List<EntInfo> entInfoList = regiInfoDto.getEntInfoList();
-        entInfoList = getTestEntInfoList();
-        if(CollectionUtils.isNotEmpty(entInfoList)) {
-            for(EntInfo entInfo : entInfoList) {
-                new SuperEntityUtils<>().buildCreateEntity(entInfo, userInfo);
-                entInfo.setHcId(hcId);
-                entInfoMapper.insert(entInfo);
-            }
-        }
-        // 附件信息
-        List<File> fileList = regiInfoDto.getFileList();
-        fileList = getTestFileList();
-        if(CollectionUtils.isNotEmpty(fileList)) {
-            for(File file : fileList) {
-                new SuperEntityUtils<>().buildCreateEntity(file, userInfo);
-                buildFileInfo(file, regiInfo, userInfo);
-                fileMapper.insert(file);
-            }
-        }
     }
 
+    /**
+     * 保存房屋的入住人信息
+     * @param entInfo
+     * @param hcId
+     * @param userInfo
+     */
+    private void saveNewEntInfo(EntInfo entInfo, String hcId, CurrentUser userInfo) {
+        new SuperEntityUtils<>().buildCreateEntity(entInfo, userInfo);
+        entInfo.setHcId(hcId);
+        entInfoMapper.insert(entInfo);
+    }
+
+    /**
+     * 校验房屋唯一性
+     * @param regiInfo
+     */
     private void checkRegiInfoUnique(RegiInfo regiInfo) {
-        int houseCount = regiInfoMapper.checkRegiInfoUnique(regiInfo);
-        if(houseCount > 0) {
+        List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
+        if(CollectionUtils.isNotEmpty(regiInfoList)) {
             throw new RuntimeException("房屋信息重复，请再次确认房屋信息");
         }
     }
 
-    private void initRegiInfo(RegiInfo regiInfo, CurrentUser userInfo) {
-        regiInfo.setHouseId(regiInfoMapper.generateHouseId());
-        // 默认状态是录入
-        regiInfo.setHouseStatus(CensusConstants.HOUSE_STATUS_INPUT);
-        regiInfo.setOrgCode(userInfo.getOrganization().getDm());
-        regiInfo.setOrgName(userInfo.getOrganization().getMc());
-        regiInfo.setUnitName(userInfo.getOrganization().getMc());
-        regiInfo.setApplyUser(userInfo.getName());
-        regiInfo.setReportDate(new Date());
-    }
 
     private List<EntInfo> getTestEntInfoList() {
         List<EntInfo> entInfoList = new ArrayList<>();
@@ -269,8 +293,102 @@ public class BuildInfoServiceImpl implements BuildInfoService {
     }
 
     @Override
-    public void importRegiInfo(MultipartFile uploadFile) {
+    public void importRegiInfo(MultipartFile uploadFile) throws IOException {
+        List<ExcelRegiInfoVo> queryList = null;
+        ExcelImporter<ExcelRegiInfoVo> importer = new ExcelImporter<>();
+        queryList = importer.setStartRows(4).setHeadRows(3).setItemClass(ExcelRegiInfoVo.class).execute(uploadFile.getInputStream());
+        // 校验Excel数据有效性
+        checkExcelRegiInfoVoList(queryList);
+        for(ExcelRegiInfoVo excelRegiInfoVo : queryList) {
+            RegiInfo regiInfo = new RegiInfo();
+            EntInfo entInfo = new EntInfo();
+            // 拷贝房屋对象属性
+            BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
+            // 拷贝入住人员属性
+            BeanUtils.copyProperties(excelRegiInfoVo, entInfo);
+            CurrentUser userInfo = getUserInfo();
+            String hcId = null;
+            // 因为房屋和入住人是一对多的关系，因此可能存在多条相同的房屋信息
+            List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
+            if(CollectionUtils.isNotEmpty(regiInfoList)) {
+                RegiInfo regiInfoExist = regiInfoList.get(0);
+                hcId = regiInfoExist.getId();
+            } else {
+                // 保存房屋信息
+                saveNewRegiInfo(regiInfo, userInfo);
+                regiInfo.getId();
+            }
+            // 保存入住人信息
+            saveNewEntInfo(entInfo, hcId, userInfo);
+        }
+    }
 
+    /**
+     * 检查Excel批量导入的房屋数据是否已经在数据库中存在
+     * @param excelRegiInfoVoList
+     */
+    private void checkExcelRegiInfoVoList(List<ExcelRegiInfoVo> excelRegiInfoVoList) {
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
+        }
+        for(ExcelRegiInfoVo excelRegiInfoVo :excelRegiInfoVoList) {
+            RegiInfo regiInfo = new RegiInfo();
+            // 拷贝房屋对象属性
+            BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
+            List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
+            if(regiInfoList.size() > 0) {
+                throw new RuntimeException(getRegiInfoDesc(regiInfo));
+            }
+        }
+
+    }
+
+    /**
+     * 市+区+县+门牌号+楼栋地图编号+栋+单元+楼层+号
+     * @param regiInfo
+     * @return
+     */
+    private String getRegiInfoDesc(RegiInfo regiInfo) {
+        StringBuilder regiInfoBuilder = new StringBuilder();
+        String mapCode = regiInfo.getMapCode();
+        if(StringUtils.isNotBlank(mapCode)) {
+            regiInfoBuilder.append("楼栋地图编号为：" + mapCode + ",");
+        }
+        regiInfoBuilder.append("地址为：");
+        String addressCity = regiInfo.getAddressCity();
+        if(StringUtils.isNotBlank(addressCity)) {
+            regiInfoBuilder.append(addressCity);
+        }
+        String addressRegion = regiInfo.getAddressRegion();
+        if(StringUtils.isNotBlank(addressRegion)) {
+            regiInfoBuilder.append(addressRegion);
+        }
+        String addressCounty = regiInfo.getAddressCounty();
+        if(StringUtils.isNotBlank(addressCounty)) {
+            regiInfoBuilder.append(addressCounty);
+        }
+        String apt = regiInfo.getApt();
+        if(StringUtils.isNotBlank(apt)) {
+            regiInfoBuilder.append(apt + "号");
+        }
+        String buildNo = regiInfo.getBuildNo();
+        if(StringUtils.isNotBlank(buildNo)) {
+            regiInfoBuilder.append(buildNo + "栋");
+        }
+        String unitNo = regiInfo.getUnitNo();
+        if(StringUtils.isNotBlank(unitNo)) {
+            regiInfoBuilder.append(unitNo + "单元");
+        }
+        String layer = regiInfo.getLayer();
+        if(StringUtils.isNotBlank(layer)) {
+            regiInfoBuilder.append(layer + "楼");
+        }
+        String roomNo = regiInfo.getRoomNo();
+        if(StringUtils.isNotBlank(roomNo)) {
+            regiInfoBuilder.append(roomNo + "号");
+        }
+        regiInfoBuilder.append("的房屋信息在数据库中存在多条数据，请核对房屋信息");
+        return regiInfoBuilder.toString();
     }
 
     @Override

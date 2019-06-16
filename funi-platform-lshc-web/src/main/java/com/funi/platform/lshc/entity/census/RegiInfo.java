@@ -1,6 +1,8 @@
 package com.funi.platform.lshc.entity.census;
 
 import com.funi.platform.lshc.entity.SuperEntity;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -46,6 +48,9 @@ public class RegiInfo extends SuperEntity implements Serializable {
 
     /** 实际地址(县) */
     private String addressCounty;
+
+    /** 实际地址，非数据库字段，由市区县拼接而成*/
+    private String addressDetail;
 
     /** 门牌号 */
     private String apt;
@@ -236,6 +241,27 @@ public class RegiInfo extends SuperEntity implements Serializable {
 
     public void setAddressCounty(String addressCounty) {
         this.addressCounty = addressCounty;
+    }
+
+    public String getAddressDetail() {
+        StringBuilder regiInfoBuilder = new StringBuilder();
+        String addressCity = getAddressCity();
+        if(StringUtils.isNotBlank(addressCity)) {
+            regiInfoBuilder.append(addressCity);
+        }
+        String addressRegion = getAddressRegion();
+        if(StringUtils.isNotBlank(addressRegion)) {
+            regiInfoBuilder.append(addressRegion);
+        }
+        String addressCounty = getAddressCounty();
+        if(StringUtils.isNotBlank(addressCounty)) {
+            regiInfoBuilder.append(addressCounty);
+        }
+        return regiInfoBuilder.toString();
+    }
+
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
     }
 
     public String getApt() {

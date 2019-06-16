@@ -30,4 +30,12 @@ public interface EntInfoMapper {
      * @param ids
      */
     void batchDeleteEntInfo(@Param("ids") List<String> ids, @Param("userId") String userId);
+
+    /**
+     * 根据房屋ID，证件类型和证件号码判断是否唯一
+     * @param entInfo
+     * @return
+     */
+    List<EntInfo> selectEntInfoByUniqueQuery(EntInfo entInfo);
+
 }

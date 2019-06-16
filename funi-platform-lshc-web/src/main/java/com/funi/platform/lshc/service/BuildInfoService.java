@@ -9,6 +9,7 @@ import com.funi.platform.lshc.vo.census.RegiInfoDetailVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -52,7 +53,7 @@ public interface BuildInfoService {
      * 批量导入普查信息
      * @param uploadFile
      */
-    void importRegiInfo(MultipartFile uploadFile);
+    void importRegiInfo(MultipartFile uploadFile) throws IOException;
 
     /**
      * 根据房屋编号导出普查信息列表

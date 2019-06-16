@@ -48,10 +48,10 @@ public interface RegiInfoMapper {
     List<ExcelRegiInfoVo> selectExcelRegiInfoVoList(List<String> ids);
 
     /**
-     * 校验房屋的唯一性，以下字段相同，则认为房屋信息重复
+     * 根据房屋的唯一性条件查询房屋信息
      * 市+区+县+门牌号+楼栋地图编号+栋+单元+楼层+号
      * @param regiInfo
      * @return
      */
-    int checkRegiInfoUnique(RegiInfo regiInfo);
+    List<RegiInfo> selectRegiInfoByUniqueQuery(RegiInfo regiInfo);
 }
