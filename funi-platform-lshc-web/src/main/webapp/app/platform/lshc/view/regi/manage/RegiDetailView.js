@@ -4,7 +4,7 @@
  */
 
 Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.Panel',
     xtype: 'lshc-view-regi-RegiDetailView',
     requires: [
         //房屋列表信息
@@ -12,19 +12,20 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 		'app.platform.lshc.view.regi.manage.HouseDetailView'//房屋详情
     ],
     config: {
-        //主容器
-        parentContainer: null,
-		//普查主表ID
-		bizId:null,
-		mapCode:"",
-		address:""
+        // //主容器
+        // parentContainer: null,
+		// //普查主表ID
+		// bizId:null,
+		// mapCode:"",
+		// address:""
     },
-    constructor: function (config) {
-        var me = this;
-        config = config || {};
-        Ext.applyIf(config, me.config);
-        this.callParent(arguments);
-    },
+    //需要注释，否者传参数会报错
+    // constructor: function (config) {
+    //     var me = this;
+    //     config = config || {};
+    //     Ext.applyIf(config, me.config);
+    //     this.callParent(arguments);
+    // },
     title: null,
     getParams:function(){
         var formElements = Ext.ComponentQuery.query("textfield",this);
