@@ -1,10 +1,10 @@
 package com.funi.platform.lshc.entity.sys;
 
-import com.funi.platform.lshc.entity.BaseEntity;
+import com.funi.platform.lshc.entity.SuperEntity;
 
 import java.util.Date;
 
-public class JobAccept extends BaseEntity {
+public class JobAccept extends SuperEntity {
 
     /**
      * 受理号

@@ -10,6 +10,7 @@ public class WorkLogDto {
     private String jobOpinion;
     private String createDateStr;
     private String conclusion;
+    private String unitName;
 
     public String getConclusion() {
         return conclusion;
@@ -49,5 +50,13 @@ public class WorkLogDto {
 
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 }

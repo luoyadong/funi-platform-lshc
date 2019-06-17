@@ -8,8 +8,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
     modal: true,
     requires:[],
     width:420,
-    height:280,
-    title:'添加产权人',
+    height:360,
+    title:'添加人口信息',
     layout:"fit",
     border:true,
     initComponent: function () {
@@ -22,26 +22,45 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                     margin:'20 0 0 30',
                     items:[
                         {text: 'id', dataIndex: 'id',hidden:true},
-                        {text: 'houIs', dataIndex: 'houseId',hidden:true},
                         {
                             xtype: "textfield", labelAlign:"right",
-                            emptyText: "产权证书编号", allowBlank: false, fieldLabel: '产权证书编号',  width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'propertyCertificateNo'
+                            emptyText: "姓名", allowBlank: false, fieldLabel: '姓名',  width:300,
+                            labelWidth: 90, margin: '11 0 0 0',name:'entName'
+                        },
+						 {
+                            xtype: "textfield", labelAlign:"right",
+                            emptyText: "姓名", allowBlank: false, fieldLabel: '证件号码',  width:300,
+                            labelWidth: 90, margin: '11 0 0 0',name:'idNo',vtype:"idcard"
+                        },
+						{
+                            xtype: "textfield", labelAlign:"right",
+                            emptyText: "性别", allowBlank: false, fieldLabel: '性别',  width:300,
+                            labelWidth: 90, margin: '11 0 0 0',name:'sex'
+                        },
+						{
+                            xtype: "textfield", labelAlign:"right",
+                            emptyText: "人员类别", allowBlank: false, fieldLabel: '人员类别',  width:300,
+                            labelWidth: 90, margin: '11 0 0 0',name:'entType'
+                        },
+						{
+                            xtype: "textfield", labelAlign:"right",
+                            emptyText: "民族", allowBlank: false, fieldLabel: '民族',  width:300,
+                            labelWidth: 90, margin: '11 0 0 0',name:'entNation'
                         },
                         {
                             xtype: "textfield", labelAlign:"right",
-                            emptyText: "产权人姓名", allowBlank: false, fieldLabel: '产权人姓名',  width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'propertyUserName'
+                            emptyText: "籍贯", allowBlank: false, fieldLabel: '籍贯',  width:300,
+                            labelWidth: 90, margin: '11 0 0 0',name:'entNative'
                         },
                         {
                             xtype: "textfield", labelAlign:"right",
-                            emptyText: "产权人身份证", allowBlank: false, fieldLabel: '产权人身份证',width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'propertyUserIdNumber',vtype:"idcard"
+                            emptyText: "联系电话", allowBlank: false, fieldLabel: '联系电话',width:300,
+                            labelWidth: 90, margin: '11 0 0 0',name:'tel'
                         },
                         {
                             xtype: "textfield", labelAlign:"right",width:300,
-                            emptyText: "产权人联系电话", allowBlank: false, fieldLabel: '联系电话',
-                            labelWidth: 90, margin: '11 0 0 0',name:'propertyUserTel'
+                            emptyText: "婚姻状况", allowBlank: false, fieldLabel: '婚姻状况',
+                            labelWidth: 90, margin: '11 0 0 0',name:'marriageStatus'
                         }
 
                     ]
@@ -73,28 +92,44 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
     },
     valideFrom:function(){
         var me = this;
+
         var formView = me.queryById("rightEntItemId").form;
         var data = formView.getValues();
-        if(null == data.propertyCertificateNo || "" == data.propertyCertificateNo){
-            Ext.Msg.alert("提示","请输入产权证书编号");
+        if(null == data.entName || "" == data.entName){
+            Ext.Msg.alert("提示","请输入姓名");
             return false;
         }
-        if(null == data.propertyUserName || "" == data.propertyUserName){
-            Ext.Msg.alert("提示","请输入产权人姓名！");
+        if(null == data.sex || "" == data.sex){
+            Ext.Msg.alert("提示","请输入性别！");
             return false;
         }
-        if(null == data.propertyUserIdNumber || "" == data.propertyUserIdNumber){
-            Ext.Msg.alert("提示","请输入产权人身份证！");
+        if(null == data.idNo || "" == data.idNo){
+            Ext.Msg.alert("提示","请输入证件号码！");
             return false;
         }else{
-            if(me.CheckIdentityCode(data.propertyUserIdNumber,'0-100')!=0){
-                Ext.Msg.alert('提示',me.CheckIdentityCode(data.propertyUserIdNumber));
+            if(me.CheckIdentityCode(data.idNo,'0-100')!=0){
+                Ext.Msg.alert('提示',me.CheckIdentityCode(data.idNo));
                 return false;
             }
         }
-
-        if(null ==  data.propertyUserTel || "" == data.propertyUserTel){
-            Ext.Msg.alert("提示","请输入产权人联系电话！");
+		  if(null == data.entNation || "" == data.entNation){
+            Ext.Msg.alert("提示","请输入民族！");
+            return false;
+        }
+		  if(null == data.entType || "" == data.entType){
+            Ext.Msg.alert("提示","请输入人员类别！");
+            return false;
+        }
+		  if(null == data.entNative || "" == data.entNative){
+            Ext.Msg.alert("提示","请输入籍贯！");
+            return false;
+        }
+        if(null == data.tel || "" == data.tel){
+            Ext.Msg.alert("提示","请输入联系电话！");
+            return false;
+        }
+       if(null == data.marriageStatus || "" == data.marriageStatus){
+            Ext.Msg.alert("提示","请输入婚姻状况！");
             return false;
         }
         return true;

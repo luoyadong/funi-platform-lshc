@@ -1,6 +1,6 @@
 /**
- * 土地产权
- * reated by guochuan.deng on 2017/5/17.
+ * 人员信息
+ * reated by yadong.luo on 2019/5/17.
  */
 Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
     extend: 'Ext.panel.Panel',
@@ -15,9 +15,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
         var array = new Array();
         var count = store.getCount();
         for(var i=0;i<count;i++){
-            if(null == store.getAt(i).data.houseId || "" == store.getAt(i).data.houseId){
                 array.push(store.getAt(i).data);
-            }
         }
         return array;
         //throw {message:"请添加产权人信息"};
@@ -27,9 +25,31 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
         houseId:null,
         isUpdate:false
     },
+	
     initComponent: function () {
         var me = this;
-       
+       var store = Ext.create("Funi.data.ListStore",{
+            //url:app.platform.ghouse.view.base.RequestUtils.url("/contract/list"),
+            fields:[
+			    {type:"string",name:"id"},
+                {type:"string",name:"entName"},
+                {type:"string",name:"idNo"},
+                {type:"string",name:"sex"},
+                {type:"string",name:"entType"},
+                {type:"string",name:"entNation"},
+                {type:"string",name:"entNative"},
+				{type:"string",name:"tel"},
+                {type:"string",name:"marriageStatus"}
+            ],
+			data:[
+			{"id":"eqweqwewq","serialNo":1,"entName":"321321","idNo":"321321","sex":"dasdas",
+				"entType":"321321312","entNation":"dasdsa","entNative":'sa',"tel":'1340098765',"marriageStatus":'1'},
+			{"id":"eqweqwewq2","serialNo":1,"entName":"321321","idNo":"321321","sex":"dasdas",
+				"entType":"321321312","entNation":"dasdsa","entNative":'sa',"tel":'1340098765',"marriageStatus":'1'}
+			],
+			load:false,
+            pageSize:15
+        });
         Ext.apply(me, {
             items: [
                 {
@@ -38,7 +58,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                     border: true,
                     minHeight: 100,
                     width: "100%",
-                    //store: store,
+                    store: store,
                     margin: '0 0 20 0',
                     columnLines: true,
                     listeners: {
@@ -59,7 +79,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                                     //access:"AUTH_GHOUSE_HOUSE_ENT_ADD",
                                     handler: function () {
                                         Ext.create("app.platform.lshc.view.regi.manage.RightEntWin", {
-                                            
+                                            residentStore: store
                                         }).show();
                                     }
                                 }, {
@@ -72,7 +92,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                                     cls: "selected-action",
                                     handler: function (cmp) {
                                         var orgRecord = me.queryById("ghouse-manage-HousePropety-resident").getSelectionModel().getSelection()[0];
-                                        Ext.MessageBox.confirm("确认", '确认删除产权人：' + orgRecord.data.propertyUserName, function (btn, text) {
+                                        Ext.MessageBox.confirm("确认", '确认删除：' + orgRecord.data.entName, function (btn, text) {
                                             if (btn === "yes") {
                                                 Funi.core.Http.post({
                                                     url: Funi.core.Context.path("ghouse", "/house/deleteRightEnt"),
@@ -83,7 +103,6 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                                                         //store.reload();
                                                     }
                                                 });
-
                                             }
                                         })
                                     }
@@ -93,26 +112,19 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                     ],
                     columns: [
                         {text: 'id', dataIndex: 'id',hidden:true},
-                        {text: 'houIs', dataIndex: 'houseId',hidden:true},
-                        {text: '产权证书编号', dataIndex: 'propertyCertificateNo',flex: 1, align: 'center'},
-                        {text: '产权人姓名', dataIndex: 'propertyUserName', flex: 1, align: 'center'},
-                        {text: '产权人身份证号', dataIndex: 'propertyUserIdNumber', flex: 1, align: 'center'},
-                        {text: '产权人联系电话', dataIndex: 'propertyUserTel', flex: 1, align: 'center'},
+						 {text: '姓名', dataIndex: 'entName',flex: 1, align: 'center'},
+						 {text: '证件号码', dataIndex: 'idNo',flex: 1.5, align: 'center'},
+						 {text: '性别', dataIndex: 'sex',flex: 0.5, align: 'center'},
+						 {text: '人员类别', dataIndex: 'entType',flex: 0.5, align: 'center'},
+                        {text: '民族', dataIndex: 'entNation',flex: 1, align: 'center'},
+                        {text: '籍贯', dataIndex: 'entNative', flex: 1, align: 'center'},
+                        {text: '联系电话', dataIndex: 'tel', flex: 1, align: 'center'},
+                        {text: '婚姻状况', dataIndex: 'marriageStatus', flex: 1, align: 'center'}
                     ]
                 }
             ]
         });
-        me.dockedItems = [{
-            xtype: 'toolbar',
-            style: {
-                background: '#f3f7f7'
-            },
-            dock: 'top',
-            items: [{
-                xtype: 'displayfield',
-                value: '<span style="font-weight: bold;font-size: 15px;">产权人信息</span>'
-            }]
-        }];
+    
         me.callParent(arguments);
     }
 });

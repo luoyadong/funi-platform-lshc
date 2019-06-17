@@ -9,40 +9,40 @@
     <result column="job_result" jdbcType="VARCHAR" property="jobResult" />
     <result column="node_name" jdbcType="VARCHAR" property="nodeName" />
     <result column="job_opinion" jdbcType="VARCHAR" property="jobOpinion" />
-    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
-    <result column="version" jdbcType="DECIMAL" property="version" />
-    <result column="sys_create_time" jdbcType="TIMESTAMP" property="sysCreateTime" />
-    <result column="sys_update_time" jdbcType="TIMESTAMP" property="sysUpdateTime" />
-    <result column="sys_delete_time" jdbcType="TIMESTAMP" property="sysDeleteTime" />
-    <result column="sys_create_id" jdbcType="VARCHAR" property="sysCreateId" />
-    <result column="sys_update_id" jdbcType="VARCHAR" property="sysUpdateId" />
-    <result column="sys_delete_id" jdbcType="VARCHAR" property="sysDeleteId" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_ID" jdbcType="VARCHAR" property="createId" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
+    <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
+    <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
+
   </resultMap>
   
   <sql id="Base_Column_List">
-    id, job_accept_id, audit_name, audit_id, job_result, node_name, job_opinion, sys_create_time, 
-    sys_update_time, sys_delete_time, sys_create_id, sys_update_id, sys_delete_id, is_deleted
+    id, job_accept_id, audit_name, audit_id, job_result, node_name, job_opinion, VERSION,
+    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE, unit_name
   </sql>
   
   <insert id="insert" parameterType="com.funi.platform.lshc.entity.sys.JobLog">
-    insert into ghouse_job_log (id, job_accept_id, audit_name,
+    insert into lshc_job_log (id, job_accept_id, audit_name,
       audit_id, job_result, node_name,
-      job_opinion, sys_create_time, sys_update_time,
-      sys_delete_time, sys_create_id, sys_update_id,
-      sys_delete_id, is_deleted)
+      job_opinion, VERSION,CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID,
+      DELETED, ISVALIDE,unit_name)
     values (#{id,jdbcType=VARCHAR}, #{jobAcceptId,jdbcType=VARCHAR}, #{auditName,jdbcType=VARCHAR}, 
       #{auditId,jdbcType=VARCHAR}, #{jobResult,jdbcType=VARCHAR}, #{nodeName,jdbcType=VARCHAR}, 
-      #{jobOpinion,jdbcType=VARCHAR}, #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, 
-      #{sysDeleteTime,jdbcType=TIMESTAMP}, #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, 
-      #{sysDeleteId,jdbcType=VARCHAR}, #{isDeleted,jdbcType=DECIMAL})
+      #{jobOpinion,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+    #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
+    #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR},#{unitName,jdbcType=VARCHAR})
   </insert>
 
   <select id="selectByServiceNum" resultType="com.funi.platform.lshc.dto.WorkLogDto">
       select
           audit_name as auditName,node_name as nodeName,job_opinion as jobOpinion,jl.job_result as conclusion,
-          to_char(jl.sys_create_time,'yyyy-MM-dd') as createDateStr
-          from ghouse_job_log jl
-          inner join ghouse_job_accept ja on jl.job_accept_id = ja.id
+          to_char(jl.sys_create_time,'yyyy-MM-dd') as createDateStr, jl.unit_name as unitName
+          from lshc_job_log jl
+          inner join lshc_job_accept ja on jl.job_accept_id = ja.id
       where ja.service_num=#{serviceNum}
 
   </select>

@@ -22,8 +22,8 @@ Ext.define('app.platform.lshc.view.regi.manage.NewInfoWinView', {
         this.callParent(arguments);
     },
     title: '新增普查',
-    width: 900,
-    height:580,
+    width: 760,
+    height:480,
     autoScroll: false,
     resizable: true,
     buttonAlign: 'center',
@@ -35,8 +35,8 @@ Ext.define('app.platform.lshc.view.regi.manage.NewInfoWinView', {
         Ext.apply(me, {
 			xtype:'container',
 			border: true,
-            width:900,
-            height:580,
+            width:760,
+            height:480,
             items: [
                 {
                     xtype:'lshc-view-regi-HouseEditView'

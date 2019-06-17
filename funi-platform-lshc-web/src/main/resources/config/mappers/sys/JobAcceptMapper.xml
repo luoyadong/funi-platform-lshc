@@ -8,47 +8,45 @@
     <result column="status" jdbcType="DECIMAL" property="status" />
     <result column="cur_status" jdbcType="VARCHAR" property="curStatus" />
     <result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime" />
-    <result column="is_deleted" jdbcType="DECIMAL" property="isDeleted" />
-    <result column="version" jdbcType="DECIMAL" property="version" />
-    <result column="sys_create_time" jdbcType="TIMESTAMP" property="sysCreateTime" />
-    <result column="sys_update_time" jdbcType="TIMESTAMP" property="sysUpdateTime" />
-    <result column="sys_delete_time" jdbcType="TIMESTAMP" property="sysDeleteTime" />
-    <result column="sys_create_id" jdbcType="VARCHAR" property="sysCreateId" />
-    <result column="sys_update_id" jdbcType="VARCHAR" property="sysUpdateId" />
-    <result column="sys_delete_id" jdbcType="VARCHAR" property="sysDeleteId" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_ID" jdbcType="VARCHAR" property="createId" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
+    <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
+    <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, service_num, type_name, status, cur_status, accept_time, sys_create_time, sys_update_time,
-    sys_delete_time, sys_create_id, sys_update_id, sys_delete_id, is_deleted
+    id, service_num, type_name, status, cur_status, accept_time, VERSION,
+    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
 
   <insert id="insert" parameterType="com.funi.platform.lshc.entity.sys.JobAccept">
-    insert into ghouse_job_accept (id, service_num, type_name,
+    insert into lshc_job_accept (id, service_num, type_name,
       status, cur_status, accept_time,
-      sys_create_time, sys_update_time, sys_delete_time,
-      sys_create_id, sys_update_id, sys_delete_id,
-      is_deleted)
+      VERSION,CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID,
+      DELETED, ISVALIDE)
     values (#{id,jdbcType=VARCHAR}, #{serviceNum,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, 
       #{status,jdbcType=DECIMAL}, #{curStatus,jdbcType=VARCHAR}, #{acceptTime,jdbcType=TIMESTAMP}, 
-      #{sysCreateTime,jdbcType=TIMESTAMP}, #{sysUpdateTime,jdbcType=TIMESTAMP}, #{sysDeleteTime,jdbcType=TIMESTAMP}, 
-      #{sysCreateId,jdbcType=VARCHAR}, #{sysUpdateId,jdbcType=VARCHAR}, #{sysDeleteId,jdbcType=VARCHAR}, 
-      #{isDeleted,jdbcType=DECIMAL})
+      #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
+    #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
+    #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR})
   </insert>
 
   <update id="modifyCurStatus">
-    update ghouse_job_accept
-        set  cur_status=#{curStatus},sys_update_id=#{sysUpdateId},
-             sys_update_time=#{sysUpdateTime}
-    where id=#{id} and is_deleted=0
+    update lshc_job_accept
+        set  cur_status=#{curStatus},update_id=#{updateId},
+             update_time=#{updateTime}
+    where id=#{id} and deleted=0
   </update>
 
   <select id="selectByServiceNum"  resultType="com.funi.platform.lshc.dto.JobDto">
       select
         ja.id,ja.type_name as businessName, ja.cur_status as currentConclusion,
         jl.node_name as nodeName
-        from ghouse_job_accept ja
+        from lshc_job_accept ja
         left join ghouse_job_log jl on ja.id = jl.job_accept_id
-        where ja.service_num=#{serviceNum}
+        where ja.lshc_job_log=#{serviceNum}
   </select>
 
 </mapper>

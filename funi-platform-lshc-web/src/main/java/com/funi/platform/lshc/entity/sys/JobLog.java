@@ -1,9 +1,9 @@
 package com.funi.platform.lshc.entity.sys;
 
-import com.funi.platform.lshc.entity.BaseEntity;
+import com.funi.platform.lshc.entity.SuperEntity;
 
 
-public class JobLog extends BaseEntity {
+public class JobLog extends SuperEntity {
 
 
     /**

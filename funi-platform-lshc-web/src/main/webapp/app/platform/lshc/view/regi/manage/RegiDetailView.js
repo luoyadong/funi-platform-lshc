@@ -13,7 +13,11 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     ],
     config: {
         //主容器
-        parentContainer: null
+        parentContainer: null,
+		//普查主表ID
+		bizId:null,
+		mapCode:"",
+		address:""
     },
     constructor: function (config) {
         var me = this;
@@ -22,7 +26,99 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
         this.callParent(arguments);
     },
     title: null,
+    getParams:function(){
+        var formElements = Ext.ComponentQuery.query("textfield",this);
+        var obj = new Object();
+        for(var i=0;i<formElements.length;i++){
+            obj[formElements[i].name] =formElements[i].value;
+        }
+        return obj;
+    },
+	resetParams:function(){
+        var formElements = Ext.ComponentQuery.query("textfield",this);
+        var obj = new Object();
+        for(var i=0;i<formElements.length;i++){
+			this.queryById(formElements[i].itemId).setValue(null)
+        }
+        return obj;
+    },
+	initDetail:function(mapCode,address){
+	    var me = this;
 
+		//初始化楼栋信息
+        var mapCodeTb = me.queryById("mapCodeTbItemId");
+		mapCodeTb.setHtml( '<div style="font-weight:bold;font-size:10">'+mapCode+'</div>');
+
+        var addressTb = me.queryById("addressTbItemId");
+		addressTb.setHtml(  '<div style="font-weight:bold;font-size:10;margin-left:10;float:right">'+address+'</div>');
+
+		//初始化房屋列表
+        //var houseListPanel = me.queryById("lshc-view-regi-HouseListView-itemId");
+		//var gridObjStore = houseListPanel.store;
+		 //gridObjStore.loadPage(1);
+	},
+	initStatus:function(status,doneStatus,doingStatus,todoStatus){
+	    var me = this;
+		//初始化顶部状态进度信息
+        var statusTb = me.queryById("statusTbItemId");
+		statusTb.setHtml(  '<div style="font-weight:bold;font-size:10;color:green;">'+status+'</div>')
+
+        var doneTb = me.queryById("doneTbItemId");
+		doneTb.setHtml( '<div style="font-weight:bold;font-size:11;color:green;">'+doneStatus+'</div>')
+
+		var doingTb = me.queryById("doingTbItemId");
+		doingTb.setHtml( '<div style="font-weight:bold;font-size:11;color:orange;">'+doingStatus+'</div>')
+
+		var todoTb = me.queryById("todoTbItemId");
+		todoTb.setHtml('<div style="font-weight:bold;font-size:11;margin-right:50;">'+todoStatus+'</div>')
+	},
+	readOnly:function(){
+
+         var houseListView = this.queryById("lshc-view-regi-HouseListView-itemId");
+		 var view = Ext.ComponentQuery.query("textfield,button,checkbox,toolbar",houseListView);
+            for(var j=0;j<view.length;j++){
+                if(view[j].xtype=="button"){
+					if(view[j].text != '导出' && view[j].text != '审批'){
+						view[j].hide();
+					}
+                    
+                }else{
+                    view[j].readOnly=true;
+                }
+            }
+       
+        var tabpanelView = this.queryById("lshc-regi-housedetail-parent-tabpanel-itemId");
+        for(var i=0;i<tabpanelView.items.length;i++){
+            if(tabpanelView.items.items[i].down("xgridpanel") && tabpanelView.items.items[i].down("xgridpanel").selModel){
+                tabpanelView.items.items[i].down("xgridpanel").disableSelection=true;
+                tabpanelView.items.items[i].down("xgridpanel").addListener("beforecellclick",function(){
+                    return false;
+                }) ;
+                tabpanelView.items.items[i].down("xgridpanel").addListener("beforedeselect",function(){
+                    return false;
+                })
+            }
+            var view = Ext.ComponentQuery.query("textfield,button,checkbox,toolbar",tabpanelView.items.items[i]);
+            for(var j=0;j<view.length;j++){
+                if(view[j].xtype=="button" || view[j].xtype=="toolbar"){
+                    if(view[j].text != '导出' && view[j].text != '审批'){
+						view[j].hide();
+					}
+                }else{
+                    view[j].readOnly=true;
+					view[j].disabled = true;
+                }
+
+            }
+        }
+       
+        //上传
+        var uploadViews = Ext.ComponentQuery.query("fileuploadfield,#delete_file",this);
+        for(var i=0;i<uploadViews.length;i++){
+            uploadViews[i].hidden=true;
+        }
+
+    },
     initComponent: function () {
         var me = this;
 
@@ -52,6 +148,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 store: mStore,
                                 editable: false,
                                 valueField: 'value',
+								name:"",
                                 itemId:'isVacant',
                                 displayField: 'name',
                                 labelWidth: 60,
@@ -60,8 +157,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                            {
 								xtype:"textfield",
 								labelAlign:'right',
-								itemId:"ghost-rent-contract-keyword-itemId",
-								name:"keyword",
+								itemId:"houseIdItemId",
+								name:"houseId",
 								labelWidth:65,
 								fieldLabel:'房屋编码',
 								width:240,
@@ -70,8 +167,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                             {
 								xtype:"textfield",
 								labelAlign:'right',
-								itemId:"ghost-rent-contract-keyword2-itemId",
-								name:"keyword",labelWidth:65,fieldLabel:'人员姓名',
+								itemId:"entNameItemId",
+								name:"entName",labelWidth:65,fieldLabel:'人员姓名',
 								width:240,
 								emptyText:"人员姓名"
 						  },
@@ -79,16 +176,20 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 xtype: 'button', text: '查询', scope: me,
                                 glyph:0xf002,
                                 handler: function () {
-                                    
+									var houseListPanel = me.queryById("lshc-view-regi-HouseListView-itemId");
+                                    var gridObjStore = houseListPanel.store;
+                                     gridObjStore.proxy.extraParams = me.getParams();//获取列表store
+								     gridObjStore.loadPage(1);
+
+									 //点击第一条记录
+
                                 }
                             },
                             {
                                 xtype: 'button', text: '重置', scope: me,
                                 glyph:'xf0e2@FontAwesome',
                                 handler: function () {
-                                    me.query("#searchPeriodCom")[0].setValue('');
-                                    me.query("#searchContent")[0].setValue('');
-                                    me.query("#searchPeriodStatus")[0].setValue('');
+                                    me.resetParams();
                                 }
                             },
                             {
@@ -130,11 +231,13 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
+							    itemId:"mapCodeTbItemId",
 								html:'<div style="font-weight:bold;font-size:10">XS1234561</div>'
 							},
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
+							    itemId:"addressTbItemId",
 								html:'<div style="font-weight:bold;font-size:10;margin-left:10;float:right">城关区纳金乡1001号2栋</div>'
 							},
 								"->",
@@ -146,6 +249,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
+						       itemId:"statusTbItemId",
 								html:'<div style="font-weight:bold;font-size:10;color:green;">审核通过</div>'
 							},
 							{   xtype: 'tbtext',
@@ -156,16 +260,19 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
+						       itemId:"doneTbItemId",
 								html:'<div style="font-weight:bold;font-size:11;color:green;">①社区->②街道办</div>'
 							},
                            {   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
+						        itemId:"doingTbItemId",
 								html:'<div style="font-weight:bold;font-size:11;color:orange;">->③区政府</div>'
 							},
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
+							   itemId:"todoTbItemId",
 								html:'<div style="font-weight:bold;font-size:11;margin-right:50;">->④市住建局</div>'
 							}
                         ]
@@ -183,7 +290,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                             //height:405,
                             // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
                             items: [
-                                {xtype: 'lshc-view-regi-HouseListView'}
+                                {xtype: 'lshc-view-regi-HouseListView',parentContainer:me,bizId:me.bizId}
                             ]
                         }
 				]
@@ -203,7 +310,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
             
         });
         me.callParent(arguments);
+    } 
 
-    }
 });
 
