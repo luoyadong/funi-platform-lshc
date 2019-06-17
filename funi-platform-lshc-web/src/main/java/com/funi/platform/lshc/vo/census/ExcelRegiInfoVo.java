@@ -8,8 +8,8 @@ import java.math.BigDecimal;
  * Created by sam on 2019/6/15.1:09 PM
  */
 public class ExcelRegiInfoVo {
-    @Excel(name="项目（小区）名称")
     /** 项目名称 */
+    @Excel(name="项目（小区）名称")
     private String projectName;
     /** 物管单位 */
     @Excel(name="物业管理单位")

@@ -5,7 +5,9 @@ import com.funi.framework.biz.support.CurrentUser;
 import com.funi.framework.biz.support.CurrentUserAccessor;
 import com.funi.platform.lshc.entity.BaseEntity;
 import com.funi.platform.lshc.entity.SuperEntity;
+import com.funi.platform.lshc.query.BaseQuery;
 import com.funi.platform.lshc.query.GhouseBaseQuery;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -96,6 +98,50 @@ public class BoSupport {
             //可以忽略该错误，套接字通信的时候才会没有
             return null;
         }
+    }
+
+    /**
+     * 数据权限
+     * @param baseQuery
+     */
+    @Before("execution(public * com.funi.platform.lshc..service.*Service.find*(..)) && args(baseQuery,..)")
+    public void findByQuery(BaseQuery baseQuery) {
+        com.funi.framework.biz.eic.bo.CurrentUser user = userManager.findUser();
+        // 当前机构编码
+        String currentUserOrgCode = user.getOrganization().getDm();
+        // TODO 如果是住建局的机构不控制数据权限
+//        if(currentUserOrgCode.indexOf("ghouse_zf")==0){
+//            return;
+//        }
+        List<Dict> authorityList = new ArrayList<>();
+        authorityList.add(user.getOrganization());
+        Dict organization = user.getOrganization();
+        // 获取子机构
+        List<Dict> children = organization.getChildren();
+        if(CollectionUtils.isNotEmpty(children)) {
+            for(Dict dict : children) {
+                authorityList.add(dict);
+            }
+        }
+        baseQuery.setAuthorityList(authorityList);
+        // 操作角色一共四级；社区角色只看查看本社区的数据； 街道可查看及操作辖区内所有社区的数据；
+        // 区政府可查看和操作辖区内所有街道的数据；住建局可查看所有数据；
+        // 如果当前登录用户所属机构是住建局
+//        if(currentUserOrgCode.indexOf("ghouse_zf")==0){
+//            return;
+//        } else if(currentUserOrgCode.indexOf("ghouse_dg")==0){
+//            // 如果当前登录用户所属机构属于代管公司管理员，只返回所属机构
+//            if(isDgAdmin(user)) {
+//                List<Dict> authorityList = new ArrayList<>();
+//                authorityList.add(user.getOrganization());
+//                ghouseBaseQuery.setAuthorityList(authorityList);
+//            } else {
+//                // 代管公司普通用户只能查看自己创建的业务件
+//                ghouseBaseQuery.setUserId(userManager.findUser().getUserId());
+//            }
+//        } else {
+//            throw new RuntimeException("非房管局和代管公司用户的无效用户");
+//        }
     }
 
     /**

@@ -19,12 +19,16 @@ public class CensusConstants {
 
     /** 房屋状态：录入*/
     public static final String HOUSE_STATUS_INPUT = "0";
-    /** 房屋状态：提交*/
+    /** 房屋状态：待初审*/
     public static final String HOUSE_STATUS_SUBMIT = "1";
-    /** 房屋状态：初审*/
-    public static final String HOUSE_STATUS_FIRST_APPROVAL = "2";
-    /** 房屋状态：复审*/
-    public static final String HOUSE_STATUS_SECOND_APPROVAL = "3";
-    /** 房屋状态： 归档*/
-    public static final String HOUSE_STATUS_FILE = "4";
+    /** 房屋状态：初审通过*/
+    public static final String HOUSE_STATUS_FIRST_APPROVAL_PASS = "2";
+    /** 房屋状态：初审不通过*/
+    public static final String HOUSE_STATUS_FIRST_APPROVAL_REJECT = "3";
+    /** 房屋状态：复审通过*/
+    public static final String HOUSE_STATUS_SECOND_APPROVAL_PASS = "4";
+    /** 房屋状态：复审不通过*/
+    public static final String HOUSE_STATUS_SECOND_APPROVAL_REJECT = "5";
+    /** 房屋状态：退回*/
+    public static final String HOUSE_STATUS_BACK = "6";
 }

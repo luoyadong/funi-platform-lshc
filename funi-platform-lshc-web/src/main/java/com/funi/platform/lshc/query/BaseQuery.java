@@ -9,7 +9,9 @@ import java.util.List;
  * Created by sam on 2019/6/14.12:09 AM
  */
 public class BaseQuery extends PageableQuery {
+    /** 权限范围内的机构集合*/
     private List<Dict> authorityList;
+    /** 预留字段用于区分管理员和普通账号*/
     private String userId;
 
 
