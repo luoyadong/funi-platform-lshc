@@ -49,6 +49,8 @@ public class UndoneRegiInfoServiceImpl implements UndoneRegiInfoService {
 
     @Override
     public List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
-        return null;
+        regiInfoQuery.setOwner(userManager.findUser().getRoles());
+        regiInfoQuery.setQueryType(CensusConstants.BUILD_QUERY_TYPE_UNDONE);
+        return regiInfoMapper.selectRegiInfoVoList(regiInfoQuery);
     }
 }

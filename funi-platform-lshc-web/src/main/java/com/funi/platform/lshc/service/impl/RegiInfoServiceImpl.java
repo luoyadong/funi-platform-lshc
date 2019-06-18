@@ -60,7 +60,8 @@ public class RegiInfoServiceImpl implements RegiInfoService {
 
     @Override
     public List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
-        return null;
+        regiInfoQuery.setQueryType(CensusConstants.BUILD_QUERY_TYPE_COLLECT);
+        return regiInfoMapper.selectRegiInfoVoList(regiInfoQuery);
     }
 
     @Override

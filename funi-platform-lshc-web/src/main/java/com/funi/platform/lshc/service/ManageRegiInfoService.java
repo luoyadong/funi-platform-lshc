@@ -2,7 +2,9 @@ package com.funi.platform.lshc.service;
 
 import com.funi.platform.lshc.dto.RegiInfoDto;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
+import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +29,13 @@ public interface ManageRegiInfoService {
      * @throws Exception
      */
     void exportBuildInfoVoList(List<String> ids, HttpServletResponse response) throws Exception;
+
+    /**
+     * 分页查询房屋列表
+     * @param regiInfoQuery
+     * @return
+     */
+    List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery);
 
     /**
      * 创建普查信息

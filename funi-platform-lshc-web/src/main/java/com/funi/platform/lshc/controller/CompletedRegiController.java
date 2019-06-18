@@ -1,8 +1,10 @@
 package com.funi.platform.lshc.controller;
 
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
+import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.CompletedRegiService;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,5 +47,16 @@ public class CompletedRegiController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 分页查询房屋列表
+     * @param regiInfoQuery
+     * @return
+     */
+    @RequestMapping("getRegiInfoVoList")
+    @ResponseBody
+    public List<ListRegiInfoVo> getRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
+        return completedRegiService.findRegiInfoVoList(regiInfoQuery);
     }
 }

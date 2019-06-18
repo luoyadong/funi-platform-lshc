@@ -1,9 +1,5 @@
 package com.funi.platform.lshc.vo.census;
 
-import org.apache.commons.collections.CollectionUtils;
-
-import java.util.List;
-
 /**
  * Created by sam on 2019/6/15.9:40 AM
  */
@@ -18,16 +14,11 @@ public class ListRegiInfoVo {
     private String layer;
     /** 房屋号 */
     private String roomNo;
-    /** 文件列表*/
-    private List<ListFileVo> listFileVoList;
     /** 图片数量*/
     private int fileCount;
 
     public int getFileCount() {
-        if(CollectionUtils.isNotEmpty(listFileVoList)) {
-            return listFileVoList.size();
-        }
-        return 0;
+        return fileCount;
     }
 
     public void setFileCount(int fileCount) {
@@ -72,13 +63,5 @@ public class ListRegiInfoVo {
 
     public void setRoomNo(String roomNo) {
         this.roomNo = roomNo;
-    }
-
-    public List<ListFileVo> getListFileVoList() {
-        return listFileVoList;
-    }
-
-    public void setListFileVoList(List<ListFileVo> listFileVoList) {
-        this.listFileVoList = listFileVoList;
     }
 }
