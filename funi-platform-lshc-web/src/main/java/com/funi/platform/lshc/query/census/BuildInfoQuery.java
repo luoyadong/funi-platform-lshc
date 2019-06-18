@@ -13,6 +13,12 @@ public class BuildInfoQuery extends BaseQuery {
     private String region;
     /** 街道 */
     private String street;
+    /** 项目名称（小区名称） */
+    private String projectName;
+    /** 楼栋地图编号 */
+    private String mapCode;
+    /** 楼栋实际地址 */
+    private String address;
     /** 用于工作流数据权限控制*/
     private List<Dict> owner;
     /** 工作流数据权限控制类型，默认使用角色*/
@@ -34,6 +40,30 @@ public class BuildInfoQuery extends BaseQuery {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getMapCode() {
+        return mapCode;
+    }
+
+    public void setMapCode(String mapCode) {
+        this.mapCode = mapCode;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<Dict> getOwner() {

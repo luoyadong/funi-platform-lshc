@@ -75,11 +75,16 @@
           AND t1.REGION = #{region}
         </if>
         <if test="street != null and street != ''">
-          AND t1.STREET =  #{street}
+          AND t1.STREET = #{street}
         </if>
-        <if test="keyword != null and keyword != ''">
-          AND ( t1.PROJECT_NAME LIKE '%'||#{keyword}||'%' OR t1.MAP_CODE LIKE '%'||#{keyword}||'%'
-          OR t1.ADDRESS LIKE '%'||#{keyword}||'%' OR t2.RIGHT_NO LIKE '%'||#{keyword}||'%' )
+        <if test="projectName != null and projectName != ''">
+          AND t1.PROJECT_NAME LIKE '%'||#{projectName}||'%'
+        </if>
+        <if test="mapCode != null and mapCode != ''">
+          AND t1.MAP_CODE LIKE '%'||#{mapCode}||'%'
+        </if>
+        <if test="address != null and address != ''">
+          AND t1.ADDRESS LIKE '%'||#{address}||'%'
         </if>
         ORDER BY t1.SERIAL_NO
   </select>
