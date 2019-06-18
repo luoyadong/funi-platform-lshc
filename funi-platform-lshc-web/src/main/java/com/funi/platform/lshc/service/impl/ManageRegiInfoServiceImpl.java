@@ -12,9 +12,11 @@ import com.funi.platform.lshc.mapper.census.EntInfoMapper;
 import com.funi.platform.lshc.mapper.census.FileMapper;
 import com.funi.platform.lshc.mapper.census.RegiInfoMapper;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
+import com.funi.platform.lshc.query.census.BuildRegiQuery;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
 import com.funi.platform.lshc.support.CensusConstants;
 import com.funi.platform.lshc.support.UserManager;
+import com.funi.platform.lshc.utils.ExcelUtil;
 import com.funi.platform.lshc.utils.SuperEntityUtils;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
@@ -24,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,7 +50,18 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
 
     @Override
     public List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery) {
-        return buildInfoMapper.selectManageBuildInfoVoList(buildInfoQuery);
+        buildInfoQuery.setQueryType(CensusConstants.BUILD_QUERY_TYPE_MANAGE);
+        return buildInfoMapper.selectBuildInfoVoList(buildInfoQuery);
+    }
+
+    @Override
+    public void exportBuildInfoVoList(List<String> ids, HttpServletResponse response) throws Exception {
+        BuildRegiQuery buildRegiQuery = new BuildRegiQuery(ids, CensusConstants.BUILD_QUERY_TYPE_MANAGE);
+        List<ExcelRegiInfoVo> excelRegiInfoVoList = regiInfoMapper.exportBuildInfoVoList(buildRegiQuery);
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("没有满足条件的数据");
+        }
+        ExcelUtil.excelExport("普查数据统计表.xls","普查数据", excelRegiInfoVoList, response);
     }
 
     @Override

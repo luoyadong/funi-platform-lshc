@@ -31,4 +31,13 @@ public class CensusConstants {
     public static final String HOUSE_STATUS_SECOND_APPROVAL_REJECT = "5";
     /** 房屋状态：退回*/
     public static final String HOUSE_STATUS_BACK = "6";
+
+    /** 楼栋列表页查询类型：管理页面查询*/
+    public static final String BUILD_QUERY_TYPE_MANAGE = "0";
+    /** 楼栋列表页查询类型：综合查询*/
+    public static final String BUILD_QUERY_TYPE_COLLECT = "1";
+    /** 楼栋列表页查询类型：待办件查询*/
+    public static final String BUILD_QUERY_TYPE_UNDONE = "2";
+    /** 楼栋列表页查询类型：已办件查询*/
+    public static final String BUILD_QUERY_TYPE_COMPLETED = "3";
 }

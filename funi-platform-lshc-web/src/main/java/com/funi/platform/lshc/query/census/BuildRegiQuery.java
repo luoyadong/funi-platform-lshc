@@ -6,13 +6,10 @@ import com.funi.platform.lshc.query.BaseQuery;
 import java.util.List;
 
 /**
- * Created by sam on 2019/6/14.12:10 AM
+ * Created by sam on 2019/6/18.11:28 AM
  */
-public class BuildInfoQuery extends BaseQuery {
-    /** 区县 */
-    private String region;
-    /** 街道 */
-    private String street;
+public class BuildRegiQuery extends BaseQuery {
+    List<String> ids;
     /** 用于工作流数据权限控制*/
     private List<Dict> owner;
     /** 工作流数据权限控制类型，默认使用角色*/
@@ -20,20 +17,20 @@ public class BuildInfoQuery extends BaseQuery {
     /** 查询类型*/
     private String queryType;
 
-    public String getRegion() {
-        return region;
+    public BuildRegiQuery() {
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public BuildRegiQuery(List<String> ids, String queryType) {
+        this.ids = ids;
+        this.queryType = queryType;
     }
 
-    public String getStreet() {
-        return street;
+    public List<String> getIds() {
+        return ids;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setIds(List<String> ids) {
+        this.ids = ids;
     }
 
     public List<Dict> getOwner() {

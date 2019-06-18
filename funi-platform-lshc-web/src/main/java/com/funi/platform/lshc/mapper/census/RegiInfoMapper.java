@@ -1,6 +1,7 @@
 package com.funi.platform.lshc.mapper.census;
 
 import com.funi.platform.lshc.entity.census.RegiInfo;
+import com.funi.platform.lshc.query.census.BuildRegiQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
@@ -46,6 +47,13 @@ public interface RegiInfoMapper {
      * @return
      */
     List<ExcelRegiInfoVo> selectExcelRegiInfoVoList(List<String> ids);
+
+    /**
+     * 根据楼栋ID批量导出楼栋和房屋信息
+     * @param buildRegiQuery
+     * @return
+     */
+    List<ExcelRegiInfoVo> exportBuildInfoVoList(BuildRegiQuery buildRegiQuery);
 
     /**
      * 根据房屋的唯一性条件查询房屋信息

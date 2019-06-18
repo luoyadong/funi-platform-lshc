@@ -38,6 +38,20 @@ public class RegiInfoController extends BaseController {
     }
 
     /**
+     * 根据楼栋ID批量导出楼栋和房屋信息
+     * @param ids
+     * @param response
+     */
+    @RequestMapping("exportBuildInfoVoList")
+    public void exportBuildInfoVoList(@RequestBody List<String> ids, HttpServletResponse response) {
+        try {
+            regiInfoService.exportBuildInfoVoList(ids, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 分页查询房屋列表
      * @param regiInfoQuery
      * @return

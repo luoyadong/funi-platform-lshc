@@ -3,6 +3,7 @@ package com.funi.platform.lshc.service;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -15,4 +16,13 @@ public interface CompletedRegiService {
      * @return
      */
     List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery);
+
+    /**
+     * 根据楼栋ID批量导出楼栋和房屋信息
+     * @param ids
+     * @param response
+     * @throws Exception
+     */
+    void exportBuildInfoVoList(List<String> ids, HttpServletResponse response) throws Exception;
+
 }

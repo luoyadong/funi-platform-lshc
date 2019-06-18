@@ -22,6 +22,14 @@ public interface RegiInfoService {
     List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery);
 
     /**
+     * 根据楼栋ID批量导出楼栋和房屋信息
+     * @param ids
+     * @param response
+     * @throws Exception
+     */
+    void exportBuildInfoVoList(List<String> ids, HttpServletResponse response) throws Exception;
+
+    /**
      * 分页查询房屋列表
      * @param regiInfoQuery
      * @return

@@ -8,9 +8,11 @@ import com.funi.platform.lshc.mapper.census.EntInfoMapper;
 import com.funi.platform.lshc.mapper.census.FileMapper;
 import com.funi.platform.lshc.mapper.census.RegiInfoMapper;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
+import com.funi.platform.lshc.query.census.BuildRegiQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.RegiInfoService;
 import com.funi.platform.lshc.support.BasicHelper;
+import com.funi.platform.lshc.support.CensusConstants;
 import com.funi.platform.lshc.support.UserManager;
 import com.funi.platform.lshc.utils.ExcelUtil;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
@@ -42,7 +44,18 @@ public class RegiInfoServiceImpl implements RegiInfoService {
 
     @Override
     public List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery) {
+        buildInfoQuery.setQueryType(CensusConstants.BUILD_QUERY_TYPE_COLLECT);
         return buildInfoMapper.selectBuildInfoVoList(buildInfoQuery);
+    }
+
+    @Override
+    public void exportBuildInfoVoList(List<String> ids, HttpServletResponse response) throws Exception {
+        BuildRegiQuery buildRegiQuery = new BuildRegiQuery(ids, CensusConstants.BUILD_QUERY_TYPE_COLLECT);
+        List<ExcelRegiInfoVo> excelRegiInfoVoList = regiInfoMapper.exportBuildInfoVoList(buildRegiQuery);
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("没有满足条件的数据");
+        }
+        ExcelUtil.excelExport("普查数据统计表.xls","普查数据", excelRegiInfoVoList, response);
     }
 
     @Override
@@ -70,7 +83,7 @@ public class RegiInfoServiceImpl implements RegiInfoService {
         if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
             throw new RuntimeException("没有满足条件的数据");
         }
-        ExcelUtil.excelExport("普查数据统计表.xls","普查数据", excelRegiInfoVoList, response);
+        ExcelUtil.excelExport("楼栋普查数据统计表.xls","普查数据", excelRegiInfoVoList, response);
     }
 
 }

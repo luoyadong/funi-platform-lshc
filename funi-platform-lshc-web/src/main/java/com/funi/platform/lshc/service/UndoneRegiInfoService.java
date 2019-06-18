@@ -20,7 +20,7 @@ public interface UndoneRegiInfoService {
     List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery);
 
     /**
-     * 导出
+     * 根据楼栋ID批量导出楼栋和房屋信息
      * @param ids
      * @param response
      * @throws Exception

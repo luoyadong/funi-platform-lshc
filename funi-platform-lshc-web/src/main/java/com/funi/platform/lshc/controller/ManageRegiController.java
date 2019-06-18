@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -34,6 +35,20 @@ public class ManageRegiController {
     @ResponseBody
     public List<BuildInfoVo> getBuildInfoList(BuildInfoQuery buildInfoQuery) {
         return manageRegiInfoService.findBuildInfoList(buildInfoQuery);
+    }
+
+    /**
+     * 根据楼栋ID批量导出楼栋和房屋信息
+     * @param ids
+     * @param response
+     */
+    @RequestMapping("exportBuildInfoVoList")
+    public void exportBuildInfoVoList(@RequestBody List<String> ids, HttpServletResponse response) {
+        try {
+            manageRegiInfoService.exportBuildInfoVoList(ids, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

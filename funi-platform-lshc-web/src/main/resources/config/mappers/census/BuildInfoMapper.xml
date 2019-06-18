@@ -26,40 +26,6 @@
     CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
 
-  <select id="selectUndoneBuildInfoVoList" parameterType="com.funi.platform.lshc.query.census.BuildInfoQuery" resultMap="BuildInfoVoMap">
-      SELECT DISTINCT
-          t1.id,
-          t1.SERIAL_NO AS serialNo,
-          t1.REGION AS region,
-          t1.STREET AS street,
-          t1.PROJECT_NAME AS projectName,
-          t1.MAP_CODE AS mapCode,
-          t1.ADDRESS AS address,
-          count( t2.id ) over ( partition BY t1.id ) AS houseCount
-      FROM
-          LSHC_BUILD_INFO t1
-          INNER JOIN LSHC_REGI_INFO t2 ON t1.MAP_CODE = t2.MAP_CODE
-          INNER JOIN BUSINESS_TASK t3 ON t2.id = t3.business_id
-      WHERE
-        t1.ISVALIDE='1' AND t1.DELETED=0 AND t2.ISVALIDE='1' AND t2.DELETED=0
-        AND t3.owner_type = #{ownerType}
-        AND t3.owner in
-        <foreach collection="owner" item="item" open="(" close=")" separator=",">
-          #{item.id}
-        </foreach>
-        <if test="region != null and region != ''">
-          AND t1.REGION = #{region}
-        </if>
-        <if test="street != null and street != ''">
-          AND t1.STREET =  #{street}
-        </if>
-        <if test="keyword != null and keyword != ''">
-          AND ( t1.PROJECT_NAME LIKE '%'||#{keyword}||'%' OR t1.MAP_CODE LIKE '%'||#{keyword}||'%'
-          OR t1.ADDRESS LIKE '%'||#{keyword}||'%' OR t2.RIGHT_NO LIKE '%'||#{keyword}||'%' )
-        </if>
-      ORDER BY t1.SERIAL_NO
-  </select>
-
   <select id="selectBuildInfoVoList" parameterType="com.funi.platform.lshc.query.census.BuildInfoQuery" resultMap="BuildInfoVoMap">
       SELECT DISTINCT
           t1.id,
@@ -73,16 +39,37 @@
           FROM
           LSHC_BUILD_INFO t1
           LEFT JOIN LSHC_REGI_INFO t2 ON t1.MAP_CODE = t2.MAP_CODE
+          <if test="queryType == '2'.toString()">
+              INNER JOIN BUSINESS_TASK t3 ON t2.id = t3.business_id
+          </if>
+          <if test="queryType == '3'.toString()">
+              INNER JOIN job_log t3 ON t2.id = t3.business_id AND t3.is_deleted = 0
+          </if>
       WHERE
           t1.ISVALIDE = '1'
           AND t1.DELETED = 0
           AND t2.ISVALIDE = '1'
           AND t2.DELETED =0
-          <if test="authorityList != null and authorityList.size > 0">
-            and t2.org_code in
-            <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
-              #{authority.dm}
-            </foreach>
+          <if test="queryType == '0'.toString()">
+              AND t2.house_status in ('0','3')
+          </if>
+          <if test="queryType == '0'.toString() or queryType == '1'.toString()">
+            <if test="authorityList != null and authorityList.size > 0">
+              and t2.org_code in
+              <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
+                #{authority.dm}
+              </foreach>
+            </if>
+          </if>
+          <if test="queryType == '2'.toString()">
+              AND t3.owner_type = #{ownerType}
+              AND t3.owner in
+              <foreach collection="owner" item="item" open="(" close=")" separator=",">
+                  #{item.id}
+              </foreach>
+          </if>
+          <if test="queryType == '3'.toString()">
+              AND t3.auditor = #{ userId}
           </if>
         <if test="region != null and region != ''">
           AND t1.REGION = #{region}
@@ -95,78 +82,6 @@
           OR t1.ADDRESS LIKE '%'||#{keyword}||'%' OR t2.RIGHT_NO LIKE '%'||#{keyword}||'%' )
         </if>
         ORDER BY t1.SERIAL_NO
-  </select>
-
-  <select id="selectManageBuildInfoVoList" parameterType="com.funi.platform.lshc.query.census.BuildInfoQuery" resultMap="BuildInfoVoMap">
-    SELECT DISTINCT
-    t1.id,
-    t1.SERIAL_NO AS serialNo,
-    t1.REGION AS region,
-    t1.STREET AS street,
-    t1.PROJECT_NAME AS projectName,
-    t1.MAP_CODE AS mapCode,
-    t1.ADDRESS AS address,
-    count( t2.id ) over ( partition BY t1.id ) AS houseCount
-    FROM
-    LSHC_BUILD_INFO t1
-    LEFT JOIN LSHC_REGI_INFO t2 ON t1.MAP_CODE = t2.MAP_CODE
-    WHERE
-    t1.ISVALIDE = '1'
-    AND t1.DELETED = 0
-    AND t2.ISVALIDE = '1'
-    AND t2.DELETED =0
-    AND t2.house_status in ('0','3')
-    <if test="authorityList != null and authorityList.size > 0">
-      and t2.org_code in
-      <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
-        #{authority.dm}
-      </foreach>
-    </if>
-    <if test="region != null and region != ''">
-      AND t1.REGION = #{region}
-    </if>
-    <if test="street != null and street != ''">
-      AND t1.STREET =  #{street}
-    </if>
-    <if test="keyword != null and keyword != ''">
-      AND ( t1.PROJECT_NAME LIKE '%'||#{keyword}||'%' OR t1.MAP_CODE LIKE '%'||#{keyword}||'%'
-      OR t1.ADDRESS LIKE '%'||#{keyword}||'%' OR t2.RIGHT_NO LIKE '%'||#{keyword}||'%' )
-    </if>
-    ORDER BY t1.SERIAL_NO
-  </select>
-
-  <select id="selectCompletedBuildInfoVoList" parameterType="com.funi.platform.lshc.query.census.BuildInfoQuery" resultMap="BuildInfoVoMap">
-    SELECT DISTINCT
-    t1.id,
-    t1.SERIAL_NO AS serialNo,
-    t1.REGION AS region,
-    t1.STREET AS street,
-    t1.PROJECT_NAME AS projectName,
-    t1.MAP_CODE AS mapCode,
-    t1.ADDRESS AS address,
-    count( t2.id ) over ( partition BY t1.id ) AS houseCount
-    FROM
-    LSHC_BUILD_INFO t1
-    INNER JOIN LSHC_REGI_INFO t2 ON t1.MAP_CODE = t2.MAP_CODE
-    INNER JOIN job_log t3 ON t2.id = t3.business_id
-    AND t3.is_deleted = 0
-    WHERE
-    t1.ISVALIDE = '1'
-    AND t1.DELETED = 0
-    AND t2.ISVALIDE = '1'
-    AND t2.DELETED = 0
-    AND t3.auditor = #{ userId}
-    <if test="region != null and region != ''">
-      AND t1.REGION = #{region}
-    </if>
-    <if test="street != null and street != ''">
-      AND t1.STREET =  #{street}
-    </if>
-    <if test="keyword != null and keyword != ''">
-      AND ( t1.PROJECT_NAME LIKE '%'||#{keyword}||'%' OR t1.MAP_CODE LIKE '%'||#{keyword}||'%'
-      OR t1.ADDRESS LIKE '%'||#{keyword}||'%' OR t2.RIGHT_NO LIKE '%'||#{keyword}||'%' )
-    </if>
-    ORDER BY t1.SERIAL_NO
   </select>
 
   <select id="selectBuildInfoByMapCode" parameterType="java.lang.String" resultMap="BaseResultMap">

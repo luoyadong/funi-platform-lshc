@@ -37,7 +37,7 @@ public class UndoneRegiController {
     }
 
     /**
-     * 根据楼栋ID导出普查信息列表
+     * 根据楼栋ID批量导出楼栋和房屋信息
      * @param ids
      * @param response
      */
