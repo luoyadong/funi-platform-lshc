@@ -19,24 +19,13 @@ public class BasicController {
     private BasicService basicService;
 
     /**
-     * 查询西藏全部市信息
+     * 查询拉萨市全部区县信息
      * @return
      */
-    @RequestMapping("getAllCityList")
+    @RequestMapping("getAllRegionList")
     @ResponseBody
-    public List<ComboboxDto> getAllCityList() {
-        return basicService.findAllCityList();
-    }
-
-    /**
-     * 根据市ID查询全部区县信息
-     * @param cityId
-     * @return
-     */
-    @RequestMapping("getAllRegionListByCityId")
-    @ResponseBody
-    public List<ComboboxDto> getAllRegionListByCityId(String cityId) {
-        return basicService.findAllRegionListByCityId(cityId);
+    public List<ComboboxDto> getAllRegionList() {
+        return basicService.findAllRegionList();
     }
 
     /**
@@ -47,6 +36,17 @@ public class BasicController {
     @RequestMapping("getAllBlockListByRegionId")
     @ResponseBody
     public List<ComboboxDto> getAllBlockListByRegionId(String regionId) {
-        return basicService.findAllBlockListByRegionId(regionId);
+        return basicService.findAllRegionListByCityId(regionId);
+    }
+
+    /**
+     * 根据街道ID查询全部社区信息
+     * @param blockId
+     * @return
+     */
+    @RequestMapping("getAllStreetListByRegionId")
+    @ResponseBody
+    public List<ComboboxDto> getAllStreetListByRegionId(String blockId) {
+        return basicService.findAllStreetListByRegionId(blockId);
     }
 }

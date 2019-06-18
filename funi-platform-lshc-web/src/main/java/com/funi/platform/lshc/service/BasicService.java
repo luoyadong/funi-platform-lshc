@@ -12,7 +12,7 @@ public interface BasicService {
      * 查询西藏全部市信息
      * @return
      */
-    List<ComboboxDto> findAllCityList();
+    List<ComboboxDto> findAllRegionList();
 
     /**
      * 根据市ID查询全部区县信息
@@ -26,6 +26,6 @@ public interface BasicService {
      * @param regionId
      * @return
      */
-    List<ComboboxDto> findAllBlockListByRegionId(String regionId);
+    List<ComboboxDto> findAllStreetListByRegionId(String regionId);
 }
 

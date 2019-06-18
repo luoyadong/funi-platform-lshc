@@ -40,4 +40,11 @@ public class CensusConstants {
     public static final String BUILD_QUERY_TYPE_UNDONE = "2";
     /** 楼栋列表页查询类型：已办件查询*/
     public static final String BUILD_QUERY_TYPE_COMPLETED = "3";
+
+    /** 区域查询类型：根据城市查询区域*/
+    public static final Integer REGION_TYPE_CITY = 0;
+    /** 区域查询类型：根据区域查询街道*/
+    public static final Integer REGION_TYPE_REGION = 1;
+    /** 区域查询类型：根据街道查询社区*/
+    public static final Integer REGION_TYPE_COUNTY = 2;
 }
