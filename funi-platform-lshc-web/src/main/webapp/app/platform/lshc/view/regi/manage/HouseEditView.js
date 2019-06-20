@@ -11,7 +11,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 		"app.platform.lshc.view.regi.manage.FileTab",
 		"app.platform.lshc.view.regi.manage.ApproveTab",
 		"app.platform.lshc.view.regi.manage.RightEntWin",
-		"app.platform.lshc.view.base.CommonUtils"
+		"app.platform.lshc.view.base.CommonUtils",
+        'app.platform.lshc.view.base.RequestUtils'
     ],
 	itemId:'lshc-regi-houseedit-parent-itemId',
 	config: {
@@ -69,8 +70,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 							 {
                                 xtype: 'button', text: '保存', scope: me,glyph: 0xf0fe,
                                 handler: function () {
-									me.getData();
-                                	//Ext.Msg.alert('提示', '已新增！');
+									var formData = me.getData();
+                                    app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/addRegiInfo", false, false);
 
                                 }
                             },
@@ -100,7 +101,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 					xtype:'tabpanel',itemId:'lshc-regi-houseedit-parent-tabpanel-itemId',
 					items:[
 					   {
-							itemId:'tab1',
+							itemId:'lshc-regi-houseedit-tabpanel-itemId',
 							glyph: 'xf0c0@FontAwesome',
 							title:'普查信息',
 							overflowY:'auto',
@@ -116,7 +117,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 							disabled:false,
 							overflowY:'auto',
 							width:"100%",
-							itemId:'tab2',
+							itemId:'lshc-file-houseedit-tabpanel-itemId',
 							items: [
                                 {xtype: 'lshc-regi-manage-file'}
                             ]

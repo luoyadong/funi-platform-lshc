@@ -4,12 +4,15 @@
  */
 
 Ext.define('app.platform.lshc.view.regi.approve.ToDoRegiMainView', {
-    extend: 'Ext.panel.Panel',
-    xtype: 'lshc-view-regi-RegiDetailView',
+    extend: 'Ext.grid.Panel',
+    xtype: 'lshc-view-approve-ToDoRegiMainView',
     requires: [
-        //房屋列表信息
+        //新增项目分期信息Tab视图
+        'app.platform.lshc.view.base.RequestUtils',
+        'app.platform.lshc.view.regi.manage.ApproveWinView',
+        'app.platform.lshc.view.regi.manage.RegiDetailView',
+        'app.platform.lshc.view.regi.manage.ApproveTab',
         'app.platform.lshc.view.regi.manage.HouseListView',
-        
         'app.platform.lshc.view.regi.manage.HouseDetailView'//房屋详情
     ],
     config: {
@@ -23,184 +26,250 @@ Ext.define('app.platform.lshc.view.regi.approve.ToDoRegiMainView', {
         this.callParent(arguments);
     },
     title: null,
-
+    getParams:function(){
+        var formElements = Ext.ComponentQuery.query("textfield",this);
+        var obj = new Object();
+        for(var i=0;i<formElements.length;i++){
+            obj[formElements[i].name] =formElements[i].value;
+        }
+        return obj;
+    },
+    resetParams:function(){
+        var formElements = Ext.ComponentQuery.query("textfield",this);
+        var obj = new Object();
+        for(var i=0;i<formElements.length;i++){
+            this.queryById(formElements[i].itemId).setValue(null)
+        }
+        return obj;
+    },
     initComponent: function () {
         var me = this;
-
         var mStore = Ext.create('Ext.data.Store', {
             fields: ['name','value'],
             autoLoad: true,
             data: [
                 {'name': '全部', value: ''},
-                {'name': '录入',value:0},
-                {'name': '提交',value:1},
+                {'name': '城关区',value:0},
+                {'name': '市辖区',value:1},
             ]
         });
-
+        var mStore2 = Ext.create('Ext.data.Store', {
+            fields: ['name','value'],
+            autoLoad: true,
+            data: [
+                {'name': '全部', value: ''},
+                {'name': '纳金乡',value:0},
+                {'name': '热巴香',value:1},
+            ]
+        });
+        var store = Ext.create("Funi.data.ListStore",{
+            url:app.platform.lshc.view.base.RequestUtils.url("/manage/getBuildInfoList"),
+            fields:[
+                {type:"string",name:"id"},
+                {type:"string",name:"serialNo"},
+                {type:"string",name:"region"},
+                {type:"string",name:"street"},
+                {type:"string",name:"projectName"},
+                {type:"string",name:"mapCode"},
+                {type:"string",name:"address"},
+                {type:"string",name:"houseCount"}
+            ],
+            pageSize:15
+        });
         Ext.apply(me, {
+
             tbar: {
                 layout: 'column', scope: me,
                 items: [
-
                     {
-                        xtype: 'toolbar', columnWidth: 1,scope: me, itemId: 'search',
+                        xtype: 'toolbar', columnWidth: 1, scope: me,
                         items: [
-                            '->',
+                            // '->',
                             {
                                 xtype: 'combobox',
-                                fieldLabel: '状态',
+                                fieldLabel: '区(县)',
                                 emptyText: '全部',
                                 store: mStore,
                                 editable: false,
                                 valueField: 'value',
-                                itemId:'isVacant',
+                                name:"region",
+                                itemId:'regionItemId',
                                 displayField: 'name',
-                                labelWidth: 60,
-                                width: 150,
-                            },
-                            {
-                                xtype:"textfield",
-                                labelAlign:'right',
-                                itemId:"ghost-rent-contract-keyword-itemId",
-                                name:"keyword",
-                                labelWidth:65,
-                                fieldLabel:'房屋编码',
-                                width:240,
-                                emptyText:"房屋编码"
-                            },
-                            {
-                                xtype:"textfield",
-                                labelAlign:'right',
-                                itemId:"ghost-rent-contract-keyword2-itemId",
-                                name:"keyword",labelWidth:65,fieldLabel:'人员姓名',
-                                width:240,
-                                emptyText:"人员姓名"
-                            },
-                            {
-                                xtype: 'button', text: '查询', scope: me,
-                                glyph:0xf002,
-                                handler: function () {
-
+                                labelWidth: 50,
+                                width: 170,
+                                margin:'0 0 0 10',
+                                triggerAction:'all',
+                                //dataSourceUrl:app.platform.ghouse.view.base.RequestUtils.url('/archives/getArchivesList'),
+                                listeners:{
+                                    change:function(){
+                                        alert(arguments[1])
+                                        //var cabinet = me.queryById("ghost-rent-contract-cabinet-itemId");
+                                        // cabinet.store.proxy.extraParams = {id:arguments[1]};
+                                        //cabinet.store.load();
+                                        // me.queryById("ghost-rent-contract-cabinet-itemId").clearValue();
+                                    }
                                 }
                             },
+                            {
+                                xtype: 'combobox',
+                                fieldLabel: ' 街道(乡镇)',
+                                emptyText: '全部',
+                                store: mStore2,
+                                editable: false,
+                                name:"street",
+                                valueField: 'value',
+                                itemId:'streetItemId',
+                                displayField: 'name',
+                                labelWidth: 75,
+                                width: 170
+                            },
+                            {
+                                xtype:"textfield",
+                                labelAlign:'right',
+                                itemId:"projectItemId",
+                                name:"projectName",
+                                labelWidth:60,
+                                fieldLabel:'小区名称',
+                                width:170,
+                                emptyText:"小区名称"
+                            },
+                            {
+                                xtype:"textfield",
+                                labelAlign:'right',
+                                itemId:"buildtemId",
+                                name:"mapCode",
+                                labelWidth:90,
+                                fieldLabel:'楼栋地图编号',
+                                width:190,
+                                emptyText:"楼栋地图编号"
+                            },
+                            {
+                                xtype:"textfield",
+                                labelAlign:'right',
+                                itemId:"addrItemId",
+                                name:"address",
+                                labelWidth:60,
+                                fieldLabel:'实际地址',
+                                width:190,
+                                emptyText:"实际地址"
+                            }
+                            ,
+                            {xtype: 'button',text:"查询",glyph:0xf002,handler:function(){
+                                console.log(me.getParams())
+                                store.proxy.extraParams = me.getParams();//获取列表store
+                                store.loadPage(1);
+                            }},
                             {
                                 xtype: 'button', text: '重置', scope: me,
                                 glyph:'xf0e2@FontAwesome',
                                 handler: function () {
-                                    me.query("#searchPeriodCom")[0].setValue('');
-                                    me.query("#searchContent")[0].setValue('');
-                                    me.query("#searchPeriodStatus")[0].setValue('');
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                text:'返回',
-                                hidden:false,
-                                glyph: 0xf0a5,
-                                handler:function() {
-                                    me.config.parentContainer.show();
+                                    me.resetParams();
                                 }
                             }
                         ]
-                    }
-                ]
-            },
-            // xtype:'container',
-            height: '100%',
-            width:'100%',
-            layout:{
-                type:'border',
-                //	regionWeights:{
-                //	west:30,
-                //	east:30
-                //}
-            },
-
-            items: [{
-                region: 'north',//指定组建具体位置，上方
-                //height: 40,
-                items:[
+                    },
                     {
                         xtype: 'toolbar', columnWidth: 1,scope: me, itemId: 'search',
                         items: [
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:13">楼栋信息：</div>'
+                            {
+                                xtype: 'button', text: '删除', scope: me,
+                                glyph: 'xf014@FontAwesome',
+                                handler: function () {
+                                    Ext.MessageBox.alert("暂不提供！");
+                                    var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
+                                    if(selectObjArray.length!=1){
+                                        Ext.MessageBox.alert("温馨提示", "请选择一份合同!");
+                                        return;
+                                    }
+                                    //selectObjArray[0].data.xxxxx
+
+                                }
                             },
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:10">XS1234561</div>'
-                            },
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:10;margin-left:10;float:right">城关区纳金乡1001号2栋</div>'
-                            },
-                            "->",
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:13;">状态：</div>'
-                            },
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:10;color:green;">审核通过</div>'
-                            },
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:13;margin-left:10;">房屋当前处理环节：</div>'
-                            },
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:11;color:green;">①社区->②街道办</div>'
-                            },
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:11;color:orange;">->③区政府</div>'
-                            },
-                            {   xtype: 'tbtext',
-                                margin: '0 0 0 0',
-                                //width:'98px',
-                                html:'<div style="font-weight:bold;font-size:11;margin-right:50;">->④市住建局</div>'
+                            {
+                                xtype: 'button', text: '打印', scope: me,
+                                glyph: 0xf158,
+                                handler: function () {
+                                    Ext.MessageBox.alert("暂不提供！");
+                                }
                             }
                         ]
                     }
                 ]
-            }, {
-                region: 'west',//左方
-                width: '40%',
-                items:[
-                    {
-                        // title: '房屋列表信息',
-                        itemId: 'tab1',
-                        autoScroll: true,
-                        scrollable: true,
-                        //height:405,
-                        // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
-                        items: [
-                            {xtype: 'lshc-view-regi-HouseListView'}
-                        ]
+            },
+            xtype: 'gridpanel',
+            itemId: 'buildGridpanel',
+            border: true,
+            store: store,
+            columnLines: true,
+            selModel: {selType: 'checkboxmodel',mode:"SINGLE",title:'全选'},
+            dockedItems :[{
+                xtype: 'pagingtoolbar',
+                store: store,
+                dock: 'bottom',
+                displayInfo: true
+            }],
+            viewConfig: {
+                enableTextSelection: true
+            },
+            columns: [
+                {text: '业务ID',hidden:true, dataIndex: 'id', align: 'center'},
+                // {text: '序号', dataIndex: 'serialNo', width: '5%', align: 'center'},
+                {text: '楼栋地图编号', dataIndex: 'mapCode', width: '20%', align: 'center'
+                    , renderer : function(data, metadata, record, rowIndex, columnIndex,store) {
+                    return  '<a href="javascript:void(0)" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="build-detail-info">'+record.data.mapCode+'</a>';
+                }
+                },
+                {text: '区（县）', dataIndex: 'region', width: '10%', align: 'center'},
+                {text: '街道（乡镇）', dataIndex: 'street', width: '15%', align: 'center'},
+                {text: '项目（小区）名称', dataIndex: 'projectName', width: '19%', align: 'center'},
+                {text: '房屋套数', dataIndex: 'houseCount', width: '14%', align: 'center'},
+                {text: '实际地址', dataIndex: 'address', width: '20%', align: 'center'}
+            ],
+            listeners: {
+                cellclick: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+                    //cellIndex==1
+                    var className = e.getTarget().className;
+                    if (className == 'build-detail-info') {
+                        //参数不可乱传，穿错参数会导致无法渲染
+                        var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
+                            config:{parentContainer:me,bizId:record.data.id}
+                        });
+
+                        var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
+                        me.hide();
+                        currentActiveTab.add(createContractView);
+                        createContractView.initDetail(record.data.mapCode,record.data.address);
+                        // Ext.Ajax.request({
+                        //     url:app.platform.ghouse.view.base.RequestUtils.url("/contract/view/"+record.id+"/1"),
+                        //     method:"post",
+                        //     async:false,
+                        //     success:function(response)
+                        //     {
+                        //         var data = JSON.parse(response.responseText);
+                        //         createContractView.addWorkNode(data.result.contract.serviceNum,record.data.nodeName,true);
+                        //         createContractView.fillForm(data.result);
+                        //         createContractView.readOnly(true);
+                        //         createContractView.modifyTitle();
+                        //     },
+                        //     failure:function(){
+                        //         Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
+                        //     }
+                        // });
                     }
-                ]
-            }, {
-                region: 'center',
-                items:[
-                    {
-                        itemId: 'tab2',
-                        autoScroll: true,
-                        scrollable: true,
-                        items: [
-                            {xtype: 'lshc-view-regi-HouseDetailView'}
-                        ]
-                    }
-                ]
-            }]
+                },
+                itemdblclick: function (dataview, record, item, index, e) {
+
+                    var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
+                        config:{parentContainer:me,bizId:record.data.id,mapCode:record.data.mapCode,address:record.data.address}
+                    });
+
+                    var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
+                    me.hide();
+                    currentActiveTab.add(createContractView);
+
+                }
+            }
+
 
         });
         me.callParent(arguments);

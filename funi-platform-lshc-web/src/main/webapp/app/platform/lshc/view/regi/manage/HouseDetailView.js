@@ -27,23 +27,25 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
         this.callParent(arguments);
     },
 	fillForm:function(formData){
-        //房屋信息
-        var houseView = this.queryById("lshc-regi-manage-houseInfo-itemId").down("form");
-
-		//房屋信息-人员列表
-        var entView = this.queryById("lshc-view-HousePerson-itemId").down("xgridpanel");
-        entView.store.loadData(formData.houseDtoList,false);
+        //房屋信息 regiInfo entInfoList fileList
+        var houseView = this.queryById("lshc-regi-manage-houseInfo-form-itemId");
+        houseView.getForm().setValues(formData.regiInfo);
+		//房屋信息-人员列表，lshc-view-HousePerson-itemId
+        var entView = this.queryById("lshc-regi-housedetail-tabpanel-itemId").down("xgridpanel");
+        entView.store.loadData(formData.entInfoList,false);
         //entView.getSelectionModel().selectAll(true);
 
 		//文件列表
-        var approveView = this.queryById("lshc-regi-manage-file-itemId").down("gridpanel");
-        approveView.store.loadData(formData.houseDtoList,false);
+        var approveView = this.queryById("lshc-regi-file-tabpanel-itemId");
+        approveView.store.loadData(formData.fileList,false);
         //approveView.getSelectionModel().selectAll(true);
 
         //审批过程
-        var approveView = this.queryById("lshc-regi-manage-approve-itemId").down("gridpanel");
-        approveView.store.loadData(formData.houseDtoList,false);
-        //approveView.getSelectionModel().selectAll(true);
+        var obj = new Object();
+        obj["serviceNum"] = this.config.bizId;
+        var approveView = this.queryById("lshc-regi-approve-tabpanel-itemId");
+        approveView.store.proxy.extraParams = obj;
+        approveView.store.loadPage(1);
 
         //承租人
        // var lesseeFormView = this.queryById("ghouse-rent-contract-lessee-form-itemId");
@@ -122,7 +124,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
 			itemId:'lshc-regi-housedetail-parent-tabpanel-itemId',
             items:[
                {
-                    itemId:'tab1',
+                    itemId:'lshc-regi-housedetail-tabpanel-itemId',
                     glyph: 'xf0c0@FontAwesome',
                     xtype:"lshc-regi-manage-houseInfo",
                     title:'普查信息',
@@ -137,11 +139,11 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                     disabled:false,
                     overflowY:'auto',
                     width:"100%",
-                    itemId:'tab2'
+                    itemId:'lshc-regi-file-tabpanel-itemId'
                 },{
                     title:'处理过程',
                     glyph: 'xf022@FontAwesome',
-					itemId:'tab3',
+					itemId:'lshc-regi-approve-tabpanel-itemId',
                     xtype:"lshc-regi-manage-approve",
                     overflowY:'auto',
                     disabled:false,

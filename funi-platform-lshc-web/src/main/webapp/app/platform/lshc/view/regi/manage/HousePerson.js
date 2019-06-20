@@ -7,7 +7,8 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
     xtype:'lshc-view-HousePerson-xtype',
     itemId:'lshc-view-HousePerson-itemId',
 	requires:[
-		"app.platform.lshc.view.regi.manage.RightEntWin"
+		"app.platform.lshc.view.regi.manage.RightEntWin",
+        "app.platform.lshc.view.base.RequestUtils"
     ],
     getData:function(){
         var grid = this.down("xgridpanel");
@@ -41,12 +42,6 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
 				{type:"string",name:"tel"},
                 {type:"string",name:"marriageStatus"}
             ],
-			data:[
-			{"id":"eqweqwewq","serialNo":1,"entName":"321321","idNo":"321321","sex":"dasdas",
-				"entType":"321321312","entNation":"dasdsa","entNative":'sa',"tel":'1340098765',"marriageStatus":'1'},
-			{"id":"eqweqwewq2","serialNo":1,"entName":"321321","idNo":"321321","sex":"dasdas",
-				"entType":"321321312","entNation":"dasdsa","entNative":'sa',"tel":'1340098765',"marriageStatus":'1'}
-			],
 			load:false,
             pageSize:15
         });
@@ -54,7 +49,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
             items: [
                 {
                     xtype: 'xgridpanel',
-                    itemId: 'ghouse-manage-HousePropety-resident',
+                    itemId: 'lshc-manage-housePerson-panelList',
                     border: true,
                     minHeight: 100,
                     width: "100%",

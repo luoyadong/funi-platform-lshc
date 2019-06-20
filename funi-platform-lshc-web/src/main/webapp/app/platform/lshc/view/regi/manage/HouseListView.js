@@ -34,7 +34,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
         var me = this;
 
         var store = Ext.create("Funi.data.ListStore",{
-            //url:app.platform.ghouse.view.base.RequestUtils.url("/contract/list"),
+            url:app.platform.lshc.view.base.RequestUtils.url("/manage/getRegiInfoVoList"),
             fields:[
 			    {type:"string",name:"id"},
                 {type:"string",name:"houseId"},
@@ -44,11 +44,6 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 {type:"string",name:"regiStatus"},
                 {type:"string",name:"fileCount"}
             ],
-			data:[
-			{"id":"eqweqwewq","houseId":1,"unitNo":"1","layer":"2","roomNo":"2018","regiStatus":"初审通过","fileCount":3},
-			{"id":"eqweqwewq2","houseId":2,"unitNo":"1","layer":"2","roomNo":"2018","regiStatus":"初审通过","fileCount":3}
-			],
-			load:false,
             pageSize:15
         });
         Ext.apply(me, {
@@ -111,6 +106,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                         }
                     ]
                 },
+                height:405,
                 xtype: 'gridpanel',
                 itemId: 'houseGridpanel',
                 border: true,
@@ -140,10 +136,10 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                         var id = record.data.id;
                         //加载普查详情tabs
                         Ext.Ajax.request({
-                            url: app.platform.lshc.view.base.RequestUtils.url("/build/getRegiInfoDetail"),
+                            url: app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoDetail"),
                             method: "post",
                             async: false,
-                            params: {houseId: id},
+                            params: {hcId: id},
                             success: function (response) {
                                 var data = JSON.parse(response.responseText);
                                 console.log("-----get regi detail:")

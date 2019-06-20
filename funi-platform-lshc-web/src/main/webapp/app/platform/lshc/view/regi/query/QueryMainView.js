@@ -3,9 +3,9 @@
  * @author luoyadong@funi365.com
  */
 
-Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
+Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
     extend: 'Ext.grid.Panel',
-    xtype: 'lshc-view-regi-RegiMainView',
+    xtype: 'lshc-view-query-QueryMainView',
     requires: [
         //新增项目分期信息Tab视图
         'app.platform.lshc.view.base.RequestUtils',

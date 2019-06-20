@@ -14,10 +14,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     config: {
         // //主容器
         // parentContainer: null,
-		// //普查主表ID
-		// bizId:null,
-		// mapCode:"",
-		// address:""
+		// //楼栋表ID
+		// bizId:null
     },
     //需要注释，否者传参数会报错
     // constructor: function (config) {
@@ -28,8 +26,10 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     // },
     title: null,
     getParams:function(){
+        var me = this;
         var formElements = Ext.ComponentQuery.query("textfield",this);
         var obj = new Object();
+        obj["buildId"] = me.config.bizId;
         for(var i=0;i<formElements.length;i++){
             obj[formElements[i].name] =formElements[i].value;
         }
@@ -53,11 +53,16 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
         var addressTb = me.queryById("addressTbItemId");
 		addressTb.setHtml(  '<div style="font-weight:bold;font-size:10;margin-left:10;float:right">'+address+'</div>');
 
-		//初始化房屋列表
-        //var houseListPanel = me.queryById("lshc-view-regi-HouseListView-itemId");
-		//var gridObjStore = houseListPanel.store;
-		 //gridObjStore.loadPage(1);
+		//初始化房屋列表,HouseListView-Tab-itemId  lshc-view-regi-HouseListView-itemId
+        gridObjStore = me.getHouseListStore();
+        gridObjStore.proxy.extraParams = me.getParams();
+        gridObjStore.loadPage(1);
 	},
+    getHouseListStore:function(){
+        var houseListPanel = this.queryById("lshc-view-regi-HouseListView-itemId");
+        var gridObjStore = houseListPanel.down("gridpanel").store;
+        return gridObjStore;
+    },
 	initStatus:function(status,doneStatus,doingStatus,todoStatus){
 	    var me = this;
 		//初始化顶部状态进度信息
@@ -129,7 +134,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
             data: [
                 {'name': '全部', value: ''},
                 {'name': '录入',value:0},
-                {'name': '提交',value:1},
+                {'name': '初审',value:1}
             ]
         });
 
@@ -177,13 +182,10 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 xtype: 'button', text: '查询', scope: me,
                                 glyph:0xf002,
                                 handler: function () {
-									var houseListPanel = me.queryById("lshc-view-regi-HouseListView-itemId");
-                                    var gridObjStore = houseListPanel.store;
+                                     gridObjStore = me.getHouseListStore();
                                      gridObjStore.proxy.extraParams = me.getParams();//获取列表store
 								     gridObjStore.loadPage(1);
-
 									 //点击第一条记录
-
                                 }
                             },
                             {
@@ -281,14 +283,15 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 				]
             }, {
                 region: 'west',//左方
-                width: '40%',
+                width: '45%',
                 items:[
 					{
                            // title: '房屋列表信息',
-							itemId: 'tab1',
+							itemId: 'HouseListView-Tab-itemId',
                             autoScroll: true,
                             scrollable: true,
-                            //height:405,
+                            height:405,
+                            //bodyStyle : 'overflow-y:scroll',
                             // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
                             items: [
                                 {xtype: 'lshc-view-regi-HouseListView',parentContainer:me,bizId:me.bizId}

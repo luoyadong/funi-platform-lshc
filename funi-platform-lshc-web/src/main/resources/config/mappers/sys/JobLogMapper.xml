@@ -6,7 +6,7 @@
     <result column="job_accept_id" jdbcType="VARCHAR" property="jobAcceptId" />
     <result column="audit_name" jdbcType="VARCHAR" property="auditName" />
     <result column="audit_id" jdbcType="VARCHAR" property="auditId" />
-    <result column="job_result" jdbcType="VARCHAR" property="jobResult" />
+    <result column="audit_result" jdbcType="VARCHAR" property="jobResult" />
     <result column="node_name" jdbcType="VARCHAR" property="nodeName" />
     <result column="job_opinion" jdbcType="VARCHAR" property="jobOpinion" />
     <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
@@ -21,13 +21,13 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    id, job_accept_id, audit_name, audit_id, job_result, node_name, job_opinion, VERSION,
+    id, job_accept_id, audit_name, audit_id, audit_result, node_name, job_opinion, VERSION,
     CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE, unit_name
   </sql>
   
   <insert id="insert" parameterType="com.funi.platform.lshc.entity.sys.JobLog">
     insert into lshc_job_log (id, job_accept_id, audit_name,
-      audit_id, job_result, node_name,
+      audit_id, audit_result, node_name,
       job_opinion, VERSION,CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID,
       DELETED, ISVALIDE,unit_name)
     values (#{id,jdbcType=VARCHAR}, #{jobAcceptId,jdbcType=VARCHAR}, #{auditName,jdbcType=VARCHAR}, 
@@ -39,8 +39,8 @@
 
   <select id="selectByServiceNum" resultType="com.funi.platform.lshc.dto.WorkLogDto">
       select
-          audit_name as auditName,node_name as nodeName,job_opinion as jobOpinion,jl.job_result as conclusion,
-          to_char(jl.sys_create_time,'yyyy-MM-dd') as createDateStr, jl.unit_name as unitName
+          audit_name as auditName,node_name as nodeName,job_opinion as jobOpinion,jl.audit_result as conclusion,
+          to_char(jl.CREATE_TIME,'yyyy-MM-dd') as createDateStr, jl.unit_name as unitName
           from lshc_job_log jl
           inner join lshc_job_accept ja on jl.job_accept_id = ja.id
       where ja.service_num=#{serviceNum}

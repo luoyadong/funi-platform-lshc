@@ -27,7 +27,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
     },
     getData:function(){
         var form = this.down("form");
-		var entView = this.queryById("lshc-view-HousePerson-tab");
+		var entView = this.queryById("lshc-view-HousePerson-tab-itemId");
         var rtJson = {};
         if(form.isValid()){
 			 rtJson.regiInfo = form.getValues();
@@ -54,6 +54,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
                 items:[
 					{
 					xtype: 'form',
+					itemId:"lshc-regi-manage-houseInfo-form-itemId",
 					overflowY:'auto',
                     initHide:function(obj){
                     },
@@ -84,9 +85,9 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
                                 items: [
                                     {
                                         xtype: "textfield",name:"projectName",
-                                        emptyText: "项目(小区)名称",fieldLabel: '项目(小区)名称',readOnly:true ,itemId:"ghouse-rent-contract-contract-contractNo-itemId"
+                                        emptyText: "项目(小区)名称",fieldLabel: '项目(小区)名称',itemId:"ghouse-rent-contract-contract-contractNo-itemId"
                                     }, {
-                                        xtype: "textfield", name:"estateUnitName",fieldLabel: '物业管理单位',readOnly:true
+                                        xtype: "textfield", name:"estateUnitName",fieldLabel: '物业管理单位'
                                     }
                                 ]
                             }]
@@ -315,7 +316,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									{xtype: 'tbtext', text: '厅',  margin: '0 5 0 -70',colspan:1},
 									{
                                         xtype: "textfield",name:"isRegi",
-										margin: '5 5 0 -85',
+										margin: '5 5 0 0',
 										colspan:2,
 										//width:180,
                                         emptyText: "是否办理产权",fieldLabel: '是否办理产权',itemId:"ghouse-rent-contract-contract-contractNo2-itemId12"
@@ -431,7 +432,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 							items:[
 								{
 										//title:'人口信息',
-										itemId:'lshc-view-HousePerson-tab',
+										itemId:'lshc-view-HousePerson-tab-itemId',
 										xtype:"lshc-view-HousePerson-xtype",
 										overflowY:'auto',
 										disabled:false,

@@ -11,14 +11,16 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
     //layout:"fit",
     itemId:"lshc-regi-manage-file-itemId",
 	getData:function(){
-        var grid = this.queryById("fileGridpanel");
-        var store = grid.store;
+        //var grid = this.queryById("fileGridpanelItemId");
+        var store = this.store;
         var array = new Array();
         var count = store.getCount();
-        for(var i=0;i<count;i++){
-           // if(null == store.getAt(i).data.houseId || "" == store.getAt(i).data.houseId){
+        if(count >0){
+            for(var i=0;i<count;i++){
+                // if(null == store.getAt(i).data.houseId || "" == store.getAt(i).data.houseId){
                 array.push(store.getAt(i).data);
-           // }
+                // }
+            }
         }
         return array;
         //throw {message:"请添加产权人信息"};
@@ -36,18 +38,12 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                 {type:"string",name:"unitName"},
                 {type:"string",name:"url"}
             ],
-			data:[
-			{"id":"eqweqwewq","fileName":1,"fileSize":"321321","submitDate":"2019-06-16","userName":"dasdas",
-				"unitName":"321321312","url":"dasdsa"},
-			{"id":"eqweqwewq2","fileName":1,"fileSize":"321321","submitDate":"2019-06-16","userName":"dasdas",
-				"unitName":"321321312","url":"dasdsa"}
-			],
 			load:false,
             pageSize:15
         });
         Ext.applyIf(me,{
 			xtype: 'gridpanel',
-            itemId: 'fileGridpanel',
+            itemId: 'fileGridpanelItemId',
             border: true,
             store: store,
             columnLines: true,
