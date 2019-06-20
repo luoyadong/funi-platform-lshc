@@ -108,13 +108,130 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
+    public void modifyRegiInfo(RegiInfoDto regiInfoDto) {
+        // 获取普查信息
+        RegiInfo regiInfo = regiInfoDto.getRegiInfo();
+        String houseId = regiInfo.getId();
+        if(StringUtils.isBlank(houseId)) {
+            throw new RuntimeException("普查信息ID不能为空");
+        }
+        CurrentUser user = userManager.findUser();
+        String userId = user.getUserId();
+        regiInfo.setUpdateId(userId);
+        // 编辑普查信息
+        regiInfoMapper.updateByPrimaryKeySelective(regiInfo);
+        // 编辑普查信息关联的入住人信息
+        modifyEntInfoList(regiInfoDto.getEntInfoList(), houseId, user);
+        // 编辑普查信息关联的附件信息
+        modifyFileList(regiInfoDto.getFileList(), houseId, user);
+    }
+
+    /**
+     * 编辑普查信息关联的入住人信息
+     * @param entInfoList
+     * @param houseId
+     */
+    private void modifyEntInfoList(List<EntInfo> entInfoList, String houseId, CurrentUser user) {
+        String userId = user.getUserId();
+        if(CollectionUtils.isEmpty(entInfoList)) {
+            // 逻辑删除全部入住人信息
+            entInfoMapper.deleteAllEntInfoByHouseId(houseId, userId);
+        } else {
+            // 用于保存需要修改的入住人信息
+            List<EntInfo> modifyEntInfoList = new ArrayList<>();
+            // 用于保存需要新增的入住人信息
+            List<EntInfo> createEntInfoList = new ArrayList<>();
+            // 用于保存需要修改的入住人ID集合
+            List<String> modifyEntInfoIdList = new ArrayList<>();
+            for(EntInfo entInfo : entInfoList) {
+                String id = entInfo.getId();
+                if(StringUtils.isNotBlank(id)) {
+                    modifyEntInfoList.add(entInfo);
+                    modifyEntInfoIdList.add(id);
+                } else {
+                    createEntInfoList.add(entInfo);
+                }
+            }
+            if(CollectionUtils.isEmpty(modifyEntInfoIdList)) {
+                // 逻辑删除全部入住人信息
+                entInfoMapper.deleteAllEntInfoByHouseId(houseId, userId);
+            } else {
+                // 逻辑删除除了需要修改的入住人信息
+                entInfoMapper.deleteEntInfoByExceptIds(houseId, modifyEntInfoIdList, userId);
+            }
+            if(CollectionUtils.isNotEmpty(modifyEntInfoList)) {
+                for(EntInfo entInfo : modifyEntInfoList) {
+                    entInfo.setUpdateId(userId);
+                    // 编辑入住人信息
+                    entInfoMapper.updateByPrimaryKeySelective(entInfo);
+                }
+            }
+            if(CollectionUtils.isNotEmpty(createEntInfoList)) {
+                // 新增入住人信息
+                for(EntInfo entInfo : createEntInfoList) {
+                    saveNewEntInfo(entInfo, houseId, user);
+                }
+            }
+        }
+    }
+
+    /**
+     * 编辑普查信息关联的附件信息
+     * @param fileList
+     * @param houseId
+     */
+    private void modifyFileList(List<File> fileList, String houseId, CurrentUser user) {
+        String userId = user.getUserId();
+        if(CollectionUtils.isEmpty(fileList)) {
+            // 逻辑删除全部附件信息
+            fileMapper.deleteAllFileByHouseId(houseId, userId);
+        } else {
+            // 用于保存需要修改的附件信息
+            List<File> modifyFileList = new ArrayList<>();
+            // 用于保存需要新增的附件信息
+            List<File> createFileList = new ArrayList<>();
+            // 用于保存需要修改的附件ID集合
+            List<String> modifyFileIdList = new ArrayList<>();
+
+            for(File file : fileList) {
+                String id = file.getId();
+                if(StringUtils.isNotBlank(id)) {
+                    modifyFileList.add(file);
+                    modifyFileIdList.add(id);
+                } else {
+                    createFileList.add(file);
+                }
+            }
+            if(CollectionUtils.isEmpty(modifyFileList)) {
+                // 逻辑删除全部入住人信息
+                fileMapper.deleteAllFileByHouseId(houseId, userId);
+            } else {
+                // 逻辑删除除了需要修改的入住人信息
+                fileMapper.deleteFileByExceptIds(houseId, modifyFileIdList, userId);
+            }
+            if(CollectionUtils.isNotEmpty(modifyFileList)) {
+                for(File file : modifyFileList) {
+                    file.setUpdateId(userId);
+                    // 编辑入住人信息
+                    fileMapper.updateByPrimaryKeySelective(file);
+                }
+            }
+            if(CollectionUtils.isNotEmpty(createFileList)) {
+                RegiInfo regiInfoExist = regiInfoMapper.selectByPrimaryKey(houseId);
+                // 新增入住人信息
+                for(File file : createFileList) {
+                    new SuperEntityUtils<>().buildCreateEntity(file, user);
+                    buildFileInfo(file, regiInfoExist, user);
+                    fileMapper.insert(file);
+                }
+            }
+        }
+    }
+
+    @Override
     public void importRegiInfoList(MultipartFile uploadFile) throws IOException {
-        List<ExcelRegiInfoVo> queryList = null;
-        ExcelImporter<ExcelRegiInfoVo> importer = new ExcelImporter<>();
-        queryList = importer.setStartRows(4).setHeadRows(3).setItemClass(ExcelRegiInfoVo.class).execute(uploadFile.getInputStream());
-        // 校验Excel数据有效性
-        checkExcelRegiInfoVoList(queryList);
-        for(ExcelRegiInfoVo excelRegiInfoVo : queryList) {
+        List<ExcelRegiInfoVo> excelRegiInfoVoList = getRegiInfoByExcle(uploadFile);
+        for(ExcelRegiInfoVo excelRegiInfoVo : excelRegiInfoVoList) {
             RegiInfo regiInfo = new RegiInfo();
             EntInfo entInfo = new EntInfo();
             // 拷贝房屋对象属性
@@ -139,38 +256,77 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
-    public void batchRemoveBuildInfo(List<String> ids) {
+    public String checkRegiInfoList(MultipartFile uploadFile) throws IOException {
+        List<ExcelRegiInfoVo> excelRegiInfoVoList = getRegiInfoByExcle(uploadFile);
+        // 校验Excel数据有效性
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
+        }
 
+        List<Integer> rowNoList = new ArrayList<>();
+        for(int i = 0; i < excelRegiInfoVoList.size(); i ++) {
+            // 获取行号
+            int rowNo = i + CensusConstants.EXCEL_CONTENT_START_ROW_NO + 1;
+            ExcelRegiInfoVo excelRegiInfoVo = excelRegiInfoVoList.get(i);
+            RegiInfo regiInfo = new RegiInfo();
+            // 拷贝房屋对象属性
+            BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
+            List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
+            if(regiInfoList.size() > 0) {
+                rowNoList.add(rowNo);
+            }
+        }
+        if(CollectionUtils.isEmpty(rowNoList)) {
+            return "普查信息校验通过";
+        } else {
+            return StringUtils.join(rowNoList, ",") + "行数据没有通过校验";
+        }
+    }
+
+    /**
+     * 根据批量上传普查信息的Excel，获取普查信息对象和入住人信息对象集合
+     * @param uploadFile
+     * @return
+     */
+    private List<ExcelRegiInfoVo> getRegiInfoByExcle(MultipartFile uploadFile) throws IOException {
+        ExcelImporter<ExcelRegiInfoVo> importer = new ExcelImporter<>();
+        return importer.setStartRows(CensusConstants.EXCEL_CONTENT_START_ROW_NO).setHeadRows(CensusConstants.EXCEL_CONTENT_HEAD_ROWS_NO).setItemClass(ExcelRegiInfoVo.class).execute(uploadFile.getInputStream());
+    }
+
+    @Override
+    public void batchRemoveBuildInfo(List<String> ids) {
+        // 楼栋ID关联的审核中普查信息
+        List<RegiInfo> inAuditRegiInfoList = regiInfoMapper.selectRegiInfoListInAudit(ids);
+        if(CollectionUtils.isNotEmpty(inAuditRegiInfoList)) {
+            throw new RuntimeException("该楼栋还有处理审核流程中的普查信息，请先处理完审核流程中的普查信息再执行删除操作");
+        }
+        List<String> regiInfoIdList = regiInfoMapper.selectRegiInfoIdListByBuildIds(ids);
+        String userId = userManager.findUser().getUserId();
+        // 逻辑删除楼栋信息
+        buildInfoMapper.batchDeleteBuildInfo(ids, userId);
+        // 逻辑删除普查信息以及关联数据
+        if(CollectionUtils.isNotEmpty(regiInfoIdList)) {
+            batchRemoveRegiInfoByIds(regiInfoIdList, userId);
+        }
     }
 
     @Override
     public void batchRemoveRegiInfo(List<String> ids) {
-        String userId = userManager.findUser().getUserId();
+        batchRemoveRegiInfoByIds(ids, userManager.findUser().getUserId());
+    }
+
+    /**
+     * 根据普查信息ID集合逻辑删除普查信息，以及关联的入住人员信息和附件信息
+     * @param ids 普查信息ID集合
+     * @param userId
+     */
+    private void batchRemoveRegiInfoByIds(List<String> ids, String userId) {
         // 逻辑删除房屋信息
         regiInfoMapper.batchDeleteRegiInfo(ids, userId);
         // 逻辑删除房屋关联的入住人员信息
         entInfoMapper.batchDeleteEntInfo(ids, userId);
         // 逻辑删除房屋关联的附件信息
         fileMapper.batchDeleteFile(ids, userId);
-    }
-
-    /**
-     * 检查Excel批量导入的房屋数据是否已经在数据库中存在
-     * @param excelRegiInfoVoList
-     */
-    private void checkExcelRegiInfoVoList(List<ExcelRegiInfoVo> excelRegiInfoVoList) {
-        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
-            throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
-        }
-        for(ExcelRegiInfoVo excelRegiInfoVo :excelRegiInfoVoList) {
-            RegiInfo regiInfo = new RegiInfo();
-            // 拷贝房屋对象属性
-            BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
-            List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
-            if(regiInfoList.size() > 0) {
-                throw new RuntimeException(getRegiInfoDesc(regiInfo));
-            }
-        }
     }
 
     /**

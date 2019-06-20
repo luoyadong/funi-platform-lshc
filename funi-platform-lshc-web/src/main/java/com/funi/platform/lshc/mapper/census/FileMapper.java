@@ -19,6 +19,21 @@ public interface FileMapper {
     int updateByPrimaryKey(File record);
 
     /**
+     * 根据普查信息ID逻辑删除全部关联的附件信息
+     * @param houseId
+     * @return
+     */
+    int deleteAllFileByHouseId(@Param("houseId")String houseId, @Param("userId") String userId);
+
+    /**
+     * 根据普查信息ID和例外的附件ID，逻辑删除符合条件的附件信息
+     * @param houseId
+     * @param ids
+     * @return
+     */
+    int deleteFileByExceptIds(@Param("houseId") String houseId, @Param("ids") List<String> ids, @Param("userId") String userId);
+
+    /**
      * 根据房屋编号查询附件列表
      * @param hcId
      * @return

@@ -64,6 +64,41 @@
     CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
 
+  <select id="selectRegiInfoIdListByBuildIds" resultType="java.util.List">
+      SELECT
+          t2.id
+      FROM
+          LSHC_BUILD_INFO t1
+          LEFT JOIN LSHC_REGI_INFO t2 ON t1.MAP_CODE = t2.MAP_CODE
+      WHERE
+          t1.DELETED = 0
+          AND t1.ISVALIDE = '1'
+          AND t2.DELETED = 0
+          AND t2.ISVALIDE = '1'
+          AND t1.id in
+          <foreach collection="list" separator=","  item="id" open="(" close=")">
+            #{id}
+          </foreach>
+  </select>
+
+  <select id="selectRegiInfoListInAudit" resultMap="BaseResultMap">
+    SELECT
+        t2.*
+    FROM
+        LSHC_BUILD_INFO t1
+    LEFT JOIN LSHC_REGI_INFO t2 ON t1.MAP_CODE = t2.MAP_CODE
+    WHERE
+    t1.DELETED = 0
+    AND t1.ISVALIDE = '1'
+    AND t2.DELETED = 0
+    AND t2.ISVALIDE = '1'
+    AND T2.HOUSE_STATUS NOT IN ('0','3','6')
+    AND t1.id in
+    <foreach collection="list" separator=","  item="id" open="(" close=")">
+      #{id}
+    </foreach>
+  </select>
+
   <select id="selectRegiInfoByUniqueQuery" parameterType="com.funi.platform.lshc.entity.census.RegiInfo" resultMap="BaseResultMap">
     select <include refid="Base_Column_List" /> from LSHC_REGI_INFO
     <where>
@@ -255,6 +290,11 @@
       <foreach collection="ids" separator=","  item="id" open="(" close=")">
         #{id}
       </foreach>
+    </update>
+    <update id="updateRegiInfoStatus">
+      update  LSHC_REGI_INFO
+      set HOUSE_STATUS = #{houseStatus}, VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}
+      where id =#{houseId}
     </update>
   <select id="selectRegiInfoVoList" parameterType="com.funi.platform.lshc.query.census.RegiInfoQuery" resultMap="ListRegiInfoMap">
       SELECT
@@ -677,6 +717,7 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
     update LSHC_REGI_INFO
     <set>
+      DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual)
       <if test="houseId != null">
         HOUSE_ID = #{houseId,jdbcType=VARCHAR},
       </if>

@@ -44,10 +44,23 @@ public interface ManageRegiInfoService {
     void createRegiInfo(RegiInfoDto regiInfoDto);
 
     /**
+     * 创建普查信息
+     * @param regiInfoDto
+     */
+    void modifyRegiInfo(RegiInfoDto regiInfoDto);
+
+    /**
      * 批量导入普查信息
      * @param uploadFile
      */
     void importRegiInfoList(MultipartFile uploadFile) throws IOException;
+
+    /**
+     * 校验批量导入的普查信息是否有效，是否与已存在普查信息重复
+     * @param uploadFile
+     * @throws IOException
+     */
+    String checkRegiInfoList(MultipartFile uploadFile) throws IOException;
 
     /**
      * 根据楼栋ID集合删除楼栋以及普查信息

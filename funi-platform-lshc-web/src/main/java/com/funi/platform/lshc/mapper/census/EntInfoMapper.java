@@ -19,6 +19,21 @@ public interface EntInfoMapper {
     int updateByPrimaryKey(EntInfo record);
 
     /**
+     * 根据普查信息ID逻辑删除全部关联的入住人信息
+     * @param houseId
+     * @return
+     */
+    int deleteAllEntInfoByHouseId(@Param("houseId")String houseId, @Param("userId") String userId);
+
+    /**
+     * 根据普查信息ID和例外的入住人ID，逻辑删除符合条件的入住人信息
+     * @param houseId
+     * @param ids
+     * @return
+     */
+    int deleteEntInfoByExceptIds(@Param("houseId") String houseId, @Param("ids") List<String> ids, @Param("userId") String userId);
+
+    /**
      * 根据房屋编号查询入住人员信息
      * @param hcId
      * @return

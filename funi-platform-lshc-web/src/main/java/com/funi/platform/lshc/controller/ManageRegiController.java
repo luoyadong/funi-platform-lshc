@@ -85,6 +85,45 @@ public class ManageRegiController {
     }
 
     /**
+     * 编辑普查信息
+     * @param regiInfoDto
+     * @return
+     */
+    @RequestMapping("editRegiInfo")
+    @ResponseBody
+    public Object editRegiInfo(RegiInfoDto regiInfoDto) {
+        try {
+            manageRegiInfoService.modifyRegiInfo(regiInfoDto);
+            return ResultVo.newResult("编辑普查信息成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("编辑普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    /**
+     * 校验批量导入的普查信息是否有效，是否与已存在普查信息重复
+     * @param uploadFile
+     * @return
+     */
+    @RequestMapping("/checkRegiInfoList")
+    @ResponseBody
+    public Object checkRegiInfoList(MultipartFile uploadFile) {
+        try {
+            String result = manageRegiInfoService.checkRegiInfoList(uploadFile);
+            return ResultVo.newResult(result);
+        } catch(Exception e) {
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("普查信息校验失败，原因：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    /**
      * 批量导入普查信息
      * @throws Exception
      */
@@ -112,7 +151,7 @@ public class ManageRegiController {
     public Object batchDeleteBuildInfo(@RequestBody List<String> ids) {
         try {
             manageRegiInfoService.batchRemoveBuildInfo(ids);
-            return ResultVo.newResult("批量删除楼栋信息成功");
+            return ResultVo.newResult("删除楼栋信息成功");
         } catch (Exception e) {
             e.printStackTrace();
             new ResultVo(false);
@@ -123,7 +162,7 @@ public class ManageRegiController {
     }
 
     /**
-     * 根据房屋编号删除房屋信息
+     * 根据普查信息ID集合逻辑删除普查信息以及关联数据
      * @param ids
      * @return
      */
@@ -132,7 +171,7 @@ public class ManageRegiController {
     public Object batchDeleteRegiInfo(@RequestBody List<String> ids) {
         try {
             manageRegiInfoService.batchRemoveRegiInfo(ids);
-            return ResultVo.newResult("批量删除普查信息成功");
+            return ResultVo.newResult("删除普查信息成功");
         } catch (Exception e) {
             e.printStackTrace();
             new ResultVo(false);
@@ -141,4 +180,5 @@ public class ManageRegiController {
             return resultVo;
         }
     }
+
 }

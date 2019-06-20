@@ -24,6 +24,22 @@
     ID, HC_ID, RIGHT_NO, FILE_NAME, FILE_SIZE, FILE_TYPE, URL, SUBMIT_DATE, USER_NAME, 
     UNIT_NAME, VERSION, CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
+  <update id="deleteAllFileByHouseId">
+    update  LSHC_FILE
+    set DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}
+    where HC_ID = #{houseId}
+  </update>
+
+  <update id="deleteFileByExceptIds">
+    update  LSHC_FILE
+    set DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}
+    where HC_ID = #{houseId}
+    AND id not in
+    <foreach collection="ids" separator=","  item="id" open="(" close=")">
+      #{id}
+    </foreach>
+  </update>
+
     <update id="batchDeleteFile">
         update  LSHC_FILE
         set DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}
@@ -182,6 +198,7 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.File">
     update LSHC_FILE
     <set>
+      DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual)
       <if test="hcId != null">
         HC_ID = #{hcId,jdbcType=VARCHAR},
       </if>

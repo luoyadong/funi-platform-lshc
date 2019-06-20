@@ -1,5 +1,6 @@
 package com.funi.platform.lshc.service.impl;
 
+import com.funi.framework.biz.eic.bo.CurrentUser;
 import com.funi.platform.lshc.entity.census.EntInfo;
 import com.funi.platform.lshc.entity.census.File;
 import com.funi.platform.lshc.entity.census.RegiInfo;
@@ -87,4 +88,23 @@ public class RegiInfoServiceImpl implements RegiInfoService {
         ExcelUtil.excelExport("楼栋普查数据统计表.xls","普查数据", excelRegiInfoVoList, response);
     }
 
+    @Override
+    public void sendBack(String houseId, String desc) {
+        RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(houseId);
+        if (regiInfo == null) {
+            throw new RuntimeException("普查信息不存在");
+        }
+        String houseStatus = regiInfo.getHouseStatus();
+        // 只有复审审核通过的业务件才可以被退回
+        if(! CensusConstants.HOUSE_STATUS_SECOND_APPROVAL_PASS.equals(houseStatus)) {
+            throw new RuntimeException("普查信息状态异常不能进行退回操作");
+        }
+        CurrentUser user = userManager.findUser();
+        // 修改普查信息的状态
+        regiInfoMapper.updateRegiInfoStatus(houseId, CensusConstants.HOUSE_STATUS_BACK, user.getUserId());
+        // TODO 工作流
+
+        // TODO 记录操作日志
+
+    }
 }

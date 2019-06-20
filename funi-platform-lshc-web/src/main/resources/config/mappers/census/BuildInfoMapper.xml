@@ -26,6 +26,15 @@
     CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
 
+  <update id="batchDeleteBuildInfo">
+    update  LSHC_BUILD_INFO
+    set DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),UPDATE_ID=#{userId}
+    where id in
+    <foreach collection="ids" separator=","  item="id" open="(" close=")">
+      #{id}
+    </foreach>
+  </update>
+
   <select id="selectBuildInfoVoList" parameterType="com.funi.platform.lshc.query.census.BuildInfoQuery" resultMap="BuildInfoVoMap">
       SELECT DISTINCT
           t1.id,

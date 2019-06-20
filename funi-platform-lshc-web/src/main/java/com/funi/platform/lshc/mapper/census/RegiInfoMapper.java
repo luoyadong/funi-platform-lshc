@@ -23,6 +23,20 @@ public interface RegiInfoMapper {
     int updateByPrimaryKey(RegiInfo record);
 
     /**
+     * 根据楼栋ID集合查询楼栋关联的普查信息ID集合
+     * @param ids
+     * @return
+     */
+    List<String> selectRegiInfoIdListByBuildIds(List<String> ids);
+
+    /**
+     * 查询正在审核中的普查信息列表
+     * @param ids
+     * @return
+     */
+    List<RegiInfo> selectRegiInfoListInAudit(List<String> ids);
+
+    /**
      * 分页查询房屋列表
      * @param regiInfoQuery
      * @return
@@ -62,4 +76,13 @@ public interface RegiInfoMapper {
      * @return
      */
     List<RegiInfo> selectRegiInfoByUniqueQuery(RegiInfo regiInfo);
+
+    /**
+     * 根据普查信息主键ID修改普查信息状态
+     * @param houseId
+     * @param houseStatus
+     * @param userId
+     * @return
+     */
+    int updateRegiInfoStatus(@Param("houseId") String houseId, @Param("houseStatus") String houseStatus, @Param("userId") String userId);
 }

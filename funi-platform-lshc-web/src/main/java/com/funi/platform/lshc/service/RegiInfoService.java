@@ -49,4 +49,12 @@ public interface RegiInfoService {
      * @param response
      */
     void exportRegiInfoVoList(List<String> ids, HttpServletResponse response) throws Exception;
+
+    /**
+     * 审批流程-退回
+     * @param houseId 普查信息ID
+     * @param desc 退回描述
+     * @return
+     */
+    void sendBack(String houseId, String desc);
 }

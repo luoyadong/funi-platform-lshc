@@ -1,5 +1,6 @@
 package com.funi.platform.lshc.controller;
 
+import com.funi.framework.mvc.eic.vo.ResultVo;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.UndoneRegiInfoService;
@@ -59,5 +60,25 @@ public class UndoneRegiController {
     @ResponseBody
     public List<ListRegiInfoVo> getRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
         return undoneRegiInfoService.findRegiInfoVoList(regiInfoQuery);
+    }
+
+    /**
+     * 根据普查信息ID集合执行批量审批操作
+     * @param ids 普查信息ID集合
+     * @param result 审批结果，0：不通过，1：通过
+     * @parsm desc 审核描述
+     */
+    @RequestMapping("batchAuditRegiInfoList")
+    public Object batchAuditRegiInfoList(@RequestBody List<String> ids, String result, String desc) {
+        try {
+            undoneRegiInfoService.batchAuditRegiInfoList(ids, result, desc);
+            return ResultVo.newResult("审批成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("审批失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
     }
 }

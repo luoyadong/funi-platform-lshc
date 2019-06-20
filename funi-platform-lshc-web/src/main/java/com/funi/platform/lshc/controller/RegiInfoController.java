@@ -1,6 +1,7 @@
 package com.funi.platform.lshc.controller;
 
 import com.funi.framework.mvc.eic.controller.BaseController;
+import com.funi.framework.mvc.eic.vo.ResultVo;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.RegiInfoService;
@@ -84,6 +85,27 @@ public class RegiInfoController extends BaseController {
             regiInfoService.exportRegiInfoVoList(ids, response);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 审批流程-退回
+     * @param houseId 普查信息ID
+     * @param desc 退回描述
+     * @return
+     */
+    @RequestMapping("sendBack")
+    @ResponseBody
+    public Object sendBack(String houseId, String desc) {
+        try {
+            regiInfoService.sendBack(houseId, desc);
+            return ResultVo.newResult("审批退回成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("审批退回失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
         }
     }
 }

@@ -33,4 +33,12 @@ public interface UndoneRegiInfoService {
      * @return
      */
     List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery);
+
+    /**
+     * 根据普查信息ID集合执行批量审批操作
+     * @param ids 普查信息ID集合
+     * @param result 审批结果，0：不通过，1：通过
+     * @parsm desc 审核描述
+     */
+    void batchAuditRegiInfoList(List<String> ids, String result, String desc);
 }

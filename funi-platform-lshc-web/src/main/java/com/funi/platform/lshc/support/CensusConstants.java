@@ -47,4 +47,14 @@ public class CensusConstants {
     public static final Integer REGION_TYPE_REGION = 1;
     /** 区域查询类型：根据街道查询社区*/
     public static final Integer REGION_TYPE_COUNTY = 2;
+
+    /** 审批结果：不通过*/
+    public static final String AUDIT_RESULT_REFUSE = "0";
+    /** 审批结果：通过*/
+    public static final String AUDIT_RESULT_PASS = "1";
+
+    /** Excel导入普查信息，正文开始行号*/
+    public static final int EXCEL_CONTENT_START_ROW_NO = 4;
+    /** Excel导入普查信息，表头占用的行数*/
+    public static final int EXCEL_CONTENT_HEAD_ROWS_NO = 3;
 }

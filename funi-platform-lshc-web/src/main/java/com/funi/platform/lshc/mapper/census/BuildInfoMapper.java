@@ -3,6 +3,7 @@ package com.funi.platform.lshc.mapper.census;
 import com.funi.platform.lshc.entity.census.BuildInfo;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,6 +22,13 @@ public interface BuildInfoMapper {
     int updateByPrimaryKey(BuildInfo record);
 
     /**
+     * 批量逻辑删除楼栋数据
+     * @param ids
+     * @return
+     */
+    int batchDeleteBuildInfo(@Param("ids") List<String> ids, @Param("userId") String userId);
+
+    /**
      * 根据查询条件分页查询楼栋列表
      * @param buildInfoQuery
      * @return
@@ -33,9 +41,5 @@ public interface BuildInfoMapper {
      * @return
      */
     BuildInfo selectBuildInfoByMapCode(String mapCode);
-
-
-
-
 
 }
