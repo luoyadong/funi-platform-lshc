@@ -37,6 +37,10 @@
     background-image: url(images/logo.gif);
     }
 </style>
+        <%--<style>
+            table,table tr th, table tr td { border:1px solid #0094ff; }
+            table { width: 200px; min-height: 25px; line-height: 25px; text-align: center; border-collapse: collapse;}
+        </style>--%>
 </head>
 <body>
 </body>

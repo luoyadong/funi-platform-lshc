@@ -211,8 +211,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 	          // xtype:'container',
 				height: '100%',
 				width:'100%',
+            padding:"0 0 0 5",
 			   layout:{
-					type:'border',
+					type:'border'
 				//	regionWeights:{
 					//	west:30,
 					//	east:30
@@ -290,7 +291,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 							itemId: 'HouseListView-Tab-itemId',
                             autoScroll: true,
                             scrollable: true,
-                            height:405,
+                            height:450,
                             //bodyStyle : 'overflow-y:scroll',
                             // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
                             items: [

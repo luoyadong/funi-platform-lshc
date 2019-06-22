@@ -7,8 +7,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
     extend: 'Ext.Window',
     modal: true,
     requires:[],
-    width:420,
-    height:360,
+    width:695,
+    height:255,
     title:'添加人口信息',
     layout:"fit",
     border:true,
@@ -20,6 +20,10 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                     xtype:'form',
                     itemId:"rightEntItemId",
                     margin:'20 0 0 30',
+                    layout: {
+                        type: 'table',
+                        columns: 2,colspan:1
+                    },
                     items:[
                         {text: 'id', dataIndex: 'id',hidden:true},
                         {
@@ -29,7 +33,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                         },
 						 {
                             xtype: "textfield", labelAlign:"right",
-                            emptyText: "姓名", allowBlank: false, fieldLabel: '证件号码',  width:300,
+                            emptyText: "证件号码", allowBlank: false, fieldLabel: '证件号码',  width:300,
                             labelWidth: 90, margin: '11 0 0 0',name:'idNo',vtype:"idcard"
                         },
 						{
