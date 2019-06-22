@@ -36,7 +36,7 @@ public class ManageRegiController {
      */
     @RequestMapping("getBuildInfoList")
     @ResponseBody
-    public List<BuildInfoVo> getBuildInfoList(@RequestBody BuildInfoQuery buildInfoQuery) {
+    public List<BuildInfoVo> getBuildInfoList(BuildInfoQuery buildInfoQuery) {
         return manageRegiInfoService.findBuildInfoList(buildInfoQuery);
     }
 
@@ -61,7 +61,7 @@ public class ManageRegiController {
      */
     @RequestMapping("getRegiInfoVoList")
     @ResponseBody
-    public List<ListRegiInfoVo> getRegiInfoVoList(@RequestBody RegiInfoQuery regiInfoQuery) {
+    public List<ListRegiInfoVo> getRegiInfoVoList( RegiInfoQuery regiInfoQuery) {
         return manageRegiInfoService.findRegiInfoVoList(regiInfoQuery);
     }
 

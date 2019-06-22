@@ -47,6 +47,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             border: true,
             store: store,
             columnLines: true,
+            height:400,
             viewConfig: {
                 enableTextSelection: true
             },
@@ -95,9 +96,9 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
         });
 		 me.dockedItems = [{
             xtype: 'toolbar',
-            style: {
+          /*  style: {
                 background: '#f3f7f7'
-            },
+            },*/
             dock: 'top',
             items: [{
                         xtype: 'toolbar', columnWidth: 1, scope: me,
