@@ -19,6 +19,17 @@ public class BasicController {
     private BasicService basicService;
 
     /**
+     * 查询字典表，用于前端展示下拉列表
+     * @param type 见常量类：CensusConstants的DICTIONARY_TYPE相关配置
+     * @return
+     */
+    @RequestMapping("getDictionaryListName")
+    @ResponseBody
+    public List<ComboboxDto> getDictionaryListName(String type) {
+        return basicService.findDictionaryListName(type);
+    }
+
+    /**
      * 查询拉萨市全部区县信息
      * @return
      */

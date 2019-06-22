@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.census.SysConfigMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.census.SysConfig">
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CONFIG_NAME" jdbcType="VARCHAR" property="configName" />
+    <result column="CONFIG_CODE" jdbcType="VARCHAR" property="configCode" />
+    <result column="CONFIG_VALUE" jdbcType="VARCHAR" property="configValue" />
+    <result column="CONFIG_TYPE" jdbcType="VARCHAR" property="configType" />
+    <result column="SORT" jdbcType="DECIMAL" property="sort" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_ID" jdbcType="VARCHAR" property="createId" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
+    <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
+    <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
+  </resultMap>
+
+  <select id="selectSysConfDetaNameByType" resultType="com.funi.platform.lshc.dto.ComboboxDto">
+    SELECT
+        CONFIG_VALUE AS value,
+        CONFIG_VALUE AS name
+    FROM
+        LSHC_SYS_CONFIG
+    WHERE
+        DELETED = 0
+        AND ISVALIDE = '1'
+        AND CONFIG_TYPE = #{type}
+    ORDER BY
+        SORT
+  </select>
+
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.census.SysConfig">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_SYS_CONFIG (ID, CONFIG_NAME, CONFIG_CODE, CONFIG_VALUE,
+      CONFIG_TYPE, SORT, VERSION, 
+      CREATE_TIME, CREATE_ID, UPDATE_TIME, 
+      UPDATE_ID, DELETED, ISVALIDE
+      )
+    values (#{id,jdbcType=VARCHAR},#{configName,jdbcType=VARCHAR}, #{configCode,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR},
+      #{configType,jdbcType=VARCHAR}, #{sort,jdbcType=DECIMAL}, #{version,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=VARCHAR}, #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.census.SysConfig">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_SYS_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="configName != null">
+        CONFIG_NAME,
+      </if>
+      <if test="configCode != null">
+        CONFIG_CODE,
+      </if>
+      <if test="configValue != null">
+        CONFIG_VALUE,
+      </if>
+      <if test="configType != null">
+        CONFIG_TYPE,
+      </if>
+      <if test="sort != null">
+        SORT,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="createId != null">
+        CREATE_ID,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID,
+      </if>
+      <if test="deleted != null">
+        DELETED,
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="configName != null">
+        #{configName,jdbcType=VARCHAR},
+      </if>
+      <if test="configCode != null">
+        #{configCode,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null">
+        #{configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="configType != null">
+        #{configType,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=DECIMAL},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        #{isvalide,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

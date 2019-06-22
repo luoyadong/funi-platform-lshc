@@ -8,6 +8,14 @@ import java.util.List;
  * Created by sam on 2019/6/17.3:56 PM
  */
 public interface BasicService {
+
+    /**
+     * 返回以name为key，以name为value
+     * @param type
+     * @return
+     */
+    List<ComboboxDto> findDictionaryListName(String type);
+
     /**
      * 查询西藏全部市信息
      * @return

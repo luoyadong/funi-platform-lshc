@@ -5,6 +5,7 @@ import com.funi.framework.app.invocation.AppInvoker;
 import com.funi.framework.app.invocation.bo.AppInvocationResult;
 import com.funi.framework.biz.BizException;
 import com.funi.platform.lshc.dto.ComboboxDto;
+import com.funi.platform.lshc.mapper.census.SysConfigMapper;
 import com.funi.platform.lshc.service.BasicService;
 import com.funi.platform.lshc.support.CensusConstants;
 import com.funi.platform.lshc.vo.census.LshcRegionVo;
@@ -21,6 +22,20 @@ import java.util.List;
 public class BasicServiceImpl implements BasicService {
     @Resource
     private AppInvoker ccsAppInvoker;
+    @Resource
+    private SysConfigMapper sysConfigMapper;
+
+    @Override
+    public List<ComboboxDto> findDictionaryListName(String type) {
+        List<ComboboxDto> rtList = new ArrayList<>();
+        ComboboxDto allDto = new ComboboxDto("全部", "");
+        rtList.add(allDto);
+        List<ComboboxDto> comboboxDtoList = sysConfigMapper.selectSysConfDetaNameByType(type);
+        if(CollectionUtils.isNotEmpty(comboboxDtoList)) {
+            rtList.addAll(comboboxDtoList);
+        }
+        return rtList;
+    }
 
     @Override
     public List<ComboboxDto> findAllRegionList() {

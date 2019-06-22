@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.funi.platform.lshc.mapper.census.IndexNoticeMapper">
+  <resultMap id="BaseResultMap" type="com.funi.platform.lshc.entity.census.IndexNotice">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NOTICE_TYPE" jdbcType="VARCHAR" property="noticeType" />
+    <result column="NOTICE_TITLE" jdbcType="VARCHAR" property="noticeTitle" />
+    <result column="NOTICE_DATE" jdbcType="TIMESTAMP" property="noticeDate" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="COMMON" jdbcType="VARCHAR" property="common" />
+    <result column="VERSION" jdbcType="DECIMAL" property="version" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_ID" jdbcType="VARCHAR" property="createId" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
+    <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
+    <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.funi.platform.lshc.entity.census.IndexNotice">
+    <result column="CONTENT" jdbcType="CLOB" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, NOTICE_TYPE, NOTICE_TITLE, NOTICE_DATE, URL, COMMON, VERSION, CREATE_TIME, CREATE_ID, 
+    UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
+  </sql>
+  <sql id="Blob_Column_List">
+    CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from LSHC_INDEX_NOTICE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from LSHC_INDEX_NOTICE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.funi.platform.lshc.entity.census.IndexNotice">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_INDEX_NOTICE (ID, NOTICE_TYPE, NOTICE_TITLE, NOTICE_DATE,
+      URL, COMMON, VERSION, 
+      CREATE_TIME, CREATE_ID, UPDATE_TIME, 
+      UPDATE_ID, DELETED, ISVALIDE, 
+      CONTENT)
+    values (#{id,jdbcType=VARCHAR}, #{noticeType,jdbcType=VARCHAR}, #{noticeTitle,jdbcType=VARCHAR}, #{noticeDate,jdbcType=TIMESTAMP},
+      #{url,jdbcType=VARCHAR}, #{common,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateId,jdbcType=VARCHAR}, #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR}, 
+      #{content,jdbcType=CLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.census.IndexNotice">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+      SELECT sys_guid() FROM DUAL
+    </selectKey>
+    insert into LSHC_INDEX_NOTICE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="noticeType != null">
+        NOTICE_TYPE,
+      </if>
+      <if test="noticeTitle != null">
+        NOTICE_TITLE,
+      </if>
+      <if test="noticeDate != null">
+        NOTICE_DATE,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="common != null">
+        COMMON,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="createId != null">
+        CREATE_ID,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID,
+      </if>
+      <if test="deleted != null">
+        DELETED,
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE,
+      </if>
+      <if test="content != null">
+        CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeType != null">
+        #{noticeType,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeTitle != null">
+        #{noticeTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeDate != null">
+        #{noticeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="common != null">
+        #{common,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        #{isvalide,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.IndexNotice">
+    update LSHC_INDEX_NOTICE
+    <set>
+      <if test="noticeType != null">
+        NOTICE_TYPE = #{noticeType,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeTitle != null">
+        NOTICE_TITLE = #{noticeTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeDate != null">
+        NOTICE_DATE = #{noticeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null">
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="common != null">
+        COMMON = #{common,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null">
+        CREATE_ID = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        DELETED = #{deleted,jdbcType=DECIMAL},
+      </if>
+      <if test="isvalide != null">
+        ISVALIDE = #{isvalide,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        CONTENT = #{content,jdbcType=CLOB},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.funi.platform.lshc.entity.census.IndexNotice">
+    update LSHC_INDEX_NOTICE
+    set NOTICE_TYPE = #{noticeType,jdbcType=VARCHAR},
+      NOTICE_TITLE = #{noticeTitle,jdbcType=VARCHAR},
+      NOTICE_DATE = #{noticeDate,jdbcType=TIMESTAMP},
+      URL = #{url,jdbcType=VARCHAR},
+      COMMON = #{common,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      DELETED = #{deleted,jdbcType=DECIMAL},
+      ISVALIDE = #{isvalide,jdbcType=VARCHAR},
+      CONTENT = #{content,jdbcType=CLOB}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.census.IndexNotice">
+    update LSHC_INDEX_NOTICE
+    set NOTICE_TYPE = #{noticeType,jdbcType=VARCHAR},
+      NOTICE_TITLE = #{noticeTitle,jdbcType=VARCHAR},
+      NOTICE_DATE = #{noticeDate,jdbcType=TIMESTAMP},
+      URL = #{url,jdbcType=VARCHAR},
+      COMMON = #{common,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      DELETED = #{deleted,jdbcType=DECIMAL},
+      ISVALIDE = #{isvalide,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
