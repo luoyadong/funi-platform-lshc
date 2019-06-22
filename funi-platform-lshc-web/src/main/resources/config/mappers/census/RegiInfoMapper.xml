@@ -64,7 +64,14 @@
     CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
   </sql>
 
-  <select id="selectRegiInfoIdListByBuildIds" resultType="java.util.List">
+  <select id="selectByHouseId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from LSHC_REGI_INFO
+    where HOUSE_ID = #{houseId}
+  </select>
+
+  <select id="selectRegiInfoIdListByBuildIds" resultType="java.lang.String">
       SELECT
           t2.id
       FROM
@@ -717,7 +724,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
     update LSHC_REGI_INFO
     <set>
-      DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual)
       <if test="houseId != null">
         HOUSE_ID = #{houseId,jdbcType=VARCHAR},
       </if>

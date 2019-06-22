@@ -23,4 +23,21 @@ public class SuperEntityUtils <T extends SuperEntity> {
         // 默认数据有效
         superEntity.setDeleted(CensusConstants.DATA_VALIDE_NOT_DELETE);
     }
+
+    /**
+     * 拷贝对象审计字段属性
+     * @param sourceEntity
+     * @param targetEntity
+     * @param currentUser
+     */
+    public void copyEntity(T sourceEntity, T targetEntity, CurrentUser currentUser){
+        targetEntity.setId(sourceEntity.getId());
+        targetEntity.setCreateId(sourceEntity.getCreateId());
+        targetEntity.setCreateTime(sourceEntity.getUpdateTime());
+        targetEntity.setUpdateId(currentUser.getUserId());
+        targetEntity.setUpdateTime(new Date());
+        targetEntity.setVersion(sourceEntity.getVersion() + 1);
+        targetEntity.setDeleted(sourceEntity.getDeleted());
+        targetEntity.setIsvalide(sourceEntity.getIsvalide());
+    }
 }

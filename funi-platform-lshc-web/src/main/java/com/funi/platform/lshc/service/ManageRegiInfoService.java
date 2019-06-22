@@ -1,10 +1,12 @@
 package com.funi.platform.lshc.service;
 
 import com.funi.platform.lshc.dto.RegiInfoDto;
+import com.funi.platform.lshc.entity.census.RegiInfo;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
+import com.funi.platform.lshc.vo.census.RegiInfoCheckResultVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,10 +40,20 @@ public interface ManageRegiInfoService {
     List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery);
 
     /**
+     * 校验普查信息是否存在重复数据
+     * @param regiInfo
+     * @return
+     * @throws IOException
+     */
+    RegiInfoCheckResultVo checkRegiInfo(RegiInfo regiInfo);
+
+    /**
      * 创建普查信息
      * @param regiInfoDto
+     * @param isSubmit 是否是提交操作
+     * @return 普查信息ID
      */
-    void createRegiInfo(RegiInfoDto regiInfoDto);
+    String createRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit);
 
     /**
      * 创建普查信息
@@ -56,7 +68,7 @@ public interface ManageRegiInfoService {
     void importRegiInfoList(MultipartFile uploadFile) throws IOException;
 
     /**
-     * 校验批量导入的普查信息是否有效，是否与已存在普查信息重复
+     * 校验批量导入的普查信息是否有效，在本excel范围内查找重复
      * @param uploadFile
      * @throws IOException
      */

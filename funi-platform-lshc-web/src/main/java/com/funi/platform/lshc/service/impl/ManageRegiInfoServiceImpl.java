@@ -22,6 +22,8 @@ import com.funi.platform.lshc.utils.SuperEntityUtils;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
+import com.funi.platform.lshc.vo.census.RegiInfoCheckResultVo;
+import com.funi.platform.lshc.vo.census.RegiInfoCheckVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -30,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,31 +74,40 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
-    public void createRegiInfo(RegiInfoDto regiInfoDto) {
+    public RegiInfoCheckResultVo checkRegiInfo(RegiInfo regiInfo) {
+        List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
+        if(CollectionUtils.isEmpty(regiInfoList)) {
+            return new RegiInfoCheckResultVo(true);
+        } else {
+            RegiInfoCheckVo regiInfoCheckVo = new RegiInfoCheckVo(regiInfoList.size(), getRegiInfoDesc(regiInfo));
+            return new RegiInfoCheckResultVo(regiInfoCheckVo);
+        }
+    }
+
+    @Override
+    public String createRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) {
         RegiInfo regiInfo = regiInfoDto.getRegiInfo();
         if (regiInfo == null) {
-            regiInfo = new RegiInfo();
+            throw new RuntimeException("普查信息不能为空");
+        }
+        String mapCode = regiInfo.getMapCode();
+        if(StringUtils.isBlank(mapCode)) {
+            throw new RuntimeException("楼栋地图编号不能为空");
         }
         CurrentUser userInfo = userManager.findUser();
-
-//        regiInfo = getTestRegiInfo(regiInfo);
-        // 校验房屋信息唯一性
-        checkRegiInfoUnique(regiInfo);
-        // 保存房屋信息和楼栋信息
-        saveNewRegiInfo(regiInfo, userInfo);
-        // 房屋主键ID
-        String hcId = regiInfo.getId();
+        // 保存普查信息和楼栋信息
+        saveNewRegiInfo(regiInfo, userInfo, isSubmit);
+        // 普查信息主键ID
+        String id = regiInfo.getId();
         // 人口信息
         List<EntInfo> entInfoList = regiInfoDto.getEntInfoList();
-//        entInfoList = getTestEntInfoList();
         if(CollectionUtils.isNotEmpty(entInfoList)) {
             for(EntInfo entInfo: entInfoList) {
-                saveNewEntInfo(entInfo, hcId, userInfo);
+                saveNewEntInfo(entInfo, id, userInfo);
             }
         }
         // 附件信息
         List<File> fileList = regiInfoDto.getFileList();
-//        fileList = getTestFileList();
         if(CollectionUtils.isNotEmpty(fileList)) {
             for(File file : fileList) {
                 new SuperEntityUtils<>().buildCreateEntity(file, userInfo);
@@ -105,7 +115,87 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
                 fileMapper.insert(file);
             }
         }
+        if(isSubmit) {
+            // TODO 添加工作流
+        }
+        return id;
     }
+
+    /**
+     * 保存新增的房屋信息，更新或保存楼栋信息
+     * @param regiInfo
+     * @param userInfo
+     */
+    private void saveNewRegiInfo(RegiInfo regiInfo, CurrentUser userInfo, boolean isSubmit) {
+        new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
+        regiInfo.setHouseId(regiInfoMapper.generateHouseId());
+        // 默认状态是录入
+        String houseStatus = CensusConstants.HOUSE_STATUS_INPUT;
+        if(isSubmit) {
+            houseStatus = CensusConstants.HOUSE_STATUS_SUBMIT;
+        }
+        regiInfo.setHouseStatus(houseStatus);
+        regiInfo.setOrgCode(userInfo.getOrganization().getDm());
+        regiInfo.setOrgName(userInfo.getOrganization().getMc());
+        regiInfo.setUnitName(userInfo.getOrganization().getMc());
+        regiInfo.setApplyUser(userInfo.getName());
+        regiInfo.setReportDate(new Date());
+        // 保存房屋数据
+        regiInfoMapper.insert(regiInfo);
+        // 保存或更新楼栋信息
+        saveOrUpdateBuildInfo(regiInfo, userInfo);
+    }
+
+    /**
+     * 保存房屋的入住人信息
+     * @param entInfo
+     * @param hcId
+     * @param userInfo
+     */
+    private void saveNewEntInfo(EntInfo entInfo, String hcId, CurrentUser userInfo) {
+        new SuperEntityUtils<>().buildCreateEntity(entInfo, userInfo);
+        entInfo.setHcId(hcId);
+        entInfoMapper.insert(entInfo);
+    }
+
+    /**
+     * 保存或更新楼栋信息
+     * @param regiInfo
+     */
+    private void saveOrUpdateBuildInfo(RegiInfo regiInfo, CurrentUser userInfo) {
+        // 获得楼栋地图编号
+        String mapCode = regiInfo.getMapCode();
+        if(StringUtils.isBlank(mapCode)) {
+            throw new RuntimeException("楼栋地图编号不能为空");
+        }
+        BuildInfo buildInfo = buildInfoMapper.selectBuildInfoByMapCode(mapCode);
+        if (buildInfo == null) {
+            buildInfo = new BuildInfo();
+            new SuperEntityUtils<>().buildCreateEntity(buildInfo, userInfo);
+            buildBuildInfoFromRegiInfo(buildInfo, regiInfo);
+            // 保存楼栋数据
+            buildInfoMapper.insert(buildInfo);
+        } else {
+            buildBuildInfoFromRegiInfo(buildInfo, regiInfo);
+            buildInfo.setUpdateTime(new Date());
+            buildInfo.setUpdateId(userInfo.getUserId());
+            buildInfoMapper.updateByPrimaryKey(buildInfo);
+        }
+    }
+
+    /**
+     * 拷贝普查信息中的楼栋信息到楼栋对象
+     * @param buildInfo
+     * @param regiInfo
+     */
+    private void buildBuildInfoFromRegiInfo(BuildInfo buildInfo, RegiInfo regiInfo) {
+        buildInfo.setRegion(regiInfo.getRegion());
+        buildInfo.setStreet(regiInfo.getStreet());
+        buildInfo.setProjectName(regiInfo.getProjectName());
+        buildInfo.setMapCode(regiInfo.getMapCode());
+        buildInfo.setAddress(getActualAddress(regiInfo));
+    }
+
 
     @Override
     public void modifyRegiInfo(RegiInfoDto regiInfoDto) {
@@ -118,12 +208,33 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         CurrentUser user = userManager.findUser();
         String userId = user.getUserId();
         regiInfo.setUpdateId(userId);
+        RegiInfo existRegiInfo = regiInfoMapper.selectByPrimaryKey(houseId);
         // 编辑普查信息
-        regiInfoMapper.updateByPrimaryKeySelective(regiInfo);
+        updateRegiInfo(regiInfo, existRegiInfo, user);
         // 编辑普查信息关联的入住人信息
         modifyEntInfoList(regiInfoDto.getEntInfoList(), houseId, user);
         // 编辑普查信息关联的附件信息
         modifyFileList(regiInfoDto.getFileList(), houseId, user);
+    }
+
+    /**
+     * 更新普查信息
+     * @param paramRegiInfo
+     * @param existRegiInfo
+     * @param currentUser
+     */
+    private void updateRegiInfo(RegiInfo paramRegiInfo, RegiInfo existRegiInfo, CurrentUser currentUser) {
+        new SuperEntityUtils().copyEntity(existRegiInfo, paramRegiInfo, currentUser);
+        paramRegiInfo.setHouseId(existRegiInfo.getHouseId());
+        paramRegiInfo.setHouseStatus(existRegiInfo.getHouseStatus());
+        paramRegiInfo.setOrgCode(existRegiInfo.getOrgCode());
+        paramRegiInfo.setOrgName(existRegiInfo.getOrgName());
+        paramRegiInfo.setUnitName(existRegiInfo.getUnitName());
+        paramRegiInfo.setApplyUser(existRegiInfo.getApplyUser());
+        paramRegiInfo.setReportDate(existRegiInfo.getReportDate());
+        regiInfoMapper.updateByPrimaryKey(paramRegiInfo);
+        // 保存或更新楼栋信息
+        saveOrUpdateBuildInfo(paramRegiInfo, currentUser);
     }
 
     /**
@@ -231,6 +342,10 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     @Override
     public void importRegiInfoList(MultipartFile uploadFile) throws IOException {
         List<ExcelRegiInfoVo> excelRegiInfoVoList = getRegiInfoByExcle(uploadFile);
+        // 校验Excel数据有效性
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
+        }
         for(ExcelRegiInfoVo excelRegiInfoVo : excelRegiInfoVoList) {
             RegiInfo regiInfo = new RegiInfo();
             EntInfo entInfo = new EntInfo();
@@ -238,20 +353,29 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
             // 拷贝入住人员属性
             BeanUtils.copyProperties(excelRegiInfoVo, entInfo);
+            // 使用普查信息编号是否为空来判断是新增还是编辑操作
+            String houseId = regiInfo.getHouseId();
             CurrentUser userInfo = userManager.findUser();
-            String hcId = null;
-            // 因为房屋和入住人是一对多的关系，因此可能存在多条相同的房屋信息
-            List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
-            if(CollectionUtils.isNotEmpty(regiInfoList)) {
-                RegiInfo regiInfoExist = regiInfoList.get(0);
-                hcId = regiInfoExist.getId();
+            if(StringUtils.isBlank(houseId)) {
+                // 保存普查信息和楼栋信息
+                saveNewRegiInfo(regiInfo, userInfo, false);
+                // 普查信息主键ID
+                String id = regiInfo.getId();
+                if(entInfo != null) {
+                    // 保存人口信息
+                    saveNewEntInfo(entInfo, id, userInfo);
+                }
             } else {
-                // 保存房屋信息
-                saveNewRegiInfo(regiInfo, userInfo);
-                regiInfo.getId();
+                RegiInfo existRegiInfo = regiInfoMapper.selectByHouseId(houseId);
+                // 编辑普查信息
+                updateRegiInfo(regiInfo, existRegiInfo, userInfo);
+                if(entInfo != null) {
+                    List<EntInfo> entInfoList = new ArrayList<>();
+                    entInfoList.add(entInfo);
+                    // 编辑普查信息关联的入住人信息
+                    modifyEntInfoList(entInfoList, houseId, userInfo);
+                }
             }
-            // 保存入住人信息
-            saveNewEntInfo(entInfo, hcId, userInfo);
         }
     }
 
@@ -262,25 +386,27 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
             throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
         }
-
-        List<Integer> rowNoList = new ArrayList<>();
+        StringBuilder checkResultBuilder = new StringBuilder();
         for(int i = 0; i < excelRegiInfoVoList.size(); i ++) {
-            // 获取行号
+            // 获取当前行号
             int rowNo = i + CensusConstants.EXCEL_CONTENT_START_ROW_NO + 1;
-            ExcelRegiInfoVo excelRegiInfoVo = excelRegiInfoVoList.get(i);
-            RegiInfo regiInfo = new RegiInfo();
-            // 拷贝房屋对象属性
-            BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
-            List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
-            if(regiInfoList.size() > 0) {
-                rowNoList.add(rowNo);
+            List<Integer> repeatRowNoList = new ArrayList<>();
+            ExcelRegiInfoVo currentExcelRegiInfoVo = excelRegiInfoVoList.get(i);
+            for(int j = 0; j < excelRegiInfoVoList.size(); j ++) {
+                if(i  == j) {
+                    continue;
+                }
+                int loopRowNo = j + CensusConstants.EXCEL_CONTENT_START_ROW_NO + 1;
+                ExcelRegiInfoVo currentLoopExcelRegiInfoVo = excelRegiInfoVoList.get(i);
+                if(currentExcelRegiInfoVo.equals(currentLoopExcelRegiInfoVo)) {
+                    repeatRowNoList.add(loopRowNo);
+                }
+            }
+            if(CollectionUtils.isNotEmpty(repeatRowNoList)) {
+                checkResultBuilder.append("第" + rowNo + "行与第" + StringUtils.join(repeatRowNoList, ",") + "行数据重复；");
             }
         }
-        if(CollectionUtils.isEmpty(rowNoList)) {
-            return "普查信息校验通过";
-        } else {
-            return StringUtils.join(rowNoList, ",") + "行数据没有通过校验";
-        }
+        return checkResultBuilder.toString();
     }
 
     /**
@@ -373,64 +499,7 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         if(StringUtils.isNotBlank(roomNo)) {
             regiInfoBuilder.append(roomNo + "号");
         }
-        regiInfoBuilder.append("的房屋信息在数据库中存在多条数据，请核对房屋信息");
         return regiInfoBuilder.toString();
-    }
-
-    /**
-     * 校验房屋唯一性
-     * @param regiInfo
-     */
-    private void checkRegiInfoUnique(RegiInfo regiInfo) {
-        List<RegiInfo> regiInfoList = regiInfoMapper.selectRegiInfoByUniqueQuery(regiInfo);
-        if(CollectionUtils.isNotEmpty(regiInfoList)) {
-            throw new RuntimeException("房屋信息重复，请再次确认房屋信息");
-        }
-    }
-
-    /**
-     * 保存新增的房屋信息，如果楼栋不存在则保存楼栋信息
-     * @param regiInfo
-     * @param userInfo
-     */
-    private void saveNewRegiInfo(RegiInfo regiInfo, CurrentUser userInfo) {
-        new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
-        regiInfo.setHouseId(regiInfoMapper.generateHouseId());
-        // 默认状态是录入
-        regiInfo.setHouseStatus(CensusConstants.HOUSE_STATUS_INPUT);
-        regiInfo.setOrgCode(userInfo.getOrganization().getDm());
-        regiInfo.setOrgName(userInfo.getOrganization().getMc());
-        regiInfo.setUnitName(userInfo.getOrganization().getMc());
-        regiInfo.setApplyUser(userInfo.getName());
-        regiInfo.setReportDate(new Date());
-        // 保存房屋数据
-        regiInfoMapper.insert(regiInfo);
-        // 获得楼栋地图编号
-        String mapCode = regiInfo.getMapCode();
-        if(StringUtils.isBlank(mapCode)) {
-            throw new RuntimeException("楼栋地图编号不能为空");
-        }
-        BuildInfo buildInfo = buildInfoMapper.selectBuildInfoByMapCode(mapCode);
-        if (buildInfo == null) {
-            buildInfo = new BuildInfo();
-            new SuperEntityUtils<>().buildCreateEntity(buildInfo, userInfo);
-            buildBuildInfoFromRegiInfo(buildInfo, regiInfo);
-            // 保存楼栋数据
-            buildInfoMapper.insert(buildInfo);
-        }
-    }
-
-    /**
-     * 拷贝普查信息中的楼栋信息到楼栋对象
-     * @param buildInfo
-     * @param regiInfo
-     */
-    private void buildBuildInfoFromRegiInfo(BuildInfo buildInfo, RegiInfo regiInfo) {
-        buildInfo.setRegion(regiInfo.getRegion());
-        buildInfo.setStreet(regiInfo.getStreet());
-        buildInfo.setProjectName(regiInfo.getProjectName());
-        buildInfo.setMapCode(regiInfo.getMapCode());
-        buildInfo.setAddress(getActualAddress(regiInfo));
     }
 
     private String getActualAddress(RegiInfo regiInfo) {
@@ -454,90 +523,12 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         return addressBuilder.toString();
     }
 
-    /**
-     * 保存房屋的入住人信息
-     * @param entInfo
-     * @param hcId
-     * @param userInfo
-     */
-    private void saveNewEntInfo(EntInfo entInfo, String hcId, CurrentUser userInfo) {
-        new SuperEntityUtils<>().buildCreateEntity(entInfo, userInfo);
-        entInfo.setHcId(hcId);
-        entInfoMapper.insert(entInfo);
-    }
-
     private void buildFileInfo(File file, RegiInfo regiInfo, CurrentUser userInfo) {
         file.setHcId(regiInfo.getId());
         file.setRightNo(regiInfo.getRightNo());
         file.setSubmitDate(new Date());
         file.setUserName(userInfo.getName());
         file.setUnitName(userInfo.getOrganization().getMc());
-    }
-
-    private RegiInfo getTestRegiInfo(RegiInfo regiInfo) {
-        regiInfo.setRegion("高新区");
-        regiInfo.setStreet("中和街道");
-        regiInfo.setProjectName("龙湖九里晴川");
-        regiInfo.setMapCode("map_code_0001");
-        regiInfo.setEstateUnitName("九里晴川物业");
-        regiInfo.setAddressCity("成都市");
-        regiInfo.setAddressRegion("高新区");
-        regiInfo.setAddressCounty("中和镇");
-        regiInfo.setApt("11111111");
-        regiInfo.setBuildNo("1");
-        regiInfo.setUnitNo("2");
-        regiInfo.setLayer("3");
-        regiInfo.setRoomNo("4");
-        regiInfo.setRightAddr("房产证实际地址");
-        regiInfo.setHouseArea(new BigDecimal("101.01"));
-        regiInfo.setInnerHouseArea(new BigDecimal("88.87"));
-        regiInfo.setHouseRoom("一");
-        regiInfo.setHouseHall("一");
-        regiInfo.setHouseBathroom("一");
-        regiInfo.setIsRegi("1");
-        regiInfo.setRightNo("权123456");
-        regiInfo.setBuildDate("2016-06");
-        regiInfo.setHouseType("商品房");
-        regiInfo.setHouseStructure("框架");
-        regiInfo.setHouseUse("住宅");
-        regiInfo.setLandStatus("国有");
-        regiInfo.setPreSaleNo("预111");
-        regiInfo.setFitStatus("简装");
-        regiInfo.setIsCheckIn("1");
-        regiInfo.setPersonNum(6);
-        regiInfo.setIsRent("1");
-        regiInfo.setRentStartDate("2017-01");
-        regiInfo.setRentEndDate("2018-06");
-        regiInfo.setCommon("扩展字段");
-        return regiInfo;
-    }
-
-    private List<EntInfo> getTestEntInfoList() {
-        List<EntInfo> entInfoList = new ArrayList<>();
-        EntInfo entInfo = new EntInfo();
-        entInfo.setEntName("张三三");
-        entInfo.setSex("男");
-        entInfo.setEntType("三无人员");
-        entInfo.setEntNation("汉族");
-        entInfo.setEntNative("四川成都");
-        entInfo.setTel("13888888888");
-        entInfo.setMarriageStatus("0");
-        entInfo.setIdType("身份证");
-        entInfo.setIdNo("510107123465977");
-        entInfo.setCareer("无业");
-        entInfoList.add(entInfo);
-        return entInfoList;
-    }
-
-    private List<File> getTestFileList() {
-        List<File> fileList = new ArrayList<>();
-        File file = new File();
-        file.setFileName("测试图片1");
-        file.setFileSize(new BigDecimal("1"));
-        file.setFileType("JPEG");
-        file.setUrl("http://www.baidu.com");
-        fileList.add(file);
-        return fileList;
     }
 
 }

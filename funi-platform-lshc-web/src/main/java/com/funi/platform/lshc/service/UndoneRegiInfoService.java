@@ -1,5 +1,6 @@
 package com.funi.platform.lshc.service;
 
+import com.funi.platform.lshc.dto.RegiInfoAuditDto;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
@@ -36,9 +37,7 @@ public interface UndoneRegiInfoService {
 
     /**
      * 根据普查信息ID集合执行批量审批操作
-     * @param ids 普查信息ID集合
-     * @param result 审批结果，0：不通过，1：通过
-     * @parsm desc 审核描述
+     * @param regiInfoAuditDto 批量审核普查信息数据传输对象
      */
-    void batchAuditRegiInfoList(List<String> ids, String result, String desc);
+    void batchAuditRegiInfoList(RegiInfoAuditDto regiInfoAuditDto);
 }

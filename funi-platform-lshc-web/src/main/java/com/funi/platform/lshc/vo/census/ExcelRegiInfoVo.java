@@ -3,6 +3,7 @@ package com.funi.platform.lshc.vo.census;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Created by sam on 2019/6/15.1:09 PM
@@ -131,6 +132,30 @@ public class ExcelRegiInfoVo {
     /** 职业 */
     @Excel(name="职业")
     private String career;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ExcelRegiInfoVo)) {
+            return false;
+        }
+        ExcelRegiInfoVo that = (ExcelRegiInfoVo) o;
+        return Objects.equals(getMapCode(), that.getMapCode()) &&
+                Objects.equals(getRegion(), that.getRegion()) &&
+                Objects.equals(getStreet(), that.getStreet()) &&
+                Objects.equals(getApt(), that.getApt()) &&
+                Objects.equals(getBuildNo(), that.getBuildNo()) &&
+                Objects.equals(getUnitNo(), that.getUnitNo()) &&
+                Objects.equals(getLayer(), that.getLayer()) &&
+                Objects.equals(getRoomNo(), that.getRoomNo());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMapCode(), getRegion(), getStreet(), getApt(), getBuildNo(), getUnitNo(), getLayer(), getRoomNo());
+    }
 
     public String getProjectName() {
         return projectName;

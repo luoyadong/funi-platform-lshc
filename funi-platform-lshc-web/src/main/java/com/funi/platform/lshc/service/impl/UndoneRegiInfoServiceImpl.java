@@ -1,6 +1,7 @@
 package com.funi.platform.lshc.service.impl;
 
 import com.funi.framework.biz.eic.bo.CurrentUser;
+import com.funi.platform.lshc.dto.RegiInfoAuditDto;
 import com.funi.platform.lshc.entity.census.RegiInfo;
 import com.funi.platform.lshc.mapper.census.BuildInfoMapper;
 import com.funi.platform.lshc.mapper.census.RegiInfoMapper;
@@ -57,7 +58,9 @@ public class UndoneRegiInfoServiceImpl implements UndoneRegiInfoService {
     }
 
     @Override
-    public void batchAuditRegiInfoList(List<String> ids, String result, String desc) {
+    public void batchAuditRegiInfoList(RegiInfoAuditDto regiInfoAuditDto) {
+        List<String> ids = regiInfoAuditDto.getIds();
+        String result = regiInfoAuditDto.getResult();
         for(String houseId : ids) {
             RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(houseId);
             if (regiInfo == null) {

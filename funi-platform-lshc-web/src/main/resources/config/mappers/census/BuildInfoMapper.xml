@@ -280,20 +280,16 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.funi.platform.lshc.entity.census.BuildInfo">
     update LSHC_BUILD_INFO
-    set SERIAL_NO = #{serialNo,jdbcType=DECIMAL},
+    set
       REGION = #{region,jdbcType=VARCHAR},
       STREET = #{street,jdbcType=VARCHAR},
       PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
       MAP_CODE = #{mapCode,jdbcType=VARCHAR},
       ADDRESS = #{address,jdbcType=VARCHAR},
       COMMON = #{common,jdbcType=VARCHAR},
-      VERSION = #{version,jdbcType=DECIMAL},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      CREATE_ID = #{createId,jdbcType=VARCHAR},
+      VERSION = VERSION + 1,
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
       UPDATE_ID = #{updateId,jdbcType=VARCHAR},
-      DELETED = #{deleted,jdbcType=DECIMAL},
-      ISVALIDE = #{isvalide,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

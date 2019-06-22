@@ -696,8 +696,6 @@ public class HouseController extends BaseController {
                 return responseMap;
             }
             houseService.addHouseExcelDate(queryList,this.getUserInfo());
-
-            //TODO
             responseMap.put("status",200);
         }catch(Exception e){
             //System.out.println(e.getMessage());

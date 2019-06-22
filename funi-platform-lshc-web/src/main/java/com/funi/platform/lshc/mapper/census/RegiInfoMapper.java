@@ -85,4 +85,11 @@ public interface RegiInfoMapper {
      * @return
      */
     int updateRegiInfoStatus(@Param("houseId") String houseId, @Param("houseStatus") String houseStatus, @Param("userId") String userId);
+
+    /**
+     * 根据普查信息编号查询普查信息
+     * @param houseId
+     * @return
+     */
+    RegiInfo selectByHouseId(String houseId);
 }

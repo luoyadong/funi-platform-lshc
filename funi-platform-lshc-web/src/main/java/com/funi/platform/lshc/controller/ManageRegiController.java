@@ -2,6 +2,7 @@ package com.funi.platform.lshc.controller;
 
 import com.funi.framework.mvc.eic.vo.ResultVo;
 import com.funi.platform.lshc.dto.RegiInfoDto;
+import com.funi.platform.lshc.entity.census.RegiInfo;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
@@ -35,7 +36,7 @@ public class ManageRegiController {
      */
     @RequestMapping("getBuildInfoList")
     @ResponseBody
-    public List<BuildInfoVo> getBuildInfoList(BuildInfoQuery buildInfoQuery) {
+    public List<BuildInfoVo> getBuildInfoList(@RequestBody BuildInfoQuery buildInfoQuery) {
         return manageRegiInfoService.findBuildInfoList(buildInfoQuery);
     }
 
@@ -60,8 +61,26 @@ public class ManageRegiController {
      */
     @RequestMapping("getRegiInfoVoList")
     @ResponseBody
-    public List<ListRegiInfoVo> getRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
+    public List<ListRegiInfoVo> getRegiInfoVoList(@RequestBody RegiInfoQuery regiInfoQuery) {
         return manageRegiInfoService.findRegiInfoVoList(regiInfoQuery);
+    }
+
+    /**
+     * 预留接口：校验普查信息是否存在重复数据
+     * @param regiInfo
+     * @return
+     */
+    @RequestMapping("/checkRegiInfo")
+    @ResponseBody
+    public Object checkRegiInfo(@RequestBody RegiInfo regiInfo) {
+        try {
+            return ResultVo.newResult(manageRegiInfoService.checkRegiInfo(regiInfo));
+        } catch(Exception e) {
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("普查信息校验失败，原因：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
     }
 
     /**
@@ -71,14 +90,32 @@ public class ManageRegiController {
      */
     @RequestMapping("addRegiInfo")
     @ResponseBody
-    public Object addRegiInfo(RegiInfoDto regiInfoDto) {
+    public Object addRegiInfo(@RequestBody RegiInfoDto regiInfoDto) {
         try {
-            manageRegiInfoService.createRegiInfo(regiInfoDto);
-            return ResultVo.newResult("添加普查信息成功");
+            return ResultVo.newResult(manageRegiInfoService.createRegiInfo(regiInfoDto, false));
         } catch (Exception e) {
             e.printStackTrace();
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("添加普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    /**
+     * 添加普查信息
+     * @param regiInfoDto
+     * @return
+     */
+    @RequestMapping("submitRegiInfo")
+    @ResponseBody
+    public Object submitRegiInfo(@RequestBody RegiInfoDto regiInfoDto) {
+        try {
+            return ResultVo.newResult(manageRegiInfoService.createRegiInfo(regiInfoDto, true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("提交普查信息失败：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }
@@ -91,7 +128,7 @@ public class ManageRegiController {
      */
     @RequestMapping("editRegiInfo")
     @ResponseBody
-    public Object editRegiInfo(RegiInfoDto regiInfoDto) {
+    public Object editRegiInfo(@RequestBody RegiInfoDto regiInfoDto) {
         try {
             manageRegiInfoService.modifyRegiInfo(regiInfoDto);
             return ResultVo.newResult("编辑普查信息成功");
@@ -113,8 +150,7 @@ public class ManageRegiController {
     @ResponseBody
     public Object checkRegiInfoList(MultipartFile uploadFile) {
         try {
-            String result = manageRegiInfoService.checkRegiInfoList(uploadFile);
-            return ResultVo.newResult(result);
+            return ResultVo.newResult(manageRegiInfoService.checkRegiInfoList(uploadFile));
         } catch(Exception e) {
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("普查信息校验失败，原因：" + e.getMessage());

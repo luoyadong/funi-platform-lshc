@@ -64,7 +64,6 @@ public class HouseMapController extends BaseController {
         @RequestMapping(value = "/findHouList",method = RequestMethod.POST)
         @ResponseBody
         public List<MapHouseVo> findHouList(MapHouseQuery query){
-
                 List<MapHouseVo> mapHouList = mapHouseService.findMapHouseList(query);
                 return mapHouList;
         }
@@ -101,7 +100,6 @@ public class HouseMapController extends BaseController {
                         for(ExcelDemoVo obj:queryList){
                                 System.out.println(obj.getName());
                         }
-                        //TODO
                         responseMap.put("status",200);
                 }catch(Exception e){
                         responseMap.put("status",500);

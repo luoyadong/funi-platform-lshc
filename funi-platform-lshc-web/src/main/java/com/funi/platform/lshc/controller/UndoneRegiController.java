@@ -1,6 +1,7 @@
 package com.funi.platform.lshc.controller;
 
 import com.funi.framework.mvc.eic.vo.ResultVo;
+import com.funi.platform.lshc.dto.RegiInfoAuditDto;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.UndoneRegiInfoService;
@@ -33,7 +34,7 @@ public class UndoneRegiController {
      */
     @RequestMapping("getBuildInfoList")
     @ResponseBody
-    public List<BuildInfoVo> getBuildInfoList(BuildInfoQuery buildInfoQuery) {
+    public List<BuildInfoVo> getBuildInfoList(@RequestBody BuildInfoQuery buildInfoQuery) {
         return undoneRegiInfoService.findBuildInfoList(buildInfoQuery);
     }
 
@@ -58,20 +59,18 @@ public class UndoneRegiController {
      */
     @RequestMapping("getRegiInfoVoList")
     @ResponseBody
-    public List<ListRegiInfoVo> getRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
+    public List<ListRegiInfoVo> getRegiInfoVoList(@RequestBody RegiInfoQuery regiInfoQuery) {
         return undoneRegiInfoService.findRegiInfoVoList(regiInfoQuery);
     }
 
     /**
      * 根据普查信息ID集合执行批量审批操作
-     * @param ids 普查信息ID集合
-     * @param result 审批结果，0：不通过，1：通过
-     * @parsm desc 审核描述
+     * @param regiInfoAuditDto 批量审核普查信息数据传输对象
      */
     @RequestMapping("batchAuditRegiInfoList")
-    public Object batchAuditRegiInfoList(@RequestBody List<String> ids, String result, String desc) {
+    public Object batchAuditRegiInfoList(@RequestBody RegiInfoAuditDto regiInfoAuditDto) {
         try {
-            undoneRegiInfoService.batchAuditRegiInfoList(ids, result, desc);
+            undoneRegiInfoService.batchAuditRegiInfoList(regiInfoAuditDto);
             return ResultVo.newResult("审批成功");
         } catch (Exception e) {
             e.printStackTrace();
