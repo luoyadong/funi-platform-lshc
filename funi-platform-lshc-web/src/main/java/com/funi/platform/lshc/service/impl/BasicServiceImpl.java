@@ -30,11 +30,30 @@ public class BasicServiceImpl implements BasicService {
         List<ComboboxDto> rtList = new ArrayList<>();
         ComboboxDto allDto = new ComboboxDto("全部", "");
         rtList.add(allDto);
-        List<ComboboxDto> comboboxDtoList = sysConfigMapper.selectSysConfDetaNameByType(type);
+        String tableName = getDictionaryTable(type);
+        if(! CensusConstants.DICTIONARY_DEFAULT_TABLE_NAME.equals(tableName)) {
+            type = null;
+        }
+        List<ComboboxDto> comboboxDtoList = sysConfigMapper.selectSysConfDetaNameByType(tableName, type);
         if(CollectionUtils.isNotEmpty(comboboxDtoList)) {
             rtList.addAll(comboboxDtoList);
         }
         return rtList;
+    }
+
+    private String getDictionaryTable(String type) {
+        switch (type){
+            case CensusConstants.DICTIONARY_TYPE_HOUSE_STRUCTURE :
+                return "A12_D";
+            case CensusConstants.DICTIONARY_TYPE_HOUSE_USE :
+                return "A14_D";
+            case CensusConstants.DICTIONARY_TYPE_ID_TYPE :
+                return "A34_D";
+            case CensusConstants.DICTIONARY_TYPE_GENDER :
+                return "A38_D";
+            default:
+                return "LSHC_DICTIONARY";
+        }
     }
 
     @Override

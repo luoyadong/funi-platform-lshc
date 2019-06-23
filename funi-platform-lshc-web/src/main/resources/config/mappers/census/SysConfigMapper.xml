@@ -19,16 +19,15 @@
 
   <select id="selectSysConfDetaNameByType" resultType="com.funi.platform.lshc.dto.ComboboxDto">
     SELECT
-        CONFIG_VALUE AS value,
-        CONFIG_VALUE AS name
+        name AS value,
+        name AS name
     FROM
-        LSHC_SYS_CONFIG
+        ${tableName}
     WHERE
-        DELETED = 0
-        AND ISVALIDE = '1'
-        AND CONFIG_TYPE = #{type}
-    ORDER BY
-        SORT
+        ISONLINE = 1
+    <if test="type != null and type != ''">
+      AND CONFIG_TYPE = #{type}
+    </if>
   </select>
 
   <insert id="insert" parameterType="com.funi.platform.lshc.entity.census.SysConfig">

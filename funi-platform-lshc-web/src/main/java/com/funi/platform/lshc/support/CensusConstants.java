@@ -58,6 +58,9 @@ public class CensusConstants {
     /** Excel导入普查信息，表头占用的行数*/
     public static final int EXCEL_CONTENT_HEAD_ROWS_NO = 3;
 
+    /** 字典表默认表名*/
+    public static final String DICTIONARY_DEFAULT_TABLE_NAME = "LSHC_DICTIONARY";
+
     /** 字典表类型-是否*/
     public static final String DICTIONARY_TYPE_WHETHER = "WHETHER";
     /** 字典表类型-房屋户型，室、厅、卫共用*/
