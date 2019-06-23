@@ -17,6 +17,7 @@ import com.funi.platform.lshc.query.census.BuildRegiQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.LshcWorkFlowService;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
+import com.funi.platform.lshc.support.BasicHelper;
 import com.funi.platform.lshc.support.CensusConstants;
 import com.funi.platform.lshc.support.UserManager;
 import com.funi.platform.lshc.utils.ExcelUtil;
@@ -54,6 +55,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     private FileMapper fileMapper;
     @Resource
     private LshcWorkFlowService lshcWorkFlowService;
+    @Resource
+    private BasicHelper basicHelper;
 
     @Override
     public List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery) {

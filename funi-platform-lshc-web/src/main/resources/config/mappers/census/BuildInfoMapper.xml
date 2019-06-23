@@ -289,7 +289,7 @@
       COMMON = #{common,jdbcType=VARCHAR},
       VERSION = VERSION + 1,
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
