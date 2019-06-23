@@ -324,7 +324,7 @@
           </if>
           count( t2.id ) over ( partition BY t2.id ) AS fileCount
       FROM
-          LSHC_REGI_INFO t2 LEFT JOIN LSHC_FILE t1 ON t1.HC_ID = t2.id
+          LSHC_REGI_INFO t2 LEFT JOIN LSHC_FILE t1 ON t1.HC_ID = t2.id AND t1.ISVALIDE = '1' AND t1.DELETED = 0
           LEFT JOIN LSHC_BUILD_INFO t3 ON t2.map_code = t3.map_code
           left  join lshc_job_accept ja on t2.id=ja.service_num
       <if test="queryType == '2'.toString()">
@@ -334,9 +334,7 @@
           INNER JOIN job_log t5 ON t2.id = t5.business_id AND t5.is_deleted = 0
       </if>
       WHERE
-          t1.ISVALIDE = '1'
-          AND t1.DELETED = 0
-          AND t2.ISVALIDE = '1'
+          t2.ISVALIDE = '1'
           AND t2.DELETED = 0
           AND t3.id = #{buildId}
           <if test="queryType == '0'.toString()">
