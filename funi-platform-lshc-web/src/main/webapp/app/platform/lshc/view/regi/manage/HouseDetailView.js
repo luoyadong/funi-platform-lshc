@@ -80,11 +80,12 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
 									return;
 								}
 								var id = me.config.bizId ;
-								var editWin = Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView");
+								var editWin = Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView",
+                                    {config:{parentContainer:me.config.parentContainer}});
 							    editWin.show();
 
 								Ext.Ajax.request({
-                                       url:app.platform.lshc.view.base.RequestUtils.url("/build/getRegiInfoDetail"),
+                                       url:app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoDetail"),
                                        method:"post",
                                        async:false,
 									   params:{houseId:id},
@@ -94,9 +95,9 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
 										   console.log("-----get regi edit detail:")
 										   console.log(data)
 											
-										   var editView = editWin.queryById("lshc-regi-houseedit-parent-itemId");
+										    var editView = editWin.queryById("lshc-view-regi-HouseEditView-itemId");
                                             editView.config.bizId=id;
-                                           editView.fillForm(data);
+                                            editView.fillForm(data);
                                        },
                                        failure:function(){
                                            Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");

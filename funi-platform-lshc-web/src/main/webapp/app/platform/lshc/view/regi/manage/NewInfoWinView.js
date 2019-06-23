@@ -12,15 +12,15 @@ Ext.define('app.platform.lshc.view.regi.manage.NewInfoWinView', {
         'app.platform.lshc.view.regi.manage.HouseEditView'
     ],
     xtype: 'lshc-view-regi-NewInfoWinView',
-    config: {
-        parentPanel:null
-    },
-    constructor: function (config) {
-        var me = this;
-        config = config || {};
-        Ext.applyIf(config, me.config);
-        this.callParent(arguments);
-    },
+    // config: {
+    //     parentContainer:null
+    // },
+    // constructor: function (config) {
+    //     var me = this;
+    //     config = config || {};
+    //     Ext.applyIf(config, me.config);
+    //     this.callParent(arguments);
+    // },
     title: '新增普查',
     width: 760,
     height:480,
@@ -28,9 +28,18 @@ Ext.define('app.platform.lshc.view.regi.manage.NewInfoWinView', {
     resizable: true,
     buttonAlign: 'center',
     modal: true,
+    initWinEdit:function(){
+        var me = this;
+        var editHouseView = me.queryById("lshc-view-regi-HouseEditView-itemId");
+    },
     initComponent: function () {
         var me = this;
         me.on('close', function(){
+            // var editHouseView = me.queryById("lshc-view-regi-HouseEditView-itemId");
+            // //关闭清理状态
+            // editHouseView.config.bizId = null;
+            // editHouseView.config.parentContainer = null;
+            // editHouseView.resetForm();
         });
         Ext.apply(me, {
 			xtype:'container',
@@ -39,7 +48,8 @@ Ext.define('app.platform.lshc.view.regi.manage.NewInfoWinView', {
             height:480,
             items: [
                 {
-                    xtype:'lshc-view-regi-HouseEditView'
+                    itemId:'lshc-view-regi-HouseEditView-itemId',
+                    xtype:'lshc-view-regi-HouseEditView',winContainer:me,parentContainer:me.config.parentContainer
 				}
 			]
         });

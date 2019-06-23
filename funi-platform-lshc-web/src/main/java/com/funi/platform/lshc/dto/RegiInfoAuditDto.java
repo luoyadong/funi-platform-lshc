@@ -13,6 +13,14 @@ public class RegiInfoAuditDto {
     /** 审核描述*/
     private String desc;
 
+    //当前节点名称
+    private String nodeName;
+
+    //结论id
+    private String jobResultId;
+
+
+
     public List<String> getIds() {
         return ids;
     }
@@ -35,5 +43,21 @@ public class RegiInfoAuditDto {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getJobResultId() {
+        return jobResultId;
+    }
+
+    public void setJobResultId(String jobResultId) {
+        this.jobResultId = jobResultId;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 }

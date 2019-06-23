@@ -150,6 +150,11 @@
     <result column="layer" property="layer" />
     <result column="roomNo" property="roomNo" />
     <result column="fileCount" property="fileCount" />
+
+    <result column="jobAcceptId" property="jobAcceptId" />
+    <result column="businessTypeName" property="businessTypeName" />
+    <result column="nodeName" property="nodeName" />
+    <result column="auditStatus" property="auditStatus" />
   </resultMap>
 
   <select id="exportBuildInfoVoList" resultType="com.funi.platform.lshc.vo.census.ExcelRegiInfoVo">
@@ -312,10 +317,16 @@
           t2.LAYER AS layer,
           t2.room_no AS roomNo,
           t2.UPDATE_TIME,
+          ja.id as jobAcceptId,ja.type_name as businessTypeName,
+          ja.cur_status as auditStatus,
+          <if test="queryType == '2'.toString()">
+            t4.task_name as nodeName,
+          </if>
           count( t2.id ) over ( partition BY t2.id ) AS fileCount
       FROM
           LSHC_REGI_INFO t2 LEFT JOIN LSHC_FILE t1 ON t1.HC_ID = t2.id
           LEFT JOIN LSHC_BUILD_INFO t3 ON t2.map_code = t3.map_code
+          left  join lshc_job_accept ja on t2.id=ja.service_num
       <if test="queryType == '2'.toString()">
           INNER JOIN BUSINESS_TASK t4 ON t2.id = t4.business_id
       </if>

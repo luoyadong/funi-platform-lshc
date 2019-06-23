@@ -1,15 +1,19 @@
 package com.funi.platform.lshc.controller;
 
 import com.funi.framework.mvc.eic.vo.ResultVo;
+import com.funi.framework.workflow.eic.po.AuditConclusions;
 import com.funi.platform.lshc.dto.RegiInfoDto;
 import com.funi.platform.lshc.entity.census.RegiInfo;
+import com.funi.platform.lshc.enumatation.BusinessType;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
+import com.funi.platform.lshc.service.LshcWorkFlowService;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +32,9 @@ public class ManageRegiController {
 
     @Autowired
     private ManageRegiInfoService manageRegiInfoService;
+
+    @Autowired
+    private LshcWorkFlowService lshcWorkFlowService;
 
     /**
      * 分页查询楼栋列表
@@ -212,6 +219,21 @@ public class ManageRegiController {
             e.printStackTrace();
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("删除普查信息失败");
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/conclusions")
+    public Object findAuditConclusions(String serviceNum) {
+        try {
+            List<AuditConclusions> conList = lshcWorkFlowService.findWorkFlowConclusions(serviceNum, BusinessType.pnew);
+            return ResultVo.newResult(conList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("审批结论失败");
             resultVo.setSuccess(false);
             return resultVo;
         }

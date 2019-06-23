@@ -5,12 +5,12 @@ package com.funi.platform.lshc.enumatation;
  */
 public enum BusinessType {
 
-    pnew("Lshc_Regi",1,"新增普查"," LshcRegi"),
-    cnew("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
-    cchange("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
-    crenew("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
-    repairnew("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx"),
-    ccanel("Lshc_Regi_XXX",1,"变更普查"," LshcRegiXxx");
+    pnew("Lshc_Regi_Flow",1,"新建普查","LshcRegiFlow"),
+    cnew("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx"),
+    cchange("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx"),
+    crenew("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx"),
+    repairnew("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx"),
+    ccanel("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx");
 
     private String key;
     private Integer version;

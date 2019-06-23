@@ -13,7 +13,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         'app.platform.lshc.view.regi.manage.RegiDetailView',
         'app.platform.lshc.view.regi.manage.ApproveTab',
         'app.platform.lshc.view.regi.manage.HouseListView',
-        'app.platform.lshc.view.regi.manage.HouseDetailView'//房屋详情
+        'app.platform.lshc.view.regi.manage.HouseDetailView',//房屋详情
+        'app.platform.lshc.view.base.ExcelUtils',
+        'app.platform.lshc.view.base.RequestUtils'
     ],
     config: {
         //主容器
@@ -26,6 +28,12 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         this.callParent(arguments);
     },
     title: null,
+    initHouseList:function(){
+        var me = this;
+        var gridObjStore = me.store;
+        gridObjStore.proxy.extraParams = me.getParams();
+        gridObjStore.loadPage(1);
+    },
     getParams:function(){
         var formElements = Ext.ComponentQuery.query("textfield",this);
         var obj = new Object();
@@ -171,6 +179,25 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                             {
                                 xtype: 'toolbar', columnWidth: 1,scope: me, itemId: 'search',
                                 items: [
+                                    {
+                                        xtype: 'button', text: '新建普查', scope: me, glyph: 0xf0fe,
+                                        handler: function () {
+                                            Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView",{
+                                                config:{parentContainer:me}
+                                            }).show();
+                                            //Ext.Msg.alert('提示', '已新增！');
+                                        }
+                                    },
+                                    {
+                                        xtype: 'button', text: '批量导入', scope: me, glyph: 'xf234@FontAwesome',
+                                        handler: function () {
+                                            var url = "/build/importRegiInfo";
+                                            var store = null;//需要刷新的store
+                                            ExcelUtils.importExcel(url, store);
+                                            //Ext.Msg.alert('提示', '已新增！');
+
+                                        }
+                                    },
                                     {
                                         xtype: 'button', text: '删除', scope: me,
                                         glyph: 'xf014@FontAwesome',

@@ -42,7 +42,10 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 {type:"string",name:"layer"},
                 {type:"string",name:"roomNo"},
                 {type:"string",name:"regiStatus"},
-                {type:"string",name:"fileCount"}
+                {type:"string",name:"fileCount"},
+                {type:"string",name:"jobAcceptId"},
+                {type:"string",name:"nodeName"},
+                {type:"string",name:"auditStatus"}
             ],
             pageSize:15
         });
@@ -58,9 +61,10 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                 {
                                     xtype: 'button', text: '新建普查', scope: me, glyph: 0xf0fe,
                                     handler: function () {
-                                        Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView").show();
+                                        Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView",{
+                                            config:{parentContainer:me.config.parentContainer}
+                                        }).show();
                                         //Ext.Msg.alert('提示', '已新增！');
-
                                     }
                                 },
                                 {
@@ -90,6 +94,25 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                 {
                                     xtype: 'button', text: '审批', scope: me, glyph: 0xf044,
                                     handler: function () {
+                                        var selectObjArray = me.down("xgridpanel").getSelectionModel().getSelection();
+                                        if(selectObjArray.length < 1){
+                                            Ext.MessageBox.alert("温馨提示", "请选房屋数据!");
+                                            return;
+                                        }
+                                        //状态检测
+                                        for(var i=0;i< selectObjArray.lenght;i++){
+                                            var record = selectObjArray[i].data;
+                                            for(var j=i+1;j< selectObjArray.lenght;j++){
+                                                var record2 = selectObjArray[j].data;
+                                                if(record.id != record2.id){//状态相等
+                                                    Ext.MessageBox.alert("温馨提示", "请选相同状态的数据!");
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                        var oneRecord = selectObjArray[0].data;
+                                        oneRecord
+
                                         Ext.create("app.platform.lshc.view.regi.manage.ApproveWinView").show();
                                     }
                                 },
@@ -124,40 +147,19 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 },
                 columns: [
                     {text: '业务ID', hidden: true, dataIndex: 'id', align: 'center'},
+                    {text: '审批受理ID', hidden: true, dataIndex: 'jobAcceptId', align: 'center'},
+                    {text: '节点名称', hidden: true, dataIndex: 'nodeName', align: 'center'},
                     {text: '房屋编号', dataIndex: 'houseId', width: '25%', align: 'center'},
                     {text: '单元', dataIndex: 'unitNo', width: '10%', align: 'center'},
                     {text: '楼层', dataIndex: 'layer', width: '10%', align: 'center'},
                     {text: '房号', dataIndex: 'roomNo', BIZ_NO: '12%', align: 'center'},
-                    {text: '状态', dataIndex: 'regiStatus', width: '15%', align: 'center'},
+                    {text: '状态', dataIndex: 'auditStatus', width: '15%', align: 'center'},
                     {text: '图片', dataIndex: 'fileCount', width: '15%', align: 'center'}
                 ],
                 listeners: {
                     cellclick: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {
                         var id = record.data.id;
-                        //加载普查详情tabs
-                        Ext.Ajax.request({
-                            url: app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoDetail"),
-                            method: "post",
-                            async: false,
-                            params: {hcId: id},
-                            success: function (response) {
-                                var data = JSON.parse(response.responseText);
-                                console.log("-----get regi detail:")
-                                console.log(data)
-
-                                var houseDetalPanel = me.config.parentContainer.queryById("lshc-view-regi-HouseDetailView-itemId");
-                                houseDetalPanel.config.bizId = id;
-                                houseDetalPanel.fillForm(data);
-                                //houseDetalPanel.readOnly(true);
-                            },
-                            failure: function () {
-                                Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
-                            }
-                        });
-
-                        //更新右侧顶部状态
-                        me.config.parentContainer.initStatus("初审通过", "①社区", "->②街道办 ", "->③区政府->④市住建局");
-
+                        me.config.parentContainer.initHouseDetail(id);
                     },
                     itemdblclick: function (dataview, record, item, index, e) {
 

@@ -5,6 +5,7 @@ import com.funi.framework.workflow.eic.po.AuditConclusions;
 import com.funi.framework.workflow.eic.service.WorkFlowService;
 import com.funi.platform.lshc.dto.JobDto;
 import com.funi.platform.lshc.dto.JobLogDto;
+import com.funi.platform.lshc.entity.sys.JobAccept;
 import com.funi.platform.lshc.enumatation.BusinessType;
 import com.funi.platform.lshc.enumatation.Node;
 import com.funi.platform.lshc.service.JobAcceptService;
@@ -14,6 +15,7 @@ import com.funi.platform.lshc.support.UserManager;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,13 @@ public class LshcWorkFlowServiceImpl implements LshcWorkFlowService {
     @Override
     public boolean startWorkFlow(BusinessType bizType, String serviceNum, String tableName, Map taskVariables) throws Exception {
         if(StringUtils.isNotBlank(serviceNum) && StringUtils.isNotBlank(tableName)){
+            //创建受理信息
+            JobAccept jobAccept = new JobAccept();
+            jobAccept.setServiceNum(serviceNum);
+            jobAccept.setAcceptTime(new Date());
+            jobAccept.setTypeName(BusinessType.cnew.getWorkName());
+            jobLogService.createJobAccept(jobAccept);
+
             workFlowService.start(bizType.getKey(),bizType.getName(),bizType.getVersion().toString(),
                     serviceNum,tableName,userManager.findRegionCode(),
                     userManager.findUser().getId(),taskVariables);

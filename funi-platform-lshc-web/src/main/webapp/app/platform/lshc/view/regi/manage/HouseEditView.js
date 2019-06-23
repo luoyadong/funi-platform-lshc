@@ -19,7 +19,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         //主容器
         parentContainer: null,
 		//普查主表ID
-		bizId:null
+		bizId:null,
+        winContainer:null
     },
     constructor: function (config) {
         var me = this;
@@ -28,17 +29,31 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         this.callParent(arguments);
     },
     fillForm:function(formData){
-        //房屋信息
-        var houseView = this.queryById("lshc-regi-manage-houseInfo-itemId").down("form");
-
-		//房屋信息-人员列表
-        var entView = this.queryById("lshc-view-HousePerson-itemId").down("xgridpanel");
-        entView.store.loadData(formData.houseDtoList,false);
+        //房屋信息 regiInfo entInfoList fileList
+        var houseView = this.queryById("lshc-regi-houseedit-tabpanel-itemId");
+        houseView.getForm().setValues(formData.regiInfo);
+        //房屋信息-人员列表，lshc-view-HousePerson-itemId
+        var entView = this.queryById("lshc-regi-houseedit-tabpanel-itemId").down("xgridpanel");
+        entView.store.loadData(formData.entInfoList,false);
         //entView.getSelectionModel().selectAll(true);
 
-		//文件列表
-        var approveView = this.queryById("lshc-regi-manage-file-itemId").down("gridpanel");
-        approveView.store.loadData(formData.houseDtoList,false);
+        //文件列表
+        var approveView = this.queryById("lshc-file-houseedit-tabpanel-itemId");
+        approveView.store.loadData(formData.fileList,false);
+
+    },
+    resetForm:function(){
+        //房屋信息 regiInfo entInfoList fileList
+        var houseView = this.queryById("lshc-regi-houseedit-tabpanel-itemId");
+        houseView.getForm().setValues(null);
+        //房屋信息-人员列表，lshc-view-HousePerson-itemId
+        var entView = this.queryById("lshc-regi-houseedit-tabpanel-itemId").down("xgridpanel");
+        entView.store.loadData(null,false);
+        //entView.getSelectionModel().selectAll(true);
+
+        //文件列表
+        var approveView = this.queryById("lshc-file-houseedit-tabpanel-itemId");
+        approveView.store.loadData(null,false);
 
     },
 	getData:function(){
@@ -57,6 +72,13 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 		console.log(result)
         return result;
     },
+    isShowSubmitBtn:function(){
+        var showSubmitBtn = true;
+        if(this.config.bizId != null && this.config.bizId != undefined){
+            showSubmitBtn = false;
+        }
+        return showSubmitBtn;
+    },
     initComponent: function () {
         var me = this;
         Ext.apply(me, {
@@ -71,22 +93,39 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 xtype: 'button', text: '保存', scope: me,glyph: 0xf0fe,
                                 handler: function () {
 									var formData = me.getData();
-                                    app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/addRegiInfo", false, false);
-
+                                    var hcId = me.config.bizId;
+                                    if(me.config.bizId != null){
+                                        app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editRegiInfo", false, false);
+                                    }else{//新增
+                                        hcId = app.platform.lshc.view.base.RequestUtils.request(formData, "/manage/addRegiInfo");
+                                    }
+                                    me.config.parentContainer.initHouseDetail(hcId);
+                                    me.winContainer.close();
                                 }
                             },
 							{
-                                xtype: 'button', text: '提交', scope: me,glyph: 'xf234@FontAwesome',
+                                xtype: 'button',hidden:!me.isShowSubmitBtn(), text: '提交', scope: me,glyph: 'xf234@FontAwesome',
                                 handler: function () {
+                                    var formData = me.getData();
+                                    app.platform.lshc.view.base.RequestUtils.request(formData, "/manage/submitRegiInfo");
+                                    me.winContainer.close();
 
+                                    //刷新左侧的房屋列表
+                                    me.config.parentContainer.initHouseList();
                                 	//Ext.Msg.alert('提示', '已新增！');
-
                                 }
                             },
 							 {
-                                xtype: 'button', text: '提交后继续新增', scope: me,glyph: 'xf234@FontAwesome',
+                                xtype: 'button',hidden:!me.isShowSubmitBtn(), text: '提交后继续新增', scope: me,glyph: 'xf234@FontAwesome',
 								margin:'0 50 0 0',
                                 handler: function () {
+                                    var formData = me.getData();
+                                    app.platform.lshc.view.base.RequestUtils.request(formData, "/manage/submitRegiInfo");
+
+                                    //清除当前界面的输入
+                                    me.resetForm();
+                                    //刷新左侧的房屋列表
+                                    me.config.parentContainer.initHouseList();
 
                                 	//Ext.Msg.alert('提示', '已新增！');
 

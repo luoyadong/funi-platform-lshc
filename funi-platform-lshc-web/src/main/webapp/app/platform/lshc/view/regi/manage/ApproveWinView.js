@@ -24,6 +24,26 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
     resizable: false,
     buttonAlign: 'center',
     modal: true,
+    checkSameStatus:function(){
+
+    },
+    initCons:function(){
+        //任选一条记录的状态，查询出下一个节点的审批结论
+
+    }
+    ,
+    getData:function(){
+        var form = this.queryById("ghouse-base-worknodepanel-itemId").down("form");
+        if(!form)return{};
+        if(form.isValid()){
+            var values = form.getValues();
+            var displayVal = this.queryById("ghouse-base-worknode-result").getRawValue();
+            var jobResultId = values.jobResult;
+            values.jobResult = displayVal;
+            return {"jobAccept":{"serviceNum":values.serviceNum},"jobLog":values,"jobResultId":jobResultId};
+        }
+        throw {message:"请填写工作意见"};
+    },
     initComponent: function () {
         var me = this;
         me.on('close', function(){
@@ -67,8 +87,9 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                                     xtype: 'textarea',
                                     itemId: 'backReason',
                                     fieldLabel: '撤销原因',
+                                    margin:'20 0 0 0',
                                     columnWidth: .9,
-                                    height:200,
+                                    height:180,
                                     labelWidth: 80,
                                     margin: '0 0 0 10',
                                     allowBlank:false,

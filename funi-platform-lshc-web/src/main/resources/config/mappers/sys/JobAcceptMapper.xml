@@ -45,7 +45,7 @@
         ja.id,ja.type_name as businessName, ja.cur_status as currentConclusion,
         jl.node_name as nodeName
         from lshc_job_accept ja
-        left join ghouse_job_log jl on ja.id = jl.job_accept_id
+        left join lshc_job_log jl on ja.id = jl.job_accept_id
         where ja.lshc_job_log=#{serviceNum}
   </select>
 

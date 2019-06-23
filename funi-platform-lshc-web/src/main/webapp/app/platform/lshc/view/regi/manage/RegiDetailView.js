@@ -9,7 +9,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     requires: [
         //房屋列表信息
         'app.platform.lshc.view.regi.manage.HouseListView',
-		'app.platform.lshc.view.regi.manage.HouseDetailView'//房屋详情
+		'app.platform.lshc.view.regi.manage.HouseDetailView',//房屋详情
+        'app.platform.lshc.view.base.RequestUtils'
     ],
     config: {
         // //主容器
@@ -54,10 +55,14 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 		addressTb.setHtml(  '<div style="font-weight:bold;font-size:10;margin-left:10;float:right">'+address+'</div>');
 
 		//初始化房屋列表,HouseListView-Tab-itemId  lshc-view-regi-HouseListView-itemId
+        me.initHouseList();
+	},
+    initHouseList:function(){
+        var me = this;
         gridObjStore = me.getHouseListStore();
         gridObjStore.proxy.extraParams = me.getParams();
         gridObjStore.loadPage(1);
-	},
+    },
     getHouseListStore:function(){
         var houseListPanel = this.queryById("lshc-view-regi-HouseListView-itemId");
         var gridObjStore = houseListPanel.down("gridpanel").store;
@@ -123,6 +128,34 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
         for(var i=0;i<uploadViews.length;i++){
             uploadViews[i].hidden=true;
         }
+
+    },
+    initHouseDetail:function(hcId){
+        var me = this
+        var id = hcId;
+        //加载普查详情tabs
+        Ext.Ajax.request({
+            url: app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoDetail"),
+            method: "post",
+            async: false,
+            params: {hcId: id},
+            success: function (response) {
+                var data = JSON.parse(response.responseText);
+                console.log("-----get regi detail:")
+                console.log(data)
+
+                var houseDetalPanel = me.queryById("lshc-view-regi-HouseDetailView-itemId");
+                houseDetalPanel.config.bizId = id;
+                houseDetalPanel.fillForm(data);
+                //houseDetalPanel.readOnly(true);
+            },
+            failure: function () {
+                Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
+            }
+        });
+
+        //更新右侧顶部状态
+        me.initStatus("初审通过", "①社区", "->②街道办 ", "->③区政府->④市住建局");
 
     },
     initComponent: function () {

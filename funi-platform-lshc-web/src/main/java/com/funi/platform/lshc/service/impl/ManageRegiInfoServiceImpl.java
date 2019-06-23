@@ -7,6 +7,7 @@ import com.funi.platform.lshc.entity.census.BuildInfo;
 import com.funi.platform.lshc.entity.census.EntInfo;
 import com.funi.platform.lshc.entity.census.File;
 import com.funi.platform.lshc.entity.census.RegiInfo;
+import com.funi.platform.lshc.enumatation.BusinessType;
 import com.funi.platform.lshc.mapper.census.BuildInfoMapper;
 import com.funi.platform.lshc.mapper.census.EntInfoMapper;
 import com.funi.platform.lshc.mapper.census.FileMapper;
@@ -14,6 +15,7 @@ import com.funi.platform.lshc.mapper.census.RegiInfoMapper;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.BuildRegiQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
+import com.funi.platform.lshc.service.LshcWorkFlowService;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
 import com.funi.platform.lshc.support.CensusConstants;
 import com.funi.platform.lshc.support.UserManager;
@@ -50,6 +52,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     private EntInfoMapper entInfoMapper;
     @Resource
     private FileMapper fileMapper;
+    @Resource
+    private LshcWorkFlowService lshcWorkFlowService;
 
     @Override
     public List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery) {
@@ -117,6 +121,11 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         }
         if(isSubmit) {
             // TODO 添加工作流
+            try {
+                lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return id;
     }
