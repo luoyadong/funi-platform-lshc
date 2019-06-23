@@ -225,9 +225,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.EntInfo">
     update LSHC_ENT_INFO
     <set>
-      DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual)
-      <if test="hcId != null">
-        HC_ID = #{hcId,jdbcType=VARCHAR},
+      <if test="id != null">
+        VERSION=VERSION+1,
       </if>
       <if test="entName != null">
         ENT_NAME = #{entName,jdbcType=VARCHAR},
@@ -253,32 +252,14 @@
       <if test="idType != null">
         ID_TYPE = #{idType,jdbcType=VARCHAR},
       </if>
-        <if test="idNo != null">
+      <if test="idNo != null">
             ID_NO = #{idNo,jdbcType=VARCHAR},
-        </if>
+      </if>
       <if test="career != null">
         CAREER = #{career,jdbcType=VARCHAR},
       </if>
-      <if test="version != null">
-        VERSION = #{version,jdbcType=DECIMAL},
-      </if>
-      <if test="createTime != null">
-        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createId != null">
-        CREATE_ID = #{createId,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateId != null">
         UPDATE_ID = #{updateId,jdbcType=VARCHAR},
-      </if>
-      <if test="deleted != null">
-        DELETED = #{deleted,jdbcType=DECIMAL},
-      </if>
-      <if test="isvalide != null">
-        ISVALIDE = #{isvalide,jdbcType=VARCHAR},
       </if>
     </set>
     where ID = #{id,jdbcType=VARCHAR}
