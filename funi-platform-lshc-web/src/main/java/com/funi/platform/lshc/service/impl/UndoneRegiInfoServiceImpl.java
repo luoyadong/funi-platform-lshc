@@ -94,8 +94,9 @@ public class UndoneRegiInfoServiceImpl implements UndoneRegiInfoService {
 //                throw new RuntimeException("普查信息状态异常不能进行审批操作");
 //            }
             CurrentUser user = userManager.findUser();
-            // 修改普查信息的状态
-            regiInfoMapper.updateRegiInfoStatus(houseId, result, user.getUserId());
+            // 修改普查信息的状态,状态暂时和审批保持一致，便于查询（状态为中文）
+            String nextStatus = regiInfoAuditDto.getResult();
+            regiInfoMapper.updateRegiInfoStatus(houseId, nextStatus, user.getUserId());
             // TODO 工作流
             try {
                 lshcWorkFlowService.doWorkFlow(buildAuditDto(regiInfoAuditDto,houseId),"LSHC_REGI_INFO");

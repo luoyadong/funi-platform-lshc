@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -114,7 +115,7 @@ public class ManageRegiController {
      * @param regiInfoDto
      * @return
      */
-    @RequestMapping("submitRegiInfo")
+    @RequestMapping(value="submitRegiInfo",method = RequestMethod.POST)
     @ResponseBody
     public Object submitRegiInfo(@RequestBody RegiInfoDto regiInfoDto) {
         try {
@@ -226,9 +227,9 @@ public class ManageRegiController {
 
     @ResponseBody
     @RequestMapping("/conclusions")
-    public Object findAuditConclusions(String serviceNum) {
+    public Object findAuditConclusions(String serviceNum,String nodeName) {
         try {
-            List<AuditConclusions> conList = lshcWorkFlowService.findWorkFlowConclusions(serviceNum, BusinessType.pnew);
+            List<AuditConclusions> conList = lshcWorkFlowService.findWorkFlowConclusions(serviceNum, nodeName,BusinessType.pnew);
             return ResultVo.newResult(conList);
         } catch (Exception e) {
             e.printStackTrace();

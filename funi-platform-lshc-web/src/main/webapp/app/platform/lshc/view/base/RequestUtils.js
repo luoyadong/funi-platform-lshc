@@ -49,6 +49,8 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 method: 'post',
                 jsonData: data,
                 async: isAsync,
+                contentType: "application/json;charset=UTF-8",
+                dataType: 'json',
                 success: function (response) {
                     if(allowTips){
                         var data = JSON.parse(response.responseText);

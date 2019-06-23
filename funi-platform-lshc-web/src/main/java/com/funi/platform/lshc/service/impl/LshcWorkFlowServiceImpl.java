@@ -38,7 +38,8 @@ public class LshcWorkFlowServiceImpl implements LshcWorkFlowService {
             JobAccept jobAccept = new JobAccept();
             jobAccept.setServiceNum(serviceNum);
             jobAccept.setAcceptTime(new Date());
-            jobAccept.setTypeName(BusinessType.cnew.getWorkName());
+            jobAccept.setCurStatus("待初审");
+            jobAccept.setTypeName(BusinessType.pnew.getWorkName());
             jobLogService.createJobAccept(jobAccept);
 
             workFlowService.start(bizType.getKey(),bizType.getName(),bizType.getVersion().toString(),
@@ -80,15 +81,15 @@ public class LshcWorkFlowServiceImpl implements LshcWorkFlowService {
     }
 
     @Override
-    public List<AuditConclusions> findWorkFlowConclusions(String serviceNum,BusinessType newBizType) throws Exception{
+    public List<AuditConclusions> findWorkFlowConclusions(String serviceNum,String nodeName,BusinessType newBizType) throws Exception{
         List<AuditConclusions> auditList;
 
         JobDto jobDto = jobAcceptService.findByServiceNum(serviceNum);
         BusinessType businessType;
-        String nodeName;
+        //String nodeName;
         if(null!=jobDto) {
-            businessType=BusinessType.findByWorkName(jobDto.getBusinessName());
-            nodeName= org.springframework.util.StringUtils.hasText(jobDto.getNodeName())?jobDto.getNodeName(): Node.N001.getName();
+            businessType=BusinessType.findByWorkName(jobDto.getBusinessName());//jobDto.getNodeName()
+            nodeName= org.springframework.util.StringUtils.hasText(nodeName)?nodeName: Node.N001.getName();
         }else{
             businessType=BusinessType.pnew;
             nodeName= Node.N001.getName();

@@ -265,6 +265,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                 var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
                                 me.hide();
                                 currentActiveTab.add(createContractView);
+                                createContractView.config.srcType = 0
                                 createContractView.initDetail(record.data.mapCode,record.data.address);
                                 // Ext.Ajax.request({
                                 //     url:app.platform.ghouse.view.base.RequestUtils.url("/contract/view/"+record.id+"/1"),

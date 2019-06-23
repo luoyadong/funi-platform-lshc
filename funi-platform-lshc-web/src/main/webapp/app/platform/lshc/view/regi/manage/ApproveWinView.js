@@ -8,6 +8,9 @@ Ext.onReady(function(){
 Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
     extend: 'Ext.window.Window',
     xtype: 'lshc-view-regi-ApproveWinView',
+    requires:[
+        'app.platform.lshc.view.base.RequestUtils'
+    ],
     config: {
         parentPanel:null
     },
@@ -28,21 +31,97 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
 
     },
     initCons:function(){
+        var me = this
         //任选一条记录的状态，查询出下一个节点的审批结论
+        if(null == me.config.serviceNum){
+            Ext.MessageBox.alert("温馨提示","没有房屋标识数据，请联系管理员！");
+            return;
+        }
+        var data = app.platform.lshc.view.base.RequestUtils.request({"serviceNum":me.config.serviceNum,"nodeName":me.config.nodeName},"/manage/conclusions");
+        console.log("-------audit data---")
+        console.log(data)
+        console.log(me.config.ids)
+
+        var auditView = me.queryById("auditResultItemId");
+        auditView.removeAll();
+        var len = data.length;
+        for(var i=0;i<len;i++){
+            var cRecord = data[i];
+            var name = cRecord.name;
+            var code = cRecord.code;
+            if("结束" == name){
+                continue;
+            }
+            if("退回" == name){
+                auditView.add(
+                    {   boxLabel: ''+name,
+                        name: 'jobResult',
+                        inputValue: ''+code,
+                        checked: true}
+                )
+                continue;
+            }
+            if(i == 0){
+                auditView.add(
+                    {   boxLabel: ''+name,
+                        name: 'jobResult',
+                        inputValue: ''+code,
+                        checked: true}
+                )
+            }else{
+                auditView.add(
+                    {   boxLabel: name,
+                        name: 'jobResult',
+                        inputValue: code}
+                )
+            }
+        }
+
+        //当前节点名称
+        var nodeNameView = me.queryById("lshc-base-worknodepanel-nodeName-itemId");
+        nodeNameView.setValue(me.config.nodeName);
 
     }
     ,
     getData:function(){
-        var form = this.queryById("ghouse-base-worknodepanel-itemId").down("form");
+        var form = this.down("form");
         if(!form)return{};
         if(form.isValid()){
             var values = form.getValues();
-            var displayVal = this.queryById("ghouse-base-worknode-result").getRawValue();
+            //var displayVal = this.queryById("auditResultItemId").getRawValue();
+            var displayVal = "";
+            var radioView = this.queryById("auditResultItemId").items.items;
+            if(radioView != null && radioView.length >0){
+                for(var j=0;j<radioView.length;j++ ){
+                    if(radioView[j].checked){
+                        displayVal = radioView[j].boxLabel;
+                        break;
+                    }
+                }
+            }
+            if(displayVal == ""){
+                Ext.MessageBox.alert("温馨提示","没有可用的什么结论！");
+                return
+            }
             var jobResultId = values.jobResult;
-            values.jobResult = displayVal;
-            return {"jobAccept":{"serviceNum":values.serviceNum},"jobLog":values,"jobResultId":jobResultId};
+            var jobResult = displayVal;
+            return {"ids":this.config.ids,
+                "result":jobResult,"jobResultId":jobResultId,"nodeName":this.config.nodeName,"desc":values.jobOpinion};
         }
-        throw {message:"请填写工作意见"};
+        throw {message:"请填写审批意见"};
+    },
+    sumitAudit:function(){
+        var me = this;
+        var extData = me.getData();
+        console.log("-------audit submit---")
+        console.log(extData)
+        app.platform.lshc.view.base.RequestUtils.post_json(extData,"/undone/batchAuditRegiInfoList",false,false);
+
+        //关闭当前窗口
+        me.close();
+
+        //刷新列表
+        me.config.parentContainer.initHouseList();
     },
     initComponent: function () {
         var me = this;
@@ -66,6 +145,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
 									/*xtype: 'radiogroup',*/
 									xtype : 'fieldcontainer',
 									defaultType: 'radiofield',
+                                    itemId:'auditResultItemId',
 									columnWidth: .9,
 									colspan: 2,
 									fieldLabel: '审批结论',
@@ -74,19 +154,20 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
 									labelWidth: 80,
 									margin: '0 0 0 10',
 									items:[{ boxLabel: '同意',
-										name: 'rentorType',
+										name: 'jobResult',
 										inputValue: '1',
 										checked: true},{
 										boxLabel: '取消',
-										name: 'rentorType',
+										name: 'jobResult',
 										inputValue: '2'
 									}]
 
 								},
                                 {
                                     xtype: 'textarea',
-                                    itemId: 'backReason',
+                                    itemId: 'jobOpinionItemId',
                                     fieldLabel: '撤销原因',
+                                    name:"jobOpinion",
                                     margin:'20 0 0 0',
                                     columnWidth: .9,
                                     height:180,
@@ -94,6 +175,10 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                                     margin: '0 0 0 10',
                                     allowBlank:false,
                                 },
+                                {
+                                    xtype: 'textfield', itemId: "lshc-base-worknodepanel-nodeName-itemId", hidden: true,
+                                    name: 'nodeName'
+                                }
                             ]
                         },
                         {
@@ -104,25 +189,8 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                                     margin: '5 0 0 250',
                                     text: '提交',
                                     handler:function(){
-                                        var param = {};
-                                        param.backReason = me.queryById("backReason").getValue();
-                                        param.historyId = me.config.historyId;
-                                        if(null == param.backReason || param.backReason == ''){
-                                            Ext.Msg.alert('提示', '撤销原因不能为空');
-                                            return false;
-                                        }
-                                        if(null == param.historyId || param.historyId == ''){
-                                            Ext.Msg.alert('提示', '收费记录ID不能为空');
-                                            return false;
-                                        }
-                                        var result = Ext.appContext.invokeService(Funi.core.Context.path("ghouse","/charge/cancelCharge"),param);
-                                        if(result && result != null && result != '') {
-                                            Ext.Msg.alert('提示', result.message);
-                                            if(result.success) {
-                                                me.close();
-                                                me.config.parentStore.load();
-                                            }
-                                        }
+                                        me.sumitAudit();
+
                                     }
                                 },
                                 {

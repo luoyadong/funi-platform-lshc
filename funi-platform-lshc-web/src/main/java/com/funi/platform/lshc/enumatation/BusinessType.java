@@ -42,14 +42,14 @@ public enum BusinessType {
 
     public static BusinessType findByWorkName(String workName){
         switch (workName){
-            case  "新增普查":return BusinessType.pnew;
+            case  "新建普查":return BusinessType.pnew;
         }
         return null;
     }
 
     public static BusinessType findByKey(String key){
         switch (key){
-            case  "新增普查":return BusinessType.pnew;
+            case  "新建普查":return BusinessType.pnew;
         }
         return null;
     }

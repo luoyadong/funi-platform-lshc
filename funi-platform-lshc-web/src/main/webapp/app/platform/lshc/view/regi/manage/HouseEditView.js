@@ -107,7 +107,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 xtype: 'button',hidden:!me.isShowSubmitBtn(), text: '提交', scope: me,glyph: 'xf234@FontAwesome',
                                 handler: function () {
                                     var formData = me.getData();
-                                    app.platform.lshc.view.base.RequestUtils.request(formData, "/manage/submitRegiInfo");
+                                    app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/submitRegiInfo",false,false);
                                     me.winContainer.close();
 
                                     //刷新左侧的房屋列表

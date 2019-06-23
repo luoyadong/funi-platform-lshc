@@ -170,6 +170,7 @@
             <artifactId>funi-web</artifactId>
             <version>1.0.3-SNAPSHOT</version>
         </dependency>
+
         <!--<dependency>
             <groupId>com.funi.framework</groupId>
             <artifactId>funi-app-invocation</artifactId>

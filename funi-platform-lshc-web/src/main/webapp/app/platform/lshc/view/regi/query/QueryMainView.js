@@ -63,7 +63,7 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
             ]
         });
 		var store = Ext.create("Funi.data.ListStore",{
-            url:app.platform.lshc.view.base.RequestUtils.url("/manage/getBuildInfoList"),
+            url:app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getBuildInfoList"),
             fields:[
 			    {type:"string",name:"id"},
                 {type:"string",name:"serialNo"},
@@ -238,6 +238,7 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
                                 var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
                                 me.hide();
                                 currentActiveTab.add(createContractView);
+                                createContractView.config.srcType = 1
                                 createContractView.initDetail(record.data.mapCode,record.data.address);
                                 // Ext.Ajax.request({
                                 //     url:app.platform.ghouse.view.base.RequestUtils.url("/contract/view/"+record.id+"/1"),

@@ -44,7 +44,7 @@ public interface LshcWorkFlowService {
      * @return List<AuditConclusions>
      * @throws
      */
-    List<AuditConclusions> findWorkFlowConclusions(String serviceNum,BusinessType newBizType)throws Exception;
+    List<AuditConclusions> findWorkFlowConclusions(String serviceNum,String nodeName,BusinessType newBizType)throws Exception;
 
     /**
      * 房屋普查-批量提交、批量审批前的的检测，

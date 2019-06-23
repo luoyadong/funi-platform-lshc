@@ -59,7 +59,21 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 	},
     initHouseList:function(){
         var me = this;
+        if(me.config.srcType == null){
+            Ext.MessageBox.alert("温馨提示","操作类型不明确！");
+            return
+        }
         gridObjStore = me.getHouseListStore();
+        if(me.config.srcType == 1){//综合
+            gridObjStore.proxy.url = app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoVoList");
+        }else  if(me.config.srcType == 2){//待办
+            gridObjStore.proxy.url = app.platform.lshc.view.base.RequestUtils.url("/undone/getRegiInfoVoList");
+        }else if(me.config.srcType == 3){//已办
+            gridObjStore.proxy.url = app.platform.lshc.view.base.RequestUtils.url("/completed/getRegiInfoVoList");
+        }else{//管理
+            gridObjStore.proxy.url = app.platform.lshc.view.base.RequestUtils.url("/manage/getRegiInfoVoList");
+        }
+
         gridObjStore.proxy.extraParams = me.getParams();
         gridObjStore.loadPage(1);
     },

@@ -41,7 +41,6 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 {type:"string",name:"unitNo"},
                 {type:"string",name:"layer"},
                 {type:"string",name:"roomNo"},
-                {type:"string",name:"regiStatus"},
                 {type:"string",name:"fileCount"},
                 {type:"string",name:"jobAcceptId"},
                 {type:"string",name:"nodeName"},
@@ -94,26 +93,38 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                 {
                                     xtype: 'button', text: '审批', scope: me, glyph: 0xf044,
                                     handler: function () {
-                                        var selectObjArray = me.down("xgridpanel").getSelectionModel().getSelection();
+                                        var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
                                         if(selectObjArray.length < 1){
                                             Ext.MessageBox.alert("温馨提示", "请选房屋数据!");
                                             return;
                                         }
+                                        var ids = new Array();
                                         //状态检测
-                                        for(var i=0;i< selectObjArray.lenght;i++){
+                                        for(var i=0;i< selectObjArray.length;i++){
                                             var record = selectObjArray[i].data;
+                                            if(record.auditStatus == null){
+                                                Ext.MessageBox.alert("温馨提示", "无状态数据!房屋编号:"+record.houseId);
+                                                return;
+                                            }
                                             for(var j=i+1;j< selectObjArray.lenght;j++){
                                                 var record2 = selectObjArray[j].data;
-                                                if(record.id != record2.id){//状态相等
-                                                    Ext.MessageBox.alert("温馨提示", "请选相同状态的数据!");
+                                                if(record.auditStatus != record2.auditStatus){//状态相等
+                                                    Ext.MessageBox.alert("温馨提示", "请选相同状态的数据!房屋编号:"+record.houseId);
                                                     return;
                                                 }
                                             }
+                                            ids.push(record.id);
                                         }
                                         var oneRecord = selectObjArray[0].data;
-                                        oneRecord
-
-                                        Ext.create("app.platform.lshc.view.regi.manage.ApproveWinView").show();
+                                        var serviceNum = oneRecord.id;
+                                        var nodeName = oneRecord.nodeName;
+                                        var approveWin = Ext.create("app.platform.lshc.view.regi.manage.ApproveWinView");
+                                        approveWin.config.serviceNum = serviceNum;
+                                        approveWin.config.nodeName = nodeName;
+                                        approveWin.config.ids = ids;
+                                        approveWin.config.parentContainer = me.config.parentContainer;
+                                        approveWin.initCons();
+                                        approveWin.show();
                                     }
                                 },
 

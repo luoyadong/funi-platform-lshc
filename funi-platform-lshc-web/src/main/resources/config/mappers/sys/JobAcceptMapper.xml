@@ -46,7 +46,7 @@
         jl.node_name as nodeName
         from lshc_job_accept ja
         left join lshc_job_log jl on ja.id = jl.job_accept_id
-        where ja.lshc_job_log=#{serviceNum}
+        where ja.service_num=#{serviceNum}  and rownum=1 order by jl.create_time desc
   </select>
 
 </mapper>
