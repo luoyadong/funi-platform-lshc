@@ -30,7 +30,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
     },
     fillForm:function(formData){
         //房屋信息 regiInfo entInfoList fileList
-        var houseView = this.queryById("lshc-regi-houseedit-tabpanel-itemId");
+        var houseView = this.queryById("lshc-regi-houseedit-tabpanel-itemId").queryById("lshc-regi-manage-houseInfo-form-itemId");
         houseView.getForm().setValues(formData.regiInfo);
         //房屋信息-人员列表，lshc-view-HousePerson-itemId
         var entView = this.queryById("lshc-regi-houseedit-tabpanel-itemId").down("xgridpanel");
@@ -95,6 +95,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 									var formData = me.getData();
                                     var hcId = me.config.bizId;
                                     if(me.config.bizId != null){
+                                        formData.regiInfo.id = hcId;
                                         app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editRegiInfo", false, false);
                                     }else{//新增
                                         hcId = app.platform.lshc.view.base.RequestUtils.request(formData, "/manage/addRegiInfo");

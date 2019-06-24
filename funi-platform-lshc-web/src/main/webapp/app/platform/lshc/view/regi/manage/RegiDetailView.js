@@ -118,7 +118,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 tabpanelView.items.items[i].down("xgridpanel").disableSelection=true;
                 tabpanelView.items.items[i].down("xgridpanel").addListener("beforecellclick",function(){
                     return false;
-                }) ;
+                });
                 tabpanelView.items.items[i].down("xgridpanel").addListener("beforedeselect",function(){
                     return false;
                 })
@@ -158,6 +158,24 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 console.log("-----get regi detail:")
                 console.log(data)
 
+                //更新右侧顶部状态
+                var hStatus = formData.regiInfo.houseStatus;
+                if(hStatus.indexOf("新") != -1
+                || hStatus.indexOf("录") != -1
+                || hStatus.indexOf("初审不通过") != -1){
+                    me.initStatus(hStatus, "", "①社区", "->②街道办->③区政府->④市住建局");
+                }else if(hStatus.indexOf("待初审") != -1
+                    || hStatus.indexOf("复审不通过") != -1){
+                    me.initStatus(hStatus, "①社区", "->②街道办", "->③区政府->④市住建局");
+                }else if(hStatus.indexOf("初审通过") != -1
+                    || hStatus.indexOf("退回") != -1){
+                    me.initStatus(hStatus, "①社区->②街道办", "->③区政府", "->④市住建局");
+                }else if(hStatus.indexOf("复审通过") != -1){
+                    me.initStatus(hStatus, "①社区->②街道办->③区政府", "->④市住建局", "");
+                }else{
+                    me.initStatus(hStatus, "", "", "①社区->②街道办->③区政府->④市住建局");
+                }
+
                 var houseDetalPanel = me.queryById("lshc-view-regi-HouseDetailView-itemId");
                 houseDetalPanel.config.bizId = id;
                 houseDetalPanel.fillForm(data);
@@ -167,9 +185,6 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
             }
         });
-
-        //更新右侧顶部状态
-        me.initStatus("初审通过", "①社区", "->②街道办 ", "->③区政府->④市住建局");
 
     },
     initComponent: function () {
@@ -198,8 +213,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 xtype: 'combobox',
                                 fieldLabel: '状态',
                                 emptyText: '全部',
-                                store: mStore,
+                                //store: mStore,
                                 editable: false,
+                                dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type='),
                                 valueField: 'value',
 								name:"",
                                 itemId:'isVacant',
@@ -342,7 +358,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                             //bodyStyle : 'overflow-y:scroll',
                             // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
                             items: [
-                                {xtype: 'lshc-view-regi-HouseListView',parentContainer:me,bizId:me.bizId}
+                                {xtype: 'lshc-view-regi-HouseListView',parentContainer:me,bizId:me.config.bizId,srcType:me.config.srcType}
                             ]
                         }
 				]
@@ -354,7 +370,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                             autoScroll: true,
                             scrollable: true,
                             items: [
-                                {xtype: 'lshc-view-regi-HouseDetailView'}
+                                {xtype: 'lshc-view-regi-HouseDetailView',srcType:me.config.srcType}
                             ]
                         }
 				]

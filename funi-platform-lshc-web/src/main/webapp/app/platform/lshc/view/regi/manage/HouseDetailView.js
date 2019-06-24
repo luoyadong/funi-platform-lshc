@@ -59,7 +59,35 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
       //  var residentView = this.queryById("ghouse-rent-contract-resident");
       //  residentView.store.loadData(formData.residentList,false);
     },
-    
+    isHiddenBtn:function(btnType){//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
+        var me = this;
+        //access:"AUTH_LSHC_HOUSELIST_ADD"
+        if(me.config.srcType == 1){//综合
+            if(btnType == 3){
+                return false
+            }else{
+                return true;
+            }
+        }else  if(me.config.srcType == 2){//待办
+            if(btnType == 3 || btnType == 4){
+                return false
+            }else{
+                return true;
+            }
+        }else if(me.config.srcType == 3){//已办,//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
+            if(btnType == 3){
+                return false
+            }else{
+                return true;
+            }
+        }else{//管理
+            if(btnType == 4){
+                return true
+            }else{
+                return false;
+            }
+        }
+    },
     initComponent: function () {
         var me = this;
         Ext.apply(me, {
@@ -72,7 +100,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                         {
                             xtype:'button',
                             text:'编辑',
-                            hidden:false,
+                            hidden:me.isHiddenBtn(6),
                             glyph: 0xf044,
                             handler:function() {
 								if(me.config.bizId == null){
@@ -88,7 +116,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                                        url:app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoDetail"),
                                        method:"post",
                                        async:false,
-									   params:{houseId:id},
+									   params:{hcId:id},
                                        success:function(response)
                                        {
                                            var data = JSON.parse(response.responseText);
@@ -140,7 +168,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                     disabled:false,
                     overflowY:'auto',
                     width:"100%",
-                    itemId:'lshc-regi-file-tabpanel-itemId'
+                    itemId:'lshc-regi-file-tabpanel-itemId',
+                    parentContainer:me
                 },{
                     title:'处理过程',
                     glyph: 'xf022@FontAwesome',

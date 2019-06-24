@@ -35,9 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by sam on 2019/6/17.10:40 PM
@@ -474,6 +472,78 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     @Override
     public void batchRemoveRegiInfo(List<String> ids) {
         batchRemoveRegiInfoByIds(ids, userManager.findUser().getUserId());
+    }
+
+    @Override
+    public Map<String,Object> checkReturnRegiInfoList(MultipartFile uploadFile) throws IOException {
+        Map<String,Object> rtMap = new HashMap<String,Object>();
+        List<ExcelRegiInfoVo> excelRegiInfoVoList = getRegiInfoByExcle(uploadFile);
+        // 校验Excel数据有效性
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
+        }
+        StringBuilder checkResultBuilder = new StringBuilder();
+        for(int i = 0; i < excelRegiInfoVoList.size(); i ++) {
+            // 获取当前行号
+            int rowNo = i + CensusConstants.EXCEL_CONTENT_START_ROW_NO + 1;
+            List<Integer> repeatRowNoList = new ArrayList<>();
+            ExcelRegiInfoVo currentExcelRegiInfoVo = excelRegiInfoVoList.get(i);
+            for(int j = i; j < excelRegiInfoVoList.size(); j ++) {
+//                if(i  == j) {
+//                    continue;
+//                }
+                int loopRowNo = j + CensusConstants.EXCEL_CONTENT_START_ROW_NO + 1;
+                ExcelRegiInfoVo currentLoopExcelRegiInfoVo = excelRegiInfoVoList.get(i);
+                if(currentExcelRegiInfoVo.equals(currentLoopExcelRegiInfoVo)) {
+                    repeatRowNoList.add(loopRowNo);
+                }
+            }
+            if(CollectionUtils.isNotEmpty(repeatRowNoList)) {
+                checkResultBuilder.append("第" + rowNo + "行与第" + StringUtils.join(repeatRowNoList, ",") + "行数据重复；");
+            }
+        }
+        rtMap.put("checkMsg",checkResultBuilder.toString());
+        rtMap.put("regiList",excelRegiInfoVoList);
+        return rtMap;
+    }
+
+    @Override
+    public void importRegiInfoList(List<ExcelRegiInfoVo> excelRegiInfoVoList) throws IOException {
+        // 校验Excel数据有效性
+        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
+            throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
+        }
+        for(ExcelRegiInfoVo excelRegiInfoVo : excelRegiInfoVoList) {
+            RegiInfo regiInfo = new RegiInfo();
+            EntInfo entInfo = new EntInfo();
+            // 拷贝房屋对象属性
+            BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
+            // 拷贝入住人员属性
+            BeanUtils.copyProperties(excelRegiInfoVo, entInfo);
+            // 使用普查信息编号是否为空来判断是新增还是编辑操作
+            String houseId = regiInfo.getHouseId();
+            CurrentUser userInfo = userManager.findUser();
+            if(StringUtils.isBlank(houseId)) {
+                // 保存普查信息和楼栋信息
+                saveNewRegiInfo(regiInfo, userInfo, false);
+                // 普查信息主键ID
+                String id = regiInfo.getId();
+                if(entInfo != null) {
+                    // 保存人口信息
+                    saveNewEntInfo(entInfo, id, userInfo);
+                }
+            } else {
+                RegiInfo existRegiInfo = regiInfoMapper.selectByHouseId(houseId);
+                // 编辑普查信息
+                updateRegiInfo(regiInfo, existRegiInfo, userInfo);
+                if(entInfo != null) {
+                    List<EntInfo> entInfoList = new ArrayList<>();
+                    entInfoList.add(entInfo);
+                    // 编辑普查信息关联的入住人信息
+                    modifyEntInfoList(entInfoList, houseId, userInfo);
+                }
+            }
+        }
     }
 
     /**

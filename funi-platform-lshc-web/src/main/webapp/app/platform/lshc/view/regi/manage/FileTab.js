@@ -51,7 +51,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             viewConfig: {
                 enableTextSelection: true
             },
-            selType: "checkboxmodel",
+            //selType: "checkboxmodel",
 		    columns:[
 			   {text:"id",dataIndex:"id",hidden:true},
 			   {text:"序号",dataIndex:"id",hidden:true},
@@ -68,8 +68,9 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                             if(tempUrl != null && tempUrl !="null"&& tempUrl !="NULL"){
                                 oper = '<a href="'+tempUrl+'"  target="_blank" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="preview-contr-url">预览</a>';
                             }
-                           
-                            oper += '<a href="javascript:void(0)" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="del-contr-info">删除</a>';
+                           if(!me.parentContainer.isHiddenBtn(8)){
+                               oper += '<a href="javascript:void(0)" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="del-contr-info">删除</a>';
+                           }
                             return oper;
 						}
 			   }
@@ -81,13 +82,16 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                             //删除票据信息
                             Ext.Msg.confirm('确认', '你确认要删除这条记录吗？', function (btn) {
                                 if (btn === 'yes') {
-                                    var result = Ext.appContext.invokeService(Funi.core.Context.path("ghouse","/template/delContrTemp"),{id: record.data.id});
-                                    if(result == null || result == '') {
-                                        Ext.Msg.alert('提示', "删除失败，请联系管理员！");
-                                        return false;
-                                    } else {
-                                    }
-                                    store.loadPage(1);
+                                    me.store.remove(me.store.getAt(rowIndex));
+                                    me.store.commitChanges();
+                                    me.getView().refresh();
+                                    // var result = Ext.appContext.invokeService(Funi.core.Context.path("ghouse","/template/delContrTemp"),{id: record.data.id});
+                                    // if(result == null || result == '') {
+                                    //     Ext.Msg.alert('提示', "删除失败，请联系管理员！");
+                                    //     return false;
+                                    // } else {
+                                    // }
+                                    // store.loadPage(1);
                                 }
                             });
                         }
@@ -102,10 +106,15 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             dock: 'top',
             items: [{
                         xtype: 'toolbar', columnWidth: 1, scope: me,
+                        access:"AUTH_LSHC_FILELIST_UPLOAD",
                         items: [
-							 {
+                              {
+                                xtype: 'form',
+                                layout: 'hbox',
+                                itemId: 'FileUploadUtilsItemsId',
+                                items: [{
                                     xtype: 'fileuploadfield',
-                                    itemId:'uploadFileItemId',
+                                    itemId: 'uploadFileItemId',
                                     margin: '5 0 0 5',
                                     buttonOnly: true,
                                     labelSeparator: '',
@@ -114,11 +123,55 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
 
                                     listeners: {
                                         change: function () {
-                                           
-										   alert("上传成功！")
+
+                                            var conts = me.query("fieldcontainer");
+
+                                            var form = me.queryById("FileUploadUtilsItemsId");
+                                            var fileName = me.queryById('uploadFileItemId').getValue().split('.');
+                                            var saveFileName = fileName[0].split('\\')[fileName[0].split('\\').length - 1] + '.' + fileName[fileName.length - 1];
+
+                                            linkFileType = fileName[fileName.length - 1];
+                                            if (linkFileType != "jpg" && linkFileType != "png"
+                                                && linkFileType != "doc" && linkFileType != "xls"
+                                                && linkFileType != "jpeg" && linkFileType != "pdf" && linkFileType != "zip"
+                                                && linkFileType != "docx" && linkFileType != "xlsx") {
+                                                Ext.Msg.alert("系统提示", "上传文件格式仅支持（doc/xls/pdf/jpg/jpeg/png/docx/xlsx/zip）!");
+                                                return false;
+                                            }
+                                            if (form.isValid()) {
+                                                form.submit({
+                                                    method: 'POST',
+                                                    url: Funi.core.Context.path("lshc", "/FileController/createFile"),//后台处理的页面
+                                                    waitMsg: '文件上传中，请稍等...',
+                                                    success: function (form, action) {
+                                                    },
+                                                    failure: function (form, action) {
+                                                        console.info(action)
+                                                        //上传成功，刷新界面
+                                                        if (null != action && null != action.result) {
+                                                            var fileRecord = action.result;
+                                                            var linkFileUrl = fileRecord.linkFileUrl;
+                                                            //linkFileName,linkType,fileType,fileUrl
+
+                                                            var rData = {
+                                                                "fileName":saveFileName,
+                                                                "fileSize":12,
+                                                                "submitDate":fileRecord.uploadDate,
+                                                                "userName":fileRecord.userName,
+                                                                "unitName":fileRecord.unitName,
+                                                                "url":fileRecord.linkFileUrl
+                                                            }
+                                                            me.store.add(rData);
+                                                        }
+                                                    }
+                                                });
+                                            }
                                         }
                                     }
                                 }
+                                ]
+                            }
+
                         ]
                     }]
         }];

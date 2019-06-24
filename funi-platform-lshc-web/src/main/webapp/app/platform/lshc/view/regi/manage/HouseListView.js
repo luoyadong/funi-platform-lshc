@@ -29,7 +29,51 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
         this.callParent(arguments);
     },
     title: null,
-
+    isHiddenBtn:function(btnType){//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交 8 文件删除
+        var me = this;
+        //access:"AUTH_LSHC_HOUSELIST_ADD"
+        if(me.config.srcType == 1){//综合
+            if(btnType == 3){
+                return false
+            }else{
+                return true;
+            }
+        }else  if(me.config.srcType == 2){//待办
+            if(btnType == 3 || btnType == 4){
+                return false
+            }else{
+                return true;
+            }
+        }else if(me.config.srcType == 3){//已办,//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
+            if(btnType == 3){
+                return false
+            }else{
+                return true;
+            }
+        }else{//管理
+            if(btnType == 4){
+                return true
+            }else{
+                return false;
+            }
+        }
+    },
+    exportExcel:function(){
+        var me = this
+        var selectObjArray = me.getSelectionModel().getSelection();
+        if(selectObjArray.length!=1){
+            Ext.MessageBox.alert("温馨提示", "请选择房屋!");
+            return;
+        }
+        var ids = new Array();
+        //组装ids
+        for(var i=0;i< selectObjArray.length;i++){
+            var record = selectObjArray[i].data;
+            ids.push(record.id);
+        }
+        var url = "/regiInfo/exportRegiInfoVoList";
+        ExcelUtils.exportExcel({"ids":ids}, url);
+    },
     initComponent: function () {
         var me = this;
 
@@ -59,39 +103,34 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                 '->',
                                 {
                                     xtype: 'button', text: '新建普查', scope: me, glyph: 0xf0fe,
+                                    hidden:me.isHiddenBtn(1),
                                     handler: function () {
                                         Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView",{
                                             config:{parentContainer:me.config.parentContainer}
                                         }).show();
-                                        //Ext.Msg.alert('提示', '已新增！');
                                     }
                                 },
                                 {
                                     xtype: 'button', text: '批量导入', scope: me, glyph: 'xf234@FontAwesome',
+                                    hidden:me.isHiddenBtn(2),
                                     handler: function () {
-                                        var url = "/build/importRegiInfo";
-                                        var store = null;//需要刷新的store
+                                        var url = "/manage/checkRegiInfoList";///manage/importRegiInfoList
+                                        var store = me.store;//需要刷新的store
                                         ExcelUtils.importExcel(url, store);
-                                        //Ext.Msg.alert('提示', '已新增！');
 
                                     }
                                 },
                                 {
                                     xtype: 'button', text: '导出', scope: me, glyph: 'xf234@FontAwesome',
                                     handler: function () {
-
                                         //导出数据
-                                        var param = {
-                                            ids: [123, 2121, 2121, 2121]
-                                        };
-                                        var url = "/build/exportRegiInfoVoList";
-                                        ExcelUtils.exportExcel(param, url);
-                                        //Ext.Msg.alert('提示', '已新增！');
+                                        me.exportExcel();
 
                                     }
                                 },
                                 {
                                     xtype: 'button', text: '审批', scope: me, glyph: 0xf044,
+                                    hidden:me.isHiddenBtn(4),
                                     handler: function () {
                                         var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
                                         if(selectObjArray.length < 1){
@@ -130,9 +169,61 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
 
                                 {
                                     xtype: 'button', text: '删除', scope: me, glyph: 'xf014@FontAwesome',
+                                    hidden:me.isHiddenBtn(5),
                                     handler: function () {
 
-                                        //Ext.Msg.alert('提示', '已新增！');
+                                        var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
+                                        if(selectObjArray.length!=1){
+                                            Ext.MessageBox.alert("温馨提示", "请选择房屋!");
+                                            return;
+                                        }
+
+                                        var ids = new Array();
+                                        //组装ids
+                                        for(var i=0;i< selectObjArray.length;i++){
+                                            var record = selectObjArray[i].data;
+                                            ids.push(record.id);
+                                        }
+
+                                        Ext.Msg.confirm('提示',  '确定要删除吗？', function (btn) {
+                                            if (btn === 'yes') {
+                                                //执行删除
+                                                app.platform.lshc.view.base.RequestUtils.post_json(ids,"/manage/batchDeleteRegiInfo",false,false);
+                                                //刷新列表
+                                                me.store.proxy.extraParams = me.getParams();
+                                                me.store.loadPage(1);
+                                            }
+                                        })
+
+                                    }
+                                },
+                                {
+                                    xtype: 'button', text: '批量提交', scope: me, glyph: 'xf014@FontAwesome',
+                                    hidden:me.isHiddenBtn(7),
+                                    handler: function () {
+
+                                        var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
+                                        if(selectObjArray.length!=1){
+                                            Ext.MessageBox.alert("温馨提示", "请选择房屋!");
+                                            return;
+                                        }
+
+                                        var ids = new Array();
+                                        //组装ids
+                                        for(var i=0;i< selectObjArray.length;i++){
+                                            var record = selectObjArray[i].data;
+                                            ids.push(record.id);
+                                        }
+
+                                        Ext.Msg.confirm('提示',  '提交后将发起审批流程，确定要发起批量提交吗？', function (btn) {
+                                            if (btn === 'yes') {
+                                                //执行删除
+                                                app.platform.lshc.view.base.RequestUtils.post_json(ids,"/manage/batchDeleteRegiInfo",false,false);
+                                                //刷新列表
+                                                me.store.proxy.extraParams = me.getParams();
+                                                me.store.loadPage(1);
+                                            }
+                                        })
 
                                     }
                                 }

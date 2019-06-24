@@ -31,9 +31,9 @@ Ext.define("app.platform.lshc.view.regi.manage.ApproveTab",{
             store: store,
             columnLines: true,
             viewConfig: {
-                enableTextSelection: true
+                enableTextSelection: false
             },
-            selType: "checkboxmodel",
+            //selType: "checkboxmodel",
 		    columns:[
                    {text:"id",dataIndex:"id",hidden:true},
                    {text:"序号",dataIndex:"id",hidden:true},

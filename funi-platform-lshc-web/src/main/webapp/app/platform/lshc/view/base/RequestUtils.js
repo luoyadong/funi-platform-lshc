@@ -42,6 +42,7 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
             if (!url) {
                 throw new BizException('无效请求地址！');
             }
+            RequestUtils.set(true);
             var message = null;
             var exceptionStr = '服务器异常,请重试!';
             Ext.Ajax.request({
@@ -52,18 +53,44 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 contentType: "application/json;charset=UTF-8",
                 dataType: 'json',
                 success: function (response) {
+                    RequestUtils.setTask(false);
+                    allowTips = true;
                     if(allowTips){
                         var data = JSON.parse(response.responseText);
                         message = data.message != null ? data.message : exceptionStr;
                     }
                 },
                 failure: function () {
+                    RequestUtils.setTask(false);
                     message = exceptionStr;
                 }
             });
+            RequestUtils.setTask(false);
             if (message != null && allowTips) {
                 Ext.Msg.alert('温馨提示', message);
             }
+        },
+        setTask: function (show, message) {
+            var myTask = Ext.lshc_task;
+            if (!myTask) {
+                if (!message) {
+                    message = "请等待...";
+                }
+                var myTask = new Ext.LoadMask({
+                    msg: message,
+                    target: Ext.mainFrame
+                });
+                Ext.lshc_task = myTask;
+            }
+            if (message) {
+                myTask.msg = message;
+            }
+            if (show) {
+                myTask.show();
+            } else {
+                myTask.hide();
+            }
+            return myTask;
         },
         request: function (data, url) {
             if (!url) {

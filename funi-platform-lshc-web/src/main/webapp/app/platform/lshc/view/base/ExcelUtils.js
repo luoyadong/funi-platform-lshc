@@ -84,7 +84,7 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                     xtype: 'button',
                                     text: '开始导入数据',
                                     glyph: 'xf08b@FontAwesome',
-                                    margin: '0 0 0 5',
+                                    margin: '0 0 0 50',
                                     handler: function () {
                                         var form = win.queryById('_excelFormTmpId').form;// me.form;
 
@@ -96,8 +96,6 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                 url: Funi.core.Context.path("lshc", url),//后台处理的页面
                                                 waitMsg: '导入中，请稍等...',
                                                 success: function (form, action) {
-                                                },
-                                                failure: function (form, action) {
                                                     console.info(action)
                                                     if(null != action
                                                         && null != action.response
@@ -112,21 +110,57 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                             Ext.Msg.alert('提示', '导入失败，请重新导入');
                                                             return false;
                                                         }
-                                                         if(null != rtJson && {} != rtJson && 200 == rtJson.status){
-                                                             Ext.Msg.alert('提示', '导入成功');
-                                                             if (null != store) {
-                                                                 store.reload();
-                                                             }
+                                                        if(rtJson.success && rtJson.success == 'true'){
+                                                            Ext.Msg.alert('提示', '导入成功');
+                                                            if (null != store) {
+                                                                store.reload();
+                                                            }
+                                                            if(rtJson.result != null && rtJson.result.checkMsg != null
+                                                                && rtJson.result.checkMsg != ""){//说明校验未通过
+
+                                                                var dataList = rtJson.result.regiList
+                                                                Ext.Msg.confirm('提示',  rtJson.result.checkMsg+'，你确定要继续吗？', function (btn) {
+                                                                        if (btn === 'yes') {
+
+                                                                            var message = null;
+                                                                            var exceptionStr = '服务器异常,请重试!';
+                                                                            Ext.Ajax.request({
+                                                                                url: Funi.core.Context.path('lshc', '/manage/importDataRegiInfoList'),
+                                                                                method: 'post',
+                                                                                jsonData: dataList,
+                                                                                async: false,
+                                                                                contentType: "application/json;charset=UTF-8",
+                                                                                dataType: 'json',
+                                                                                success: function (response) {
+
+                                                                                    var data = JSON.parse(response.responseText);
+                                                                                    message = data.message != null ? data.message : exceptionStr;
+
+                                                                                },
+                                                                                failure: function () {
+                                                                                    message = exceptionStr;
+                                                                                }
+                                                                            });
+
+                                                                        }
+                                                                    }
+                                                                )
+
+                                                            }
+
                                                         }else{
-                                                             if(null != rtJson && null != rtJson.check_msg){
-                                                                 Ext.Msg.alert('提示', '导入失败:'+rtJson.check_msg);
-                                                             }else{
-                                                                 Ext.Msg.alert('提示', '导入失败，请重新导入');
-                                                             }
-                                                         }
+                                                            if(null != rtJson && null != rtJson.message){//check_msg
+                                                                Ext.Msg.alert('提示', '导入失败:'+rtJson.message);
+                                                            }else{
+                                                                Ext.Msg.alert('提示', '导入失败，请重新导入');
+                                                            }
+                                                        }
                                                     }else{
                                                         Ext.Msg.alert('提示', '导入失败，请重新导入');
                                                     }
+                                                },
+                                                failure: function (form, action) {
+                                                    Ext.Msg.alert('提示', '导入失败，服务器异常！');
                                                 }
                                             });
                                         } else {

@@ -14,6 +14,7 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
         'app.platform.lshc.view.regi.manage.ApproveTab',
         'app.platform.lshc.view.regi.manage.HouseListView',
         'app.platform.lshc.view.regi.manage.HouseDetailView'//房屋详情
+        ,'app.platform.lshc.view.base.ExcelUtils'
     ],
     config: {
         //主容器
@@ -41,6 +42,22 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
 			this.queryById(formElements[i].itemId).setValue(null)
         }
         return obj;
+    },
+    exportExcel:function(){
+        var me = this
+        var selectObjArray = me.getSelectionModel().getSelection();
+        if(selectObjArray.length!=1){
+            Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
+            return;
+        }
+        var ids = new Array();
+        //组装ids
+        for(var i=0;i< selectObjArray.length;i++){
+            var record = selectObjArray[i].data;
+            ids.push(record.id);
+        }
+        var url = "/completed/exportBuildInfoVoList";
+        ExcelUtils.exportExcel({"ids":ids}, url);
     },
     initComponent: function () {
         var me = this;
@@ -172,24 +189,10 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
                                 xtype: 'toolbar', columnWidth: 1,scope: me, itemId: 'search',
                                 items: [
                                     {
-                                        xtype: 'button', text: '删除', scope: me,
-                                        glyph: 'xf014@FontAwesome',
-                                        handler: function () {
-                                            Ext.MessageBox.alert("暂不提供！");
-                                            var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
-                                            if(selectObjArray.length!=1){
-                                                Ext.MessageBox.alert("温馨提示", "请选择一份合同!");
-                                                return;
-                                            }
-                                            //selectObjArray[0].data.xxxxx
-
-                                        }
-                                    },
-                                    {
-                                        xtype: 'button', text: '打印', scope: me,
+                                        xtype: 'button', text: '导出', scope: me,
                                         glyph: 0xf158,
                                         handler: function () {
-                                            Ext.MessageBox.alert("暂不提供！");
+                                            me.exportExcel();
                                         }
                                     }
                                 ]

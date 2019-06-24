@@ -10,6 +10,7 @@ import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.LshcWorkFlowService;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -249,6 +250,42 @@ public class ManageRegiController {
             e.printStackTrace();
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("审批结论失败");
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    /**
+     * 校验批量导入的普查信息是否有效，是否与已存在普查信息重复,并返回数据
+     * @param uploadFile
+     * @return
+     */
+    @RequestMapping("/checkReturnRegiInfoList")
+    @ResponseBody
+    public Object checkReturnRegiInfoList(MultipartFile uploadFile) {
+        try {
+            return ResultVo.newResult(manageRegiInfoService.checkReturnRegiInfoList(uploadFile));
+        } catch(Exception e) {
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("普查信息校验失败，原因：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    /**
+     * 批量导入普查信息
+     * @throws Exception
+     */
+    @RequestMapping("/importDataRegiInfoList")
+    @ResponseBody
+    public Object importDataRegiInfoList(@RequestBody List<ExcelRegiInfoVo> excelRegiInfoVoList) {
+        try {
+            manageRegiInfoService.importRegiInfoList(excelRegiInfoVoList);
+            return ResultVo.newResult("批量导入普查信息成功");
+        } catch(Exception e) {
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("批量导入普查信息失败，原因：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }

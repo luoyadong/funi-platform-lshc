@@ -5,6 +5,7 @@ import com.funi.platform.lshc.enumatation.UploadBusinessType;
 import com.funi.platform.lshc.vo.LinkFileVo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 关联文件管理表
@@ -34,6 +35,12 @@ public class LinkFile extends BaseEntity implements Serializable {
 
     /** 文件地址 */
     private String linkFileUrl;
+
+    private Date uploadDate;
+
+    private String unitName;
+
+    private String userName;
 
     public LinkFile() {
     }
@@ -103,5 +110,29 @@ public class LinkFile extends BaseEntity implements Serializable {
 
     public void setLinkFileUrl(String linkFileUrl) {
         this.linkFileUrl = linkFileUrl;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -5,6 +5,7 @@ import com.funi.platform.lshc.entity.census.RegiInfo;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import com.funi.platform.lshc.vo.census.RegiInfoCheckResultVo;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sam on 2019/6/17.10:30 PM
@@ -91,4 +93,17 @@ public interface ManageRegiInfoService {
      * @param ids
      */
     void batchRemoveRegiInfo(List<String> ids);
+
+    /**
+     * 校验批量导入的普查信息是否有效，在本excel范围内查找重复
+     * @param uploadFile
+     * @throws IOException
+     */
+    Map<String,Object> checkReturnRegiInfoList(MultipartFile uploadFile) throws IOException;
+
+    /**
+     * 批量导入普查信息
+     * @param excelRegiInfoVoList
+     */
+    void importRegiInfoList(List<ExcelRegiInfoVo> excelRegiInfoVoList) throws IOException;
 }

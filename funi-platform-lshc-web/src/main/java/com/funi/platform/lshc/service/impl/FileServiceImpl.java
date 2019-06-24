@@ -5,13 +5,11 @@ import com.funi.framework.mvc.eic.utils.UploadFileUriUtils;
 import com.funi.platform.lshc.entity.sys.LinkFile;
 import com.funi.platform.lshc.mapper.sys.LinkFileMapper;
 import com.funi.platform.lshc.service.FileService;
+import com.funi.platform.lshc.support.UserManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author by yadong on 2018/11/20.
@@ -21,6 +19,8 @@ public class FileServiceImpl implements FileService {
     private LinkFileMapper linkFileMapper;
     @Resource
     private FileUploader fileUploader;
+    @Resource
+    private UserManager userManager;
 
     @Override
     public List<LinkFile> findAllFileList(String bizId,String fileType) {
@@ -40,6 +40,9 @@ public class FileServiceImpl implements FileService {
         String fileUrl = UploadFileUriUtils.createFileUrl(fileId);
         LinkFile f = new LinkFile();
         f.setLinkFileUrl(fileUrl);
+        f.setUnitName(userManager.findUser().getOrganization().getMc());
+        f.setUserName(userManager.findUser().getUsername());
+        f.setUploadDate(new Date());
         return f;
     }
 

@@ -14,8 +14,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         'app.platform.lshc.view.regi.manage.ApproveTab',
         'app.platform.lshc.view.regi.manage.HouseListView',
         'app.platform.lshc.view.regi.manage.HouseDetailView',//房屋详情
-        'app.platform.lshc.view.base.ExcelUtils',
-        'app.platform.lshc.view.base.RequestUtils'
+        'app.platform.lshc.view.base.ExcelUtils'
     ],
     config: {
         //主容器
@@ -49,6 +48,22 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
 			this.queryById(formElements[i].itemId).setValue(null)
         }
         return obj;
+    },
+    exportExcel:function(){
+        var me = this
+        var selectObjArray = me.getSelectionModel().getSelection();
+        if(selectObjArray.length!=1){
+            Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
+            return;
+        }
+        var ids = new Array();
+        //组装ids
+        for(var i=0;i< selectObjArray.length;i++){
+            var record = selectObjArray[i].data;
+            ids.push(record.id);
+        }
+        var url = "/manage/exportBuildInfoVoList";
+        ExcelUtils.exportExcel({"ids":ids}, url);
     },
     initComponent: function () {
         var me = this;
@@ -107,14 +122,14 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         width: 170,
                                         margin:'0 0 0 10',
                                         triggerAction:'all',
-                                        //dataSourceUrl:app.platform.ghouse.view.base.RequestUtils.url('/archives/getArchivesList'),
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllRegionList'),
                                         listeners:{
                                             change:function(){
-                                                alert(arguments[1])
-                                                //var cabinet = me.queryById("ghost-rent-contract-cabinet-itemId");
-                                                // cabinet.store.proxy.extraParams = {id:arguments[1]};
-                                                //cabinet.store.load();
-                                                // me.queryById("ghost-rent-contract-cabinet-itemId").clearValue();
+                                                // alert(arguments[1])
+                                                var cabinet = me.queryById("streetItemId");
+                                                cabinet.store.proxy.extraParams = {regionId:arguments[1]};
+                                                cabinet.store.load();
+                                                me.queryById("streetItemId").clearValue();
                                             }
                                         }
                                     },
@@ -122,7 +137,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         xtype: 'combobox',
                                         fieldLabel: ' 街道(乡镇)',
                                         emptyText: '全部',
-                                        store: mStore2,
+                                        //store: mStore2,
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId'),
                                         editable: false,
                                         name:"street",
                                         valueField: 'value',
@@ -185,16 +201,18 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                             Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView",{
                                                 config:{parentContainer:me}
                                             }).show();
-                                            //Ext.Msg.alert('提示', '已新增！');
                                         }
                                     },
                                     {
                                         xtype: 'button', text: '批量导入', scope: me, glyph: 'xf234@FontAwesome',
                                         handler: function () {
-                                            var url = "/build/importRegiInfo";
-                                            var store = null;//需要刷新的store
+                                            var url = "/manage/checkRegiInfoList";///manage/importRegiInfoList
+                                            var store = me.store;//需要刷新的store
                                             ExcelUtils.importExcel(url, store);
-                                            //Ext.Msg.alert('提示', '已新增！');
+
+                                            //先校验
+
+                                            //再上传
 
                                         }
                                     },
@@ -202,21 +220,34 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         xtype: 'button', text: '删除', scope: me,
                                         glyph: 'xf014@FontAwesome',
                                         handler: function () {
-                                            Ext.MessageBox.alert("暂不提供！");
-                                            var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
+                                            var selectObjArray = me.getSelectionModel().getSelection();
                                             if(selectObjArray.length!=1){
-                                                Ext.MessageBox.alert("温馨提示", "请选择一份合同!");
+                                                Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
                                                 return;
                                             }
-                                            //selectObjArray[0].data.xxxxx
+                                            var ids = new Array();
+                                            //组装ids
+                                            for(var i=0;i< selectObjArray.length;i++){
+                                                var record = selectObjArray[i].data;
+                                                ids.push(record.id);
+                                            }
+                                            Ext.Msg.confirm('提示',  '确定要删除吗？', function (btn) {
+                                                    if (btn === 'yes') {
+                                                        //执行删除
+                                                        app.platform.lshc.view.base.RequestUtils.post_json(ids,"/manage/batchDeleteBuildInfo",false,false);
+                                                        //刷新列表
+                                                        me.store.proxy.extraParams = me.getParams();
+                                                        me.store.loadPage(1);
+                                                    }
+                                            })
 
                                         }
                                     },
                                     {
-                                        xtype: 'button', text: '打印', scope: me,
+                                        xtype: 'button', text: '导出', scope: me,
                                         glyph: 0xf158,
                                         handler: function () {
-                                            Ext.MessageBox.alert("暂不提供！");
+                                            me.exportExcel();
                                         }
                                     }
                                 ]
