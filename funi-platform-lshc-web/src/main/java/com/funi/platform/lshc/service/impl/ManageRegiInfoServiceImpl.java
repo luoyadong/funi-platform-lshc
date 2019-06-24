@@ -75,6 +75,27 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
+    public void batchSubmitRegiInfo(List<String> ids) {
+        try {
+            CurrentUser userInfo = userManager.findUser();
+            for(String id : ids) {
+                RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(id);
+                if (regiInfo == null) {
+                    throw new RuntimeException("普查信息不存在，请核实普查信息ID");
+                }
+                if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
+                    throw new RuntimeException("普查状态异常，无法进入审批流程");
+                }
+                // 修改普查信息的状态
+                regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
+                lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
         regiInfoQuery.setQueryType(CensusConstants.BUILD_QUERY_TYPE_MANAGE);
         return regiInfoMapper.selectRegiInfoVoList(regiInfoQuery);
@@ -125,6 +146,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         if(isSubmit) {
             // TODO 添加工作流
             try {
+                // 修改普查信息的状态
+                regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
                 lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
             } catch (Exception e) {
                 e.printStackTrace();

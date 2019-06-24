@@ -111,7 +111,7 @@ public class ManageRegiController {
     }
 
     /**
-     * 添加普查信息
+     * 提交普查信息
      * @param regiInfoDto
      * @return
      */
@@ -126,6 +126,20 @@ public class ManageRegiController {
             ResultVo resultVo = ResultVo.newResult("提交普查信息失败：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
+        }
+    }
+
+    /**
+     * 批量提交普查信息
+     * @param ids
+     */
+    @RequestMapping(value = "batchSubmitRegiInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public void batchSubmitRegiInfo(@RequestBody List<String> ids) {
+        try {
+            manageRegiInfoService.batchSubmitRegiInfo(ids);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

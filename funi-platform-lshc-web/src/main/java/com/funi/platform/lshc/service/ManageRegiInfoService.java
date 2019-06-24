@@ -33,6 +33,12 @@ public interface ManageRegiInfoService {
     void exportBuildInfoVoList(List<String> ids, HttpServletResponse response) throws Exception;
 
     /**
+     * 批量提交普查信息
+     * @param ids
+     */
+    void batchSubmitRegiInfo(List<String> ids);
+
+    /**
      * 分页查询房屋列表
      * @param regiInfoQuery
      * @return
