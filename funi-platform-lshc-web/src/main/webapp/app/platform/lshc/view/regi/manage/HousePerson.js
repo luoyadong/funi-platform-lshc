@@ -16,7 +16,10 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
         var array = new Array();
         var count = store.getCount();
         for(var i=0;i<count;i++){
-                array.push(store.getAt(i).data);
+            if("1" == store.getAt(i).data.isNew){
+                store.getAt(i).data.id = "";
+            }
+            array.push(store.getAt(i).data);
         }
         return array;
         //throw {message:"请添加产权人信息"};
@@ -26,13 +29,14 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
         houseId:null,
         isUpdate:false
     },
-	
+
     initComponent: function () {
         var me = this;
        var store = Ext.create("Funi.data.ListStore",{
             //url:app.platform.ghouse.view.base.RequestUtils.url("/contract/list"),
             fields:[
 			    {type:"string",name:"id"},
+                {type:"string",name:"isNew"},
                 {type:"string",name:"entName"},
                 {type:"string",name:"idNo"},
                 {type:"string",name:"sex"},
@@ -107,6 +111,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                     ],
                     columns: [
                         {text: 'id', dataIndex: 'id',hidden:true},
+                        {text:"isNew",dataIndex:"isNew",hidden:true},
 						 {text: '姓名', dataIndex: 'entName',flex: 1, align: 'center'},
 						 {text: '证件号码', dataIndex: 'idNo',flex: 1.5, align: 'center'},
 						 {text: '性别', dataIndex: 'sex',flex: 0.5, align: 'center'},

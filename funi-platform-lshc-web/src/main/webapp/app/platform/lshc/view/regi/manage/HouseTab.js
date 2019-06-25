@@ -404,6 +404,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
                             border: true,
                             width: "100%",
                             title: '人口信息',
+							height:200,
                             defaults: {
                                 layout: 'vbox',
                                 border: false
@@ -416,7 +417,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										overflowY:'auto',
 										disabled:false,
 										width:"100%",
-										height:200,
+										height:200
 									}	
 								]
 						}

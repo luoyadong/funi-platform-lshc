@@ -111,10 +111,8 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                             return false;
                                                         }
                                                         if(rtJson.success && rtJson.success == true){
-                                                            Ext.Msg.alert('提示', '导入成功');
-                                                            if (null != store) {
-                                                                store.reload();
-                                                            }
+                                                            //Ext.Msg.alert('提示', '导入成功');
+
                                                             if(rtJson.result != null && rtJson.message != null
                                                                 && rtJson.message != ""){//说明校验未通过
 
@@ -127,14 +125,17 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                                             Ext.Ajax.request({
                                                                                 url: Funi.core.Context.path('lshc', '/manage/importDataRegiInfoList'),
                                                                                 method: 'post',
-                                                                                jsonData: dataList,
+                                                                                jsonData: {"excelRegiInfo":dataList},
                                                                                 async: false,
                                                                                 contentType: "application/json;charset=UTF-8",
                                                                                 dataType: 'json',
                                                                                 success: function (response) {
 
                                                                                     var data = JSON.parse(response.responseText);
-                                                                                    message = data.message != null ? data.message : exceptionStr;
+                                                                                    message = data.result != null ? data.result : exceptionStr;
+                                                                                    if (null != store) {
+                                                                                        store.reload();
+                                                                                    }
                                                                                     Ext.Msg.alert('提示', message);
                                                                                 },
                                                                                 failure: function () {
@@ -189,6 +190,12 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                             Ext.Msg.alert('提示', '请先选择导入文件');
                                         }
                                     }
+                                },
+                                {
+                                    xtype: 'tbtext',
+                                    text: '下载模板',
+                                    margin: '0 0 0 0'
+
                                 }
 
                             ]

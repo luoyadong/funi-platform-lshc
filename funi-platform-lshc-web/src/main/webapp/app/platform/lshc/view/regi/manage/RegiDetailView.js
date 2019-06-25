@@ -79,7 +79,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 
     },
     getHouseListStore:function(){
-        var houseListPanel = this.queryById("lshc-view-regi-HouseListView-itemId");
+        var houseListPanel = this.queryById("HouseListView-Tab-itemId");//lshc-view-regi-HouseListView-itemId
         var gridObjStore = houseListPanel.down("gridpanel").store;
         return gridObjStore;
     },
@@ -132,59 +132,63 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 
     },
     initBtn:function(){
-        // var me = this;
-        // var houseListView = this.queryById("lshc-view-regi-HouseListView-itemId");
-        // var view = Ext.ComponentQuery.query("button",houseListView);
-        // for(var j=0;j<view.length;j++){
-        //     if(view[j].xtype=="button"){
-        //
-        //         var btnText = view[j].text;
-        //         if(me.config.srcType == 1){//综合
-        //             if(btnText == "导出"){
-        //             }else{
-        //                 view[j].hide();
-        //             }
-        //         }else  if(me.config.srcType == 2){//待办
-        //             if(btnText == "导出" || btnText == "审批"){
-        //             }else{
-        //                 view[j].hide();
-        //             }
-        //         }else if(me.config.srcType == 3){//已办,//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
-        //             if(btnText == "导出"){
-        //             }else{
-        //                 view[j].hide();
-        //             }
-        //         }else{//管理
-        //             if(btnText == "审批"){
-        //                 view[j].hide();
-        //             }
-        //         }
-        //
-        //     }
-        // }
-        //
-        // var houseDetailView = this.queryById("lshc-view-regi-HouseDetailView-itemId");
-        // var view = Ext.ComponentQuery.query("button",houseDetailView);
-        // for(var j=0;j<view.length;j++){
-        //     if(view[j].xtype=="button"){
-        //         var btnText = view[j].text;
-        //         if(me.config.srcType != 0 && btnText != '打印'){
-        //             view[j].hide();
-        //         }
-        //     }
-        // }
-        //
-        // if(me.config.srcType != 0){
-        //     var uploadViews = Ext.ComponentQuery.query("fileuploadfield",houseDetailView);
-        //     for(var i=0;i<uploadViews.length;i++){
-        //         uploadViews[i].hidden=true;
-        //     }
-        // }
+        var me = this;
+        var houseListView = this.queryById("lshc-view-regi-HouseListView-itemId");
+        var view = Ext.ComponentQuery.query("button",houseListView);
+        for(var j=0;j<view.length;j++){
+            if(view[j].xtype=="button"){
+
+                var btnText = view[j].text;
+                if(me.config.srcType == 1){//综合
+                    if(btnText == "导出"){
+                    }else{
+                        view[j].hide();
+                    }
+                }else  if(me.config.srcType == 2){//待办
+                    if(btnText == "导出" || btnText == "审批"){
+                    }else{
+                        view[j].hide();
+                    }
+                }else if(me.config.srcType == 3){//已办,//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
+                    if(btnText == "导出"){
+                    }else{
+                        view[j].hide();
+                    }
+                }else{//管理
+                    if(btnText == "审批"){
+                        view[j].hide();
+                    }
+                }
+
+            }
+        }
+
+        var houseDetailView = this.queryById("lshc-view-regi-HouseDetailView-itemId");
+        var view = Ext.ComponentQuery.query("button",houseDetailView);
+        for(var j=0;j<view.length;j++){
+            if(view[j].xtype=="button"){
+                var btnText = view[j].text;
+                if(me.config.srcType != 0 && btnText != '打印'){
+                    view[j].hide();
+                }
+                if(btnText == '删除文件'){
+                    view[j].hide();
+                }
+            }
+        }
+
+        //if(me.config.srcType != 0){
+            var uploadViews = Ext.ComponentQuery.query("fileuploadfield",houseDetailView);
+            for(var i=0;i<uploadViews.length;i++){
+                uploadViews[i].hidden=true;
+            }
+        //}
 
     },
     initHouseDetail:function(hcId){
         var me = this
         var id = hcId;
+        me.setTask(true);
         //加载普查详情tabs
         Ext.Ajax.request({
             url: app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoDetail"),
@@ -223,7 +227,31 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
             }
         });
+        me.setTask(false)
 
+    },
+    setTask: function (show, message) {
+        var myTask = Ext.lshc_task;
+        var me = this;
+        if (myTask == null) {
+            if (message == null) {
+                message = "请等待...";
+            }
+            var myTask = new Ext.LoadMask({
+                msg: message,
+                target: me
+            });
+            Ext.lshc_task = myTask;
+        }
+        if (message) {
+            myTask.msg = message;
+        }
+        if (show) {
+            myTask.show();
+        } else {
+            myTask.hide();
+        }
+        return myTask;
     },
     initComponent: function () {
         var me = this;
@@ -255,8 +283,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 editable: false,
                                 dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type='),
                                 valueField: 'value',
-								name:"",
-                                itemId:'isVacant',
+								name:"houseStatus",
+                                itemId:'houseStatusItemId',
                                 displayField: 'name',
                                 labelWidth: 60,
                                 width: 150,
@@ -283,9 +311,11 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 xtype: 'button', text: '查询', scope: me,
                                 glyph:0xf002,
                                 handler: function () {
+                                     me.setTask(true)
                                      gridObjStore = me.getHouseListStore();
                                      gridObjStore.proxy.extraParams = me.getParams();//获取列表store
 								     gridObjStore.loadPage(1);
+                                     me.setTask(false)
 									 //点击第一条记录
                                 }
                             },
@@ -303,6 +333,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 glyph: 0xf0a5,
                                 handler:function() {
                                     me.config.parentContainer.show();
+                                    me.destroy();
                                 }
                             }
                         ]

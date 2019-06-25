@@ -243,18 +243,18 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
                                 currentActiveTab.add(createContractView);
                                 createContractView.config.srcType = 1
                                 createContractView.initDetail(record.data.mapCode,record.data.address);
-                                // createContractView.initBtn();
+                                createContractView.initBtn();
                             }
                         },
                         itemdblclick: function (dataview, record, item, index, e) {
 
-                            var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
-                                config:{parentContainer:me,bizId:record.data.id,mapCode:record.data.mapCode,address:record.data.address}
-                            });
-
-                            var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
-                            me.hide();
-                            currentActiveTab.add(createContractView);
+                            // var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
+                            //     config:{parentContainer:me,bizId:record.data.id,mapCode:record.data.mapCode,address:record.data.address}
+                            // });
+                            //
+                            // var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
+                            // me.hide();
+                            // currentActiveTab.add(createContractView);
 
                         }
                     }

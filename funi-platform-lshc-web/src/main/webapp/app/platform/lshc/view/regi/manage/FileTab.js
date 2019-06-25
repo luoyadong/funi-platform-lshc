@@ -17,9 +17,10 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
         var count = store.getCount();
         if(count >0){
             for(var i=0;i<count;i++){
-                // if(null == store.getAt(i).data.houseId || "" == store.getAt(i).data.houseId){
+                if("1" == store.getAt(i).data.isNew){
+                  store.getAt(i).data.id = "";
+                }
                 array.push(store.getAt(i).data);
-                // }
             }
         }
         return array;
@@ -36,7 +37,9 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                 {type:"string",name:"submitDate"},
                 {type:"string",name:"userName"},
                 {type:"string",name:"unitName"},
-                {type:"string",name:"url"}
+                {type:"string",name:"url"},
+                {type:"string",name:"isNew"}
+
             ],
 			load:false,
             pageSize:15
@@ -55,7 +58,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             //selType: "checkboxmodel",
 		    columns:[
 			   {text:"id",dataIndex:"id",hidden:true},
-			   {text:"序号",dataIndex:"id",hidden:true},
+               {text:"isNew",dataIndex:"isNew",hidden:true},
 			   {text:"图片名称",dataIndex:"fileName",flex: 1},
 			   {text:"附件大小",dataIndex:"fileSize",flex: 1},
 			   {text:"上传时间",dataIndex:"submitDate",flex: 1},
@@ -157,6 +160,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                                                             //linkFileName,linkType,fileType,fileUrl
 
                                                             var rData = {
+                                                                "isNew":"1",
                                                                 "fileName":saveFileName,
                                                                 "fileSize":12,
                                                                 "submitDate":fileRecord.uploadDate,

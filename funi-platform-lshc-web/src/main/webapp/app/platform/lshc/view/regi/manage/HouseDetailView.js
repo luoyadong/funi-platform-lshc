@@ -100,7 +100,6 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                         {
                             xtype:'button',
                             text:'编辑',
-                            hidden:me.isHiddenBtn(6),
                             glyph: 0xf044,
                             handler:function() {
 								if(me.config.bizId == null){
@@ -159,7 +158,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                     title:'普查信息',
                     overflowY:'auto',
                     width:"100%",
-					height:500,
+                    height:275,
                     disabled:false
                 },{
                     title:'图片',

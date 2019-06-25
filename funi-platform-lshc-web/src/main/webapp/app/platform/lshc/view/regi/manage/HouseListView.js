@@ -51,6 +51,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
 
         var store = Ext.create("Funi.data.ListStore",{
             url:app.platform.lshc.view.base.RequestUtils.url("/manage/getRegiInfoVoList"),
+            autoLoad:false,
             fields:[
 			    {type:"string",name:"id"},
                 {type:"string",name:"houseId"},
@@ -61,8 +62,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 {type:"string",name:"jobAcceptId"},
                 {type:"string",name:"nodeName"},
                 {type:"string",name:"auditStatus"}
-            ],
-            pageSize:15
+            ]
         });
         Ext.apply(me, {
             items:[{
@@ -86,7 +86,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                     xtype: 'button', text: '批量导入', scope: me, glyph: 'xf234@FontAwesome',
 
                                     handler: function () {
-                                        var url = "/manage/checkRegiInfoList";///manage/importRegiInfoList
+                                        var url = "/manage/checkReturnRegiInfoList";///manage/importRegiInfoList
                                         var store = me.store;//需要刷新的store
                                         ExcelUtils.importExcel(url, store);
 
@@ -210,7 +210,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 border: true,
                 store: store,
                 columnLines: true,
-                selModel: {selType: 'checkboxmodel'},
+                selModel: {selType: 'checkboxmodel',mode:"SINGLE",title:'全选'},
                 dockedItems: [{
                     xtype: 'pagingtoolbar',
                     store: store,

@@ -26,6 +26,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                     },
                     items:[
                         {text: 'id', dataIndex: 'id',hidden:true},
+                        { xtype: "textfield",dataIndex: 'isNew',name:"isNew",value:"1",hidden:true},
                         {
                             xtype: "textfield", labelAlign:"right",
                             emptyText: "姓名", allowBlank: false, fieldLabel: '姓名',  width:300,

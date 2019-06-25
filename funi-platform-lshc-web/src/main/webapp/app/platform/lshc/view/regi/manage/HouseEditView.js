@@ -38,7 +38,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         //entView.getSelectionModel().selectAll(true);
 
         //文件列表
-        var approveView = this.queryById("lshc-file-houseedit-tabpanel-itemId");
+        var approveView = this.queryById("lshc-file-houseedit-tabpanel-itemId").down("gridpanel");
         approveView.store.loadData(formData.fileList,false);
 
     },
@@ -59,11 +59,11 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 	getData:function(){
         var result={};
         //var tabpanelView = this.queryById("lshc-regi-houseedit-parent-tabpanel-itemId");
-       // for(var i=0;i<tabpanelView.items.length;i++){
+        // for(var i=0;i<tabpanelView.items.length;i++){
 		//	console.log(tabpanelView.items.items[i])
-         //   tabpanelView.setDisabled(false);
-         //   app.platform.lshc.view.base.CommonUtils.extend(result,tabpanelView.items.items[i].getData());
-      //  }
+        //   tabpanelView.setDisabled(false);
+        //   app.platform.lshc.view.base.CommonUtils.extend(result,tabpanelView.items.items[i].getData());
+       //  }
 
        var houseView = this.queryById("lshc-regi-manage-houseInfo-itemId");
        var fileView = this.queryById("lshc-regi-manage-file-itemId");
@@ -105,6 +105,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                     //调用错误会影响上面的值
                                     me.config.parentContainer.initHouseDetail(hcId);
                                     me.winContainer.close();
+                                    //me.winContainer.destroy();
                                 }
                             },
 							{
@@ -123,6 +124,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 xtype: 'button',hidden:!me.isShowSubmitBtn(), text: '提交后继续新增', scope: me,glyph: 'xf234@FontAwesome',
 								margin:'0 50 0 0',
                                 handler: function () {
+                                    Ext.Msg.alert('提示', '暂未提供！');
+                                    return;
                                     var formData = me.getData();
                                     app.platform.lshc.view.base.RequestUtils.request(formData, "/manage/submitRegiInfo");
 
@@ -149,7 +152,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 							title:'普查信息',
 							overflowY:'auto',
 							width:"100%",
-							height:500,
+							height:340,
 							disabled:false,
 							 items: [
                                 {xtype: 'lshc-regi-manage-houseInfo',isDetail:false}

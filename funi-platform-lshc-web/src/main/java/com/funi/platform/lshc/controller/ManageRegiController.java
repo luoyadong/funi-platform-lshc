@@ -11,6 +11,7 @@ import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.LshcWorkFlowService;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
 import com.funi.platform.lshc.vo.census.BuildInfoVo;
+import com.funi.platform.lshc.vo.census.ExcelRegiInfoBo;
 import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -283,8 +284,10 @@ public class ManageRegiController {
      */
     @RequestMapping("/importDataRegiInfoList")
     @ResponseBody
-    public Object importDataRegiInfoList(@RequestBody List<ExcelRegiInfoVo> excelRegiInfoVoList) {
+    public Object importDataRegiInfoList(@RequestBody ExcelRegiInfoBo excelRegiInfo) {
 //        List<ExcelRegiInfoVo> excelRegiInfoVoList = JSONObject.(jsonObject,ExcelRegiInfoVo.class);
+
+        List<ExcelRegiInfoVo> excelRegiInfoVoList = excelRegiInfo.getExcelRegiInfo();
         try {
             manageRegiInfoService.importRegiInfoList(excelRegiInfoVoList);
             return ResultVo.newResult("批量导入普查信息成功");
