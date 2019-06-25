@@ -30,6 +30,9 @@ public class BasicServiceImpl implements BasicService {
         List<ComboboxDto> rtList = new ArrayList<>();
         ComboboxDto allDto = new ComboboxDto("全部", "");
         rtList.add(allDto);
+        if(CensusConstants.DICTIONARY_TYPE_HOUSE_STATUS.equals(type)){
+            return CensusConstants.DICTIONARY_HOUSE_STATUS;
+        }
         String tableName = getDictionaryTable(type);
         if(! CensusConstants.DICTIONARY_DEFAULT_TABLE_NAME.equals(tableName)) {
             type = null;

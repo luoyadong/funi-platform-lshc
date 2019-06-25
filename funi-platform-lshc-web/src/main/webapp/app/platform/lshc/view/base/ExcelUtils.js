@@ -112,11 +112,11 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                         }
                                                         if(rtJson.success && rtJson.success == true){
                                                             //Ext.Msg.alert('提示', '导入成功');
-
+                                                            var dataList = rtJson.result
                                                             if(rtJson.result != null && rtJson.message != null
                                                                 && rtJson.message != ""){//说明校验未通过
 
-                                                                var dataList = rtJson.result
+
                                                                 Ext.Msg.confirm('提示',  rtJson.message+'你确定要继续吗？', function (btn) {
                                                                         if (btn === 'yes') {
 
@@ -148,6 +148,32 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                                         }
                                                                     }
                                                                 )
+
+                                                            }else{//验证通过了，直接保存
+                                                                var message = null;
+                                                                var exceptionStr = '服务器异常,请重试!';
+                                                                Ext.Ajax.request({
+                                                                    url: Funi.core.Context.path('lshc', '/manage/importDataRegiInfoList'),
+                                                                    method: 'post',
+                                                                    jsonData: {"excelRegiInfo":dataList},
+                                                                    async: false,
+                                                                    contentType: "application/json;charset=UTF-8",
+                                                                    dataType: 'json',
+                                                                    success: function (response) {
+
+                                                                        var data = JSON.parse(response.responseText);
+                                                                        message = data.result != null ? data.result : exceptionStr;
+                                                                        if (null != store) {
+                                                                            store.reload();
+                                                                        }
+                                                                        Ext.Msg.alert('提示', message);
+                                                                    },
+                                                                    failure: function () {
+
+                                                                        Ext.Msg.alert('提示', '导入失败，请重新导入');
+
+                                                                    }
+                                                                });
 
                                                             }
 
@@ -193,8 +219,8 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    text: '下载模板',
-                                    margin: '0 0 0 0'
+                                    html: '<a href="http://rjyscm.funi.com/group1/M00/04/42/wKgB510Sb2aADjdjAABOACeSDk4405.xls">下载填报模板</a>',
+                                    margin: '0 0 0 70'
 
                                 }
 

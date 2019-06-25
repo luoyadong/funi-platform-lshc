@@ -6,6 +6,14 @@ package com.funi.platform.lshc.enumatation;
  */
 public enum ContractStatus {
 
+    NEW("新建"),
+    DCS("待初审"),
+    CSTG("初审通过"),
+    CSBTG("初审不通过"),
+    FSTG("复审通过"),
+    FSBTG("复审不通过"),
+    TH("退回"),
+
     VALID("有效"),
     EXAMINING("审批中"),
     INVALID("未生效"),
@@ -21,4 +29,5 @@ public enum ContractStatus {
     public String getDescription() {
         return description;
     }
+
 }

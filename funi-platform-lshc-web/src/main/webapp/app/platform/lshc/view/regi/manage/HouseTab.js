@@ -44,11 +44,27 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
             fields: ['name','value'],
             autoLoad: true,
             data: [
-                {'name': '全部', value: ''},
-                {'name': '录入',value:0},
-                {'name': '提交',value:1},
+                {'name': '拉萨市',value:'拉萨市'}
             ]
         });
+		//房屋用途
+		var useStore = Ext.create('Ext.data.Store', {
+			fields: ['name','value'],
+			autoLoad: true,
+			data: [
+				{'name': '住宅',value:'住宅'},
+				{'name': '商业体',value:'商业体'}
+			]
+		});
+		//房屋结构
+		var strStore = Ext.create('Ext.data.Store', {
+			fields: ['name','value'],
+			autoLoad: true,
+			data: [
+				{'name': '框架',value:'框架'},
+				{'name': '砖混',value:'砖混'}
+			]
+		});
         Ext.applyIf(this,
             {
                 items:[
@@ -157,100 +173,86 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										itemId:'isVacant',
 										displayField: 'name',
 										labelWidth: 100,
+										value:"拉萨市",
+										hidden:me.config.isDetail,
 										width: 170,
 										colspan:1
 									},
 									{xtype: 'tbtext', text: '', colspan:1,hidden:me.config.isDetail},
-									{
-										xtype: 'combobox',
-										emptyText: '全部',
-										store: mStore,
-										editable: false,
-										hidden:me.config.isDetail,
-										name:"addressRegion",
-										valueField: 'value',
-										itemId:'isVacant2',
-										displayField: 'name',
+									{xtype:'xcombobox',
+										itemId:'regionItemId2',
+										emptyText:'区(县)',
 										width: 70
-										,colspan:1
+										,colspan:1,
+										name:"region",
+										editable:false,
+										triggerAction:'all',
+										hidden:me.config.isDetail,
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllRegionList'),
+										listeners:{
+											change:function(){
+												var cabinet = me.queryById("streetItemId2");
+												cabinet.store.proxy.extraParams = {regionId:arguments[1]};
+												cabinet.store.load();
+												me.queryById("streetItemId2").clearValue();
+											}
+										}
+									},
+									{xtype:'xcombobox',
+										itemId:'streetItemId2',
+										width: 70
+										,colspan:1,
+										emptyText:'街道',
+										name:"street",
+										editable:false,
+										hidden:me.config.isDetail,
+										triggerAction:'all',
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId')
 									},
 									{xtype: 'tbtext', text: '', colspan:1,hidden:me.config.isDetail},
 									{
-										xtype: 'combobox',
-										emptyText: '全部',
-										store: mStore,
-										editable: false,
+										xtype: "textfield",name:"roomNo",
 										hidden:me.config.isDetail,
-										name:"addressCounty",
-										valueField: 'value',
-										itemId:'isVacant3',
-										displayField: 'name',
-										width: 70
-										,colspan:1
+										colspan:1,
+										width: 70,
+										emptyText: "房号"
 									},
-									{xtype: 'tbtext', text: '', colspan:1,hidden:me.config.isDetail},
+									{xtype: 'tbtext', text: '号',hidden:me.config.isDetail,  colspan:2,hidden:me.config.isDetail,width:115,style:"text-align:left"},
 
 									{
-										xtype: 'combobox',
-										emptyText: '全部',
-										store: mStore,
-										editable: false,
+										xtype: "textfield",name:"buildNo",
+										colspan:1,
 										hidden:me.config.isDetail,
-										name:"roomNo",
-										valueField: 'value',
-										itemId:'isVacant4',
-										displayField: 'name',
-										width: 70
-										,colspan:1
-									},
-									{xtype: 'tbtext', text: '号',  colspan:1,hidden:me.config.isDetail,width:115,style:"text-align:left"},
-									{
-										xtype: 'combobox',
-										emptyText: '全部',
-										store: mStore,
-										editable: false,
-										hidden:me.config.isDetail,
-										name:"buildNo",
-										valueField: 'value',
-										itemId:'isVacant5',
-										displayField: 'name',
 										labelWidth: 100,
 										fieldLabel: ' ',
-										width: 170
-										,colspan:1
+										width: 170,
+										emptyText: "栋"
 									},
-									{xtype: 'tbtext', text: '栋',colspan:1,hidden:me.config.isDetail},
-									{
-										xtype: 'combobox',
-										emptyText: '全部',
-										store: mStore,
-										editable: false,
-										hidden:me.config.isDetail,
-										name:"unitNo",
-										valueField: 'value',
-										itemId:'isVacant6',
-										displayField: 'name',
-										width: 70
-										,colspan:1
-									},
-									{xtype: 'tbtext', text: '单元',colspan:1,hidden:me.config.isDetail},
-									{
-										xtype: 'combobox',
-										emptyText: '全部',
-										store: mStore,
-										editable: false,
-										hidden:me.config.isDetail,
-										name:"layer",
-										valueField: 'value',
-										itemId:'isVacant7',
-										displayField: 'name',
-										width: 70
-										,colspan:1
-									},
-									{xtype: 'tbtext', text: '层',colspan:3,hidden:me.config.isDetail,width:198,style:"text-align:left"},
+									{xtype: 'tbtext', hidden:me.config.isDetail,text: '栋',colspan:1,hidden:me.config.isDetail},
 
-                                     
-									  
+									{
+										xtype: "numberfield",
+										name: "unitNo",
+										cls: "lessee-personal",
+										emptyText: "单元",
+										hidden:me.config.isDetail,
+										width: 70,
+										colspan:1
+									},
+									{xtype: 'tbtext', hidden:me.config.isDetail,text: '单元',colspan:1,hidden:me.config.isDetail},
+
+									{
+										xtype: "numberfield",
+										name: "layer",
+										cls: "lessee-personal",
+										emptyText: "层",
+										hidden:me.config.isDetail,
+										width: 70,
+										colspan:1
+									},
+									{xtype: 'tbtext',hidden:me.config.isDetail, text: '层',colspan:4,hidden:me.config.isDetail,width:198,style:"text-align:left"},
+
+
 									  {
                                         xtype: "textfield",name:"rightAddr",
 										//columnWidth:11,
@@ -267,101 +269,124 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
                                         emptyText: "产权证书地址",fieldLabel: '产权证书地址',itemId:"ghouse-rent-contract-contract-contractNo2-itemId2"
                                     },
 									  {
-                                        xtype: "textfield",name:"houseArea",
+                                        xtype: "numberfield",name:"houseArea",
 										//width:180,
 										colspan:4,
                                         emptyText: "建筑面积",fieldLabel: '建筑面积',itemId:"ghouse-rent-contract-contract-contractNo2-itemId3"
                                     },
 									  {
-                                        xtype: "textfield",name:"innerHouseArea",
+                                        xtype: "numberfield",name:"innerHouseArea",
 										colspan:4,
 										//width:180,
                                         emptyText: "套内面积",fieldLabel: '套内面积',itemId:"ghouse-rent-contract-contract-contractNo2-itemId4"
                                     },
 									{
-										xtype: 'combobox',
-										emptyText: '全部',
+										xtype: "numberfield",
+										name: "houseRoom",
+										cls: "lessee-personal",
+										emptyText: "室",
+										width: 170,
 										fieldLabel: '房屋户型',
 										labelWidth: 100,
-										store: mStore,
-										editable: false,
-										name:"houseRoom",
-										valueField: 'value',
-										itemId:'isVacant10',
-										displayField: 'name',
-										width: 170,
 										colspan:1
 									},
+
 									{xtype: 'tbtext', text: '室',colspan:1},
 									{
-										xtype: 'combobox',
-										emptyText: '全部',
-										store: mStore,
-										editable: false,
-										name:"houseHall",
-										valueField: 'value',
-										itemId:'isVacant11',
-										displayField: 'name',
+										xtype: "numberfield",
+										name: "houseHall",
+										cls: "lessee-personal",
+										emptyText: "厅",
 										width: 70,
-										//columnWidth:.65,
 										colspan:1
 									},
 									{xtype: 'tbtext', text: '厅', colspan:1},
 									{
-                                        xtype: "textfield",name:"isRegi",
 										colspan:4,
-										//width:180,
-                                        emptyText: "是否办理产权",fieldLabel: '是否办理产权',itemId:"ghouse-rent-contract-contract-contractNo2-itemId12"
-                                    },
-
+										xtype:'xcombobox',
+										itemId:'isRegiItemId',
+										fieldLabel:'是否办理产权',
+										emptyText:'全部',
+										name:"isRegi",
+										editable:false,
+										triggerAction:'all',
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=WHETHER')
+									},
 									  {
                                         xtype: "textfield",name:"rightNo",
 										colspan:4,
 										//width:180,
                                         emptyText: "产权证号",fieldLabel: '产权证号',itemId:"ghouse-rent-contract-contract-contractNo2-itemId13"
                                     },
-									  {
-                                        xtype: "textfield",name:"buildDate",
+									{
+										xtype:'datefield',colspan:4,
+										fieldLabel:'房屋建成年份', name:"buildDate", cls:"renew",
+										format:'Y-m-d'
+									},
+									{
 										colspan:4,
-									//	width:180,
-                                        emptyText: "房屋建成年份",fieldLabel: '房屋建成年份',itemId:"ghouse-rent-contract-contract-contractNo2-itemId14"
-                                    },
-									  {
-                                        xtype: "textfield",name:"houseType",
+										xtype:'xcombobox',
+										itemId:'houseTypeItemId',
+										fieldLabel:'房屋类别',
+										emptyText:'全部',
+										name:"houseType",
+										editable:false,
+										triggerAction:'all',
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_TYPE')
+									},
+									{
 										colspan:4,
-										//width:180,
-                                        emptyText: "房屋类别",fieldLabel: '房屋类别',itemId:"ghouse-rent-contract-contract-contractNo2-itemId15"
-                                    },
-									  {
-                                        xtype: "textfield",name:"houseStructure",
+										xtype:'xcombobox',
+										itemId:'houseStructureItemId',
+										fieldLabel:'房屋结构',
+										emptyText:'全部',
+										name:"houseStructure",
+										editable:false,
+										triggerAction:'all'
+										,store:strStore
+										//,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_STRUCTURE')
+									},
+									{
 										colspan:4,
-										//width:180,
-                                        emptyText: "房屋结构",fieldLabel: '房屋结构',itemId:"ghouse-rent-contract-contract-contractNo2-itemId16"
-                                    },
-									  {
-                                        xtype: "textfield",name:"houseUse",
+										xtype:'xcombobox',
+										itemId:'houseUseItemId',
+										fieldLabel:'房屋用途',
+										emptyText:'全部',
+										name:"houseUse",
+										editable:false,
+										triggerAction:'all'
+									    ,store:useStore
+										//,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_USE')
+									},
+									{
 										colspan:4,
-										//width:180,
-                                        emptyText: "房屋用途",fieldLabel: '房屋用途',itemId:"ghouse-rent-contract-contract-contractNo2-itemId17"
-                                    },
-									  {
-                                        xtype: "textfield",name:"landStatus",
-										colspan:4,
-									//	width:180,
-                                        emptyText: "土地性质",fieldLabel: '土地性质',itemId:"ghouse-rent-contract-contract-contractNo2-itemId18"
-                                    },
+										xtype:'xcombobox',
+										itemId:'landStatusItemId',
+										fieldLabel:'土地性质',
+										emptyText:'全部',
+										name:"landStatus",
+										editable:false,
+										triggerAction:'all',
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=LAND_NATURE')
+									},
+
 									  {
                                         xtype: "textfield",name:"preSaleNo",
 										colspan:4,
 									//	width:180,
                                         emptyText: "预售许可证号",fieldLabel: '预售许可证号',itemId:"ghouse-rent-contract-contract-contractNo2-itemId19"
                                     },
-									  {
-                                        xtype: "textfield",name:"fitStatus",
+									{
 										colspan:4,
-									//	width:180,
-                                        emptyText: "装修状态",fieldLabel: '装修状态',itemId:"ghouse-rent-contract-contract-contractNo2-itemId20"
-                                    },
+										xtype:'xcombobox',
+										itemId:'fitStatusItemId',
+										fieldLabel:'装修状态',
+										emptyText:'全部',
+										name:"fitStatus",
+										editable:false,
+										triggerAction:'all',
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=FIT_STATUS')
+									},
 								
 									  {
                                         xtype: "textfield",name:"personNum",
@@ -369,31 +394,39 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										//width:180,
                                         emptyText: "居住人数",fieldLabel: '居住人数',itemId:"ghouse-rent-contract-contract-contractNo2-itemId22"
                                     },
-									 {
-                                        xtype: "textfield",name:"isCheckIn",
+									{
 										colspan:4,
-										//width:180,
-                                        emptyText: "是否入住",fieldLabel: '是否入住',itemId:"ghouse-rent-contract-contract-contractNo2-itemId21"
-                                    },
-									
-									  {
-                                        xtype: "textfield",name:"rentStartDate",
+										xtype:'xcombobox',
+										itemId:'isCheckInItemId',
+										fieldLabel:'是否入住',
+										emptyText:'全部',
+										name:"isCheckIn",
+										editable:false,
+										triggerAction:'all',
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=WHETHER')
+									},
+									{
+										xtype:'datefield',colspan:4,
+										fieldLabel:'出租开始时间', name:"rentStartDate", cls:"renew",
+										format:'Y-m-d'
+									},
+
+									{
 										colspan:4,
-										//width:180,
-                                        emptyText: "出租开始时间",fieldLabel: '出租开始时间',itemId:"ghouse-rent-contract-contract-contractNo2-itemId24"
-                                    },
-									  {
-                                        xtype: "textfield",name:"isRent",
-										colspan:4,
-										//width:180,
-                                        emptyText: "是否出租",fieldLabel: '是否出租',itemId:"ghouse-rent-contract-contract-contractNo2-itemId23"
-                                    },
-									  {
-                                        xtype: "textfield",name:"rentEndDate",
-										colspan:4,
-										//width:180,
-                                        emptyText: "出租结束时间",fieldLabel: '出租结束时间',itemId:"ghouse-rent-contract-contract-contractNo2-itemId25"
-                                    }
+										xtype:'xcombobox',
+										itemId:'isRentItemId',
+										fieldLabel:'是否出租',
+										emptyText:'全部',
+										name:"isRent",
+										editable:false,
+										triggerAction:'all',
+										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=WHETHER')
+									},
+									{
+										xtype:'datefield',colspan:4,
+										fieldLabel:'出租结束时间', name:"rentEndDate", cls:"renew",
+										format:'Y-m-d'
+									}
                                 ]
                             }
 							]

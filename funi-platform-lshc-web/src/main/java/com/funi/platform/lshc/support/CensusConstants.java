@@ -1,5 +1,11 @@
 package com.funi.platform.lshc.support;
 
+import com.funi.platform.lshc.dto.ComboboxDto;
+import com.funi.platform.lshc.enumatation.ContractStatus;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sam on 2019/6/14.10:28 AM
  */
@@ -18,19 +24,19 @@ public class CensusConstants {
     public static final Integer DATA_DEFAULT_VERSION = 0;
 
     /** 房屋状态：录入*/
-    public static final String HOUSE_STATUS_INPUT = "新建";//0
+    public static final String HOUSE_STATUS_INPUT = ContractStatus.NEW.getDescription();//0
     /** 房屋状态：待初审*/
-    public static final String HOUSE_STATUS_SUBMIT = "待初审";//1
+    public static final String HOUSE_STATUS_SUBMIT = ContractStatus.DCS.getDescription();//1
     /** 房屋状态：初审通过*/
-    public static final String HOUSE_STATUS_FIRST_APPROVAL_PASS = "初审通过";//2
+    public static final String HOUSE_STATUS_FIRST_APPROVAL_PASS = ContractStatus.CSTG.getDescription();//2
     /** 房屋状态：初审不通过*/
-    public static final String HOUSE_STATUS_FIRST_APPROVAL_REJECT = "初审不通过";//3
+    public static final String HOUSE_STATUS_FIRST_APPROVAL_REJECT = ContractStatus.CSBTG.getDescription();//3
     /** 房屋状态：复审通过*/
-    public static final String HOUSE_STATUS_SECOND_APPROVAL_PASS = "复审通过";//4
+    public static final String HOUSE_STATUS_SECOND_APPROVAL_PASS = ContractStatus.FSTG.getDescription();//4
     /** 房屋状态：复审不通过*/
-    public static final String HOUSE_STATUS_SECOND_APPROVAL_REJECT = "复审不通过";//5
+    public static final String HOUSE_STATUS_SECOND_APPROVAL_REJECT = ContractStatus.FSBTG.getDescription();//5
     /** 房屋状态：退回*/
-    public static final String HOUSE_STATUS_BACK = "退回";//6
+    public static final String HOUSE_STATUS_BACK = ContractStatus.TH.getDescription();//6
 
     /** 楼栋列表页查询类型：管理页面查询*/
     public static final String BUILD_QUERY_TYPE_MANAGE = "0";
@@ -91,4 +97,29 @@ public class CensusConstants {
     public static final String DICTIONARY_TYPE_ID_TYPE = "ID_TYPE";
     /** 字典表类型-职业*/
     public static final String DICTIONARY_TYPE_CAREER = "CAREER";
+    /** 字典表类型-房屋状态*/
+    public static final String DICTIONARY_TYPE_HOUSE_STATUS = "HOUSE_STATUS";
+
+    public static List<ComboboxDto> DICTIONARY_HOUSE_STATUS = null;
+    static{
+        if(null == DICTIONARY_HOUSE_STATUS){
+            DICTIONARY_HOUSE_STATUS = new ArrayList<ComboboxDto>();
+            ComboboxDto allDto = new ComboboxDto("全部", "");
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+            allDto = new ComboboxDto(ContractStatus.NEW.getDescription(), ContractStatus.NEW.getDescription());
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+            allDto = new ComboboxDto(ContractStatus.DCS.getDescription(), ContractStatus.DCS.getDescription());
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+            allDto = new ComboboxDto(ContractStatus.CSTG.getDescription(), ContractStatus.CSTG.getDescription());
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+            allDto = new ComboboxDto(ContractStatus.CSBTG.getDescription(), ContractStatus.CSBTG.getDescription());
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+            allDto = new ComboboxDto(ContractStatus.FSTG.getDescription(), ContractStatus.FSTG.getDescription());
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+            allDto = new ComboboxDto(ContractStatus.FSBTG.getDescription(), ContractStatus.FSBTG.getDescription());
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+            allDto = new ComboboxDto(ContractStatus.TH.getDescription(), ContractStatus.TH.getDescription());
+            DICTIONARY_HOUSE_STATUS.add(allDto);
+        }
+    }
 }

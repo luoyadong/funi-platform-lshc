@@ -10,16 +10,10 @@ import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.LshcWorkFlowService;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
-import com.funi.platform.lshc.vo.census.BuildInfoVo;
-import com.funi.platform.lshc.vo.census.ExcelRegiInfoBo;
-import com.funi.platform.lshc.vo.census.ExcelRegiInfoVo;
-import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
+import com.funi.platform.lshc.vo.census.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -57,7 +51,7 @@ public class ManageRegiController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
-    public void exportBuildInfoVoList(@RequestBody List<String> ids, HttpServletResponse response) {
+    public void exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             manageRegiInfoService.exportBuildInfoVoList(ids, response);
         } catch (Exception e) {

@@ -166,7 +166,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                                 {
                                     xtype: 'textarea',
                                     itemId: 'jobOpinionItemId',
-                                    fieldLabel: '撤销原因',
+                                    fieldLabel: '处理意见',
                                     name:"jobOpinion",
                                     margin:'20 0 0 0',
                                     columnWidth: .9,

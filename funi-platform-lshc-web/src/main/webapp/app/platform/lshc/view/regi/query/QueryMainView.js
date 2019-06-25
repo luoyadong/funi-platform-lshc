@@ -102,43 +102,35 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
                                 xtype: 'toolbar', columnWidth: 1, scope: me,
                                 items: [
                                    // '->',
-                                    {
-                                        xtype: 'combobox',
-                                        fieldLabel: '区(县)',
-                                        emptyText: '全部',
-                                        store: mStore,
-                                        editable: false,
-                                        valueField: 'value',
-                                        name:"region",
+                                    {xtype:'xcombobox',
                                         itemId:'regionItemId',
-                                        displayField: 'name',
-                                        labelWidth: 50,
-                                        width: 170,
-                                        margin:'0 0 0 10',
+                                        fieldLabel:'区(县)',
+                                        labelWidth:56,
+                                        emptyText:'全部',
+                                        width:156,
+                                        name:"region",
+                                        editable:false,
                                         triggerAction:'all',
-                                        //dataSourceUrl:app.platform.ghouse.view.base.RequestUtils.url('/archives/getArchivesList'),
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllRegionList'),
                                         listeners:{
                                             change:function(){
-                                                alert(arguments[1])
-                                                //var cabinet = me.queryById("ghost-rent-contract-cabinet-itemId");
-                                                // cabinet.store.proxy.extraParams = {id:arguments[1]};
-                                                //cabinet.store.load();
-                                                // me.queryById("ghost-rent-contract-cabinet-itemId").clearValue();
+                                                var cabinet = me.queryById("streetItemId");
+                                                cabinet.store.proxy.extraParams = {regionId:arguments[1]};
+                                                cabinet.store.load();
+                                                me.queryById("streetItemId").clearValue();
                                             }
                                         }
                                     },
-                                    {
-                                        xtype: 'combobox',
-                                        fieldLabel: ' 街道(乡镇)',
-                                        emptyText: '全部',
-                                        store: mStore2,
-                                        editable: false,
-                                        name:"street",
-                                        valueField: 'value',
+                                    {xtype:'xcombobox',
                                         itemId:'streetItemId',
-                                        displayField: 'name',
+                                        fieldLabel:'街道(乡镇)',
                                         labelWidth: 75,
-                                        width: 170
+                                        width: 170,
+                                        emptyText:'全部',
+                                        name:"street",
+                                        editable:false,
+                                        triggerAction:'all',
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId')
                                     },
                                     {
                                         xtype:"textfield",

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +45,7 @@ public class RegiInfoController extends BaseController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
-    public void exportBuildInfoVoList(@RequestBody List<String> ids, HttpServletResponse response) {
+    public void exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             regiInfoService.exportBuildInfoVoList(ids, response);
         } catch (Exception e) {
@@ -80,7 +81,7 @@ public class RegiInfoController extends BaseController {
      * @param response
      */
     @RequestMapping("exportRegiInfoVoList")
-    public void exportRegiInfoVoList(@RequestBody List<String> ids, HttpServletResponse response) {
+    public void exportRegiInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             regiInfoService.exportRegiInfoVoList(ids, response);
         } catch (Exception e) {

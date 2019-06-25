@@ -138,6 +138,44 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                         approveWin.show();
                                     }
                                 },
+                                {
+                                    xtype: 'button', text: '退回', scope: me, glyph: 0xf044,
+
+                                    handler: function () {
+                                        var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
+                                        if(selectObjArray.length < 1){
+                                            Ext.MessageBox.alert("温馨提示", "请选房屋数据!");
+                                            return;
+                                        }
+                                        var ids = new Array();
+                                        //状态检测
+                                        for(var i=0;i< selectObjArray.length;i++){
+                                            var record = selectObjArray[i].data;
+                                            if(record.auditStatus == null){
+                                                Ext.MessageBox.alert("温馨提示", "无状态数据!房屋编号:"+record.houseId);
+                                                return;
+                                            }
+                                            for(var j=i+1;j< selectObjArray.lenght;j++){
+                                                var record2 = selectObjArray[j].data;
+                                                if(record.auditStatus != record2.auditStatus){//状态相等
+                                                    Ext.MessageBox.alert("温馨提示", "请选相同状态的数据!房屋编号:"+record.houseId);
+                                                    return;
+                                                }
+                                            }
+                                            ids.push(record.id);
+                                        }
+                                        var oneRecord = selectObjArray[0].data;
+                                        var serviceNum = oneRecord.id;
+                                        var nodeName = oneRecord.nodeName;
+                                        var approveWin = Ext.create("app.platform.lshc.view.regi.manage.ApproveWinView");
+                                        approveWin.config.serviceNum = serviceNum;
+                                        approveWin.config.nodeName = nodeName;
+                                        approveWin.config.ids = ids;
+                                        approveWin.config.parentContainer = me.config.parentContainer;
+                                        approveWin.initCons();
+                                        approveWin.show();
+                                    }
+                                },
 
                                 {
                                     xtype: 'button', text: '删除', scope: me, glyph: 'xf014@FontAwesome',
@@ -154,6 +192,10 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                         //组装ids
                                         for(var i=0;i< selectObjArray.length;i++){
                                             var record = selectObjArray[i].data;
+                                            if(record.auditStatus != '新建' && record.auditStatus != '初审不通过'){
+                                                Ext.MessageBox.alert("温馨提示", "房屋编号："+record.houseId+"，在审批中,不能删除！");
+                                                return;
+                                            }
                                             ids.push(record.id);
                                         }
 
@@ -185,6 +227,11 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                         //组装ids
                                         for(var i=0;i< selectObjArray.length;i++){
                                             var record = selectObjArray[i].data;
+                                            if(record.auditStatus != '新建'){
+                                                Ext.MessageBox.alert("温馨提示", "房屋编号："+record.houseId+",已经提交！");
+                                                return;
+                                            }
+
                                             ids.push(record.id);
                                         }
 

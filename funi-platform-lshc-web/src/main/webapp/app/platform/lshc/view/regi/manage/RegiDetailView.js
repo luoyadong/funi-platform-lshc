@@ -140,7 +140,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 
                 var btnText = view[j].text;
                 if(me.config.srcType == 1){//综合
-                    if(btnText == "导出"){
+                    if(btnText == "导出" || btnText =="退回"){
                     }else{
                         view[j].hide();
                     }
@@ -155,7 +155,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                         view[j].hide();
                     }
                 }else{//管理
-                    if(btnText == "审批"){
+                    if(btnText == "审批" || btnText =="退回"){
                         view[j].hide();
                     }
                 }
@@ -275,19 +275,16 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                         xtype: 'toolbar', columnWidth: 1,scope: me, itemId: 'search',
                         items: [
 							'->',
-							{
-                                xtype: 'combobox',
-                                fieldLabel: '状态',
-                                emptyText: '全部',
-                                //store: mStore,
-                                editable: false,
-                                dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type='),
-                                valueField: 'value',
-								name:"houseStatus",
+                            {xtype:'xcombobox',
                                 itemId:'houseStatusItemId',
-                                displayField: 'name',
-                                labelWidth: 60,
-                                width: 150,
+                                fieldLabel:'房屋状态',
+                                labelWidth:56,
+                                emptyText:'全部',
+                                width:156,
+                                name:"houseStatus",
+                                editable:false,
+                                triggerAction:'all',
+                                dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_STATUS')
                             },
                            {
 								xtype:"textfield",
