@@ -65,6 +65,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         var url = "/manage/exportBuildInfoVoList";
         ExcelUtils.exportExcel({"ids":ids}, url);
     },
+    initHouseDetail:function(hcId){
+        this.initHouseList();
+    },
     initComponent: function () {
         var me = this;
         var mStore = Ext.create('Ext.data.Store', {
@@ -206,7 +209,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                     {
                                         xtype: 'button', text: '批量导入', scope: me, glyph: 'xf234@FontAwesome',
                                         handler: function () {
-                                            var url = "/manage/checkRegiInfoList";///manage/importRegiInfoList
+                                            var url = "/manage/checkReturnRegiInfoList";///manage/importRegiInfoList
                                             var store = me.store;//需要刷新的store
                                             ExcelUtils.importExcel(url, store);
 
@@ -298,33 +301,18 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                 currentActiveTab.add(createContractView);
                                 createContractView.config.srcType = 0
                                 createContractView.initDetail(record.data.mapCode,record.data.address);
-                                // Ext.Ajax.request({
-                                //     url:app.platform.ghouse.view.base.RequestUtils.url("/contract/view/"+record.id+"/1"),
-                                //     method:"post",
-                                //     async:false,
-                                //     success:function(response)
-                                //     {
-                                //         var data = JSON.parse(response.responseText);
-                                //         createContractView.addWorkNode(data.result.contract.serviceNum,record.data.nodeName,true);
-                                //         createContractView.fillForm(data.result);
-                                //         createContractView.readOnly(true);
-                                //         createContractView.modifyTitle();
-                                //     },
-                                //     failure:function(){
-                                //         Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
-                                //     }
-                                // });
+                                createContractView.initBtn();
                             }
                         },
                         itemdblclick: function (dataview, record, item, index, e) {
 
-                            var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
-                                config:{parentContainer:me,bizId:record.data.id,mapCode:record.data.mapCode,address:record.data.address}
-                            });
-
-                            var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
-                            me.hide();
-                            currentActiveTab.add(createContractView);
+                            // var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
+                            //     config:{parentContainer:me,bizId:record.data.id,mapCode:record.data.mapCode,address:record.data.address}
+                            // });
+                            //
+                            // var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
+                            // me.hide();
+                            // currentActiveTab.add(createContractView);
 
                         }
                     }

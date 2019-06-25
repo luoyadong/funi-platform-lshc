@@ -73,8 +73,8 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                         var me = this;
                                         var fileName = me.getValue().split('.');
                                         fileName = fileName[fileName.length - 1];
-                                        if (fileName != "xls") {
-                                            Ext.Msg.alert("系统提示", "请选择xls文件!");
+                                        if (fileName != "xls" && fileName != "xlsx") {
+                                            Ext.Msg.alert("系统提示", "请选择xls/xlsx文件!");
                                             return;
                                         }
                                     }
@@ -84,7 +84,7 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                     xtype: 'button',
                                     text: '开始导入数据',
                                     glyph: 'xf08b@FontAwesome',
-                                    margin: '0 0 0 50',
+                                    margin: '0 0 0 69',
                                     handler: function () {
                                         var form = win.queryById('_excelFormTmpId').form;// me.form;
 
@@ -110,16 +110,16 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                             Ext.Msg.alert('提示', '导入失败，请重新导入');
                                                             return false;
                                                         }
-                                                        if(rtJson.success && rtJson.success == 'true'){
+                                                        if(rtJson.success && rtJson.success == true){
                                                             Ext.Msg.alert('提示', '导入成功');
                                                             if (null != store) {
                                                                 store.reload();
                                                             }
-                                                            if(rtJson.result != null && rtJson.result.checkMsg != null
-                                                                && rtJson.result.checkMsg != ""){//说明校验未通过
+                                                            if(rtJson.result != null && rtJson.message != null
+                                                                && rtJson.message != ""){//说明校验未通过
 
-                                                                var dataList = rtJson.result.regiList
-                                                                Ext.Msg.confirm('提示',  rtJson.result.checkMsg+'，你确定要继续吗？', function (btn) {
+                                                                var dataList = rtJson.result
+                                                                Ext.Msg.confirm('提示',  rtJson.message+'你确定要继续吗？', function (btn) {
                                                                         if (btn === 'yes') {
 
                                                                             var message = null;
@@ -135,10 +135,12 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
 
                                                                                     var data = JSON.parse(response.responseText);
                                                                                     message = data.message != null ? data.message : exceptionStr;
-
+                                                                                    Ext.Msg.alert('提示', message);
                                                                                 },
                                                                                 failure: function () {
-                                                                                    message = exceptionStr;
+
+                                                                                    Ext.Msg.alert('提示', '导入失败，请重新导入');
+
                                                                                 }
                                                                             });
 
@@ -160,7 +162,27 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                     }
                                                 },
                                                 failure: function (form, action) {
-                                                    Ext.Msg.alert('提示', '导入失败，服务器异常！');
+                                                    if(null != action
+                                                        && null != action.response
+                                                        && null != action.response.responseText) {
+                                                        var rtJson = null;
+                                                        try {
+                                                            rtJson = JSON.parse(action.response.responseText);
+                                                        }
+                                                        catch (err) {
+                                                            Ext.Msg.alert('提示', '导入失败，请重新导入');
+                                                            return false;
+                                                        }
+                                                        if(null != rtJson && null != rtJson.message){//check_msg
+                                                            Ext.Msg.alert('提示', '导入失败:'+rtJson.message);
+                                                        }else{
+                                                            Ext.Msg.alert('提示', '导入失败，请重新导入');
+                                                        }
+
+                                                    }else{
+                                                        Ext.Msg.alert('提示', '导入失败，服务器异常！');
+                                                    }
+
                                                 }
                                             });
                                         } else {

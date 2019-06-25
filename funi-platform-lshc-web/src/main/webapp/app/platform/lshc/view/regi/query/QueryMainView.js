@@ -243,22 +243,7 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
                                 currentActiveTab.add(createContractView);
                                 createContractView.config.srcType = 1
                                 createContractView.initDetail(record.data.mapCode,record.data.address);
-                                // Ext.Ajax.request({
-                                //     url:app.platform.ghouse.view.base.RequestUtils.url("/contract/view/"+record.id+"/1"),
-                                //     method:"post",
-                                //     async:false,
-                                //     success:function(response)
-                                //     {
-                                //         var data = JSON.parse(response.responseText);
-                                //         createContractView.addWorkNode(data.result.contract.serviceNum,record.data.nodeName,true);
-                                //         createContractView.fillForm(data.result);
-                                //         createContractView.readOnly(true);
-                                //         createContractView.modifyTitle();
-                                //     },
-                                //     failure:function(){
-                                //         Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
-                                //     }
-                                // });
+                                // createContractView.initBtn();
                             }
                         },
                         itemdblclick: function (dataview, record, item, index, e) {

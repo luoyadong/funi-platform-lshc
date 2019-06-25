@@ -18,19 +18,19 @@ public class CensusConstants {
     public static final Integer DATA_DEFAULT_VERSION = 0;
 
     /** 房屋状态：录入*/
-    public static final String HOUSE_STATUS_INPUT = "0";
+    public static final String HOUSE_STATUS_INPUT = "新建";//0
     /** 房屋状态：待初审*/
-    public static final String HOUSE_STATUS_SUBMIT = "1";
+    public static final String HOUSE_STATUS_SUBMIT = "待初审";//1
     /** 房屋状态：初审通过*/
-    public static final String HOUSE_STATUS_FIRST_APPROVAL_PASS = "2";
+    public static final String HOUSE_STATUS_FIRST_APPROVAL_PASS = "初审通过";//2
     /** 房屋状态：初审不通过*/
-    public static final String HOUSE_STATUS_FIRST_APPROVAL_REJECT = "3";
+    public static final String HOUSE_STATUS_FIRST_APPROVAL_REJECT = "初审不通过";//3
     /** 房屋状态：复审通过*/
-    public static final String HOUSE_STATUS_SECOND_APPROVAL_PASS = "4";
+    public static final String HOUSE_STATUS_SECOND_APPROVAL_PASS = "复审通过";//4
     /** 房屋状态：复审不通过*/
-    public static final String HOUSE_STATUS_SECOND_APPROVAL_REJECT = "5";
+    public static final String HOUSE_STATUS_SECOND_APPROVAL_REJECT = "复审不通过";//5
     /** 房屋状态：退回*/
-    public static final String HOUSE_STATUS_BACK = "6";
+    public static final String HOUSE_STATUS_BACK = "退回";//6
 
     /** 楼栋列表页查询类型：管理页面查询*/
     public static final String BUILD_QUERY_TYPE_MANAGE = "0";
@@ -54,9 +54,9 @@ public class CensusConstants {
     public static final String AUDIT_RESULT_PASS = "1";
 
     /** Excel导入普查信息，正文开始行号*/
-    public static final int EXCEL_CONTENT_START_ROW_NO = 4;
+    public static final int EXCEL_CONTENT_START_ROW_NO = 2;
     /** Excel导入普查信息，表头占用的行数*/
-    public static final int EXCEL_CONTENT_HEAD_ROWS_NO = 3;
+    public static final int EXCEL_CONTENT_HEAD_ROWS_NO = 1;
 
     /** 字典表默认表名*/
     public static final String DICTIONARY_DEFAULT_TABLE_NAME = "LSHC_DICTIONARY";

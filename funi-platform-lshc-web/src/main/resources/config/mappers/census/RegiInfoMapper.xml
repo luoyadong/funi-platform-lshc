@@ -99,7 +99,7 @@
     AND t1.ISVALIDE = '1'
     AND t2.DELETED = 0
     AND t2.ISVALIDE = '1'
-    AND T2.HOUSE_STATUS NOT IN ('0','3','6')
+    AND T2.HOUSE_STATUS NOT IN ('新建','待初审','退回')
     AND t1.id in
     <foreach collection="list" separator=","  item="id" open="(" close=")">
       #{id}
@@ -215,7 +215,7 @@
         AND t2.DELETED = 0
         AND t2.ISVALIDE = '1'
         <if test="queryType == '0'.toString()">
-          AND t2.house_status in ('0','3')
+          AND t2.house_status in ('新建','待初审')
         </if>
         <if test="queryType == '0'.toString() or queryType == '1'.toString()">
           <if test="authorityList != null and authorityList.size > 0">
@@ -318,7 +318,7 @@
           t2.room_no AS roomNo,
           t2.UPDATE_TIME,
           ja.id as jobAcceptId,ja.type_name as businessTypeName,
-          ja.cur_status as auditStatus,
+          t2.house_status as auditStatus,
           <if test="queryType == '2'.toString()">
             t4.task_name as nodeName,
           </if>
@@ -338,7 +338,7 @@
           AND t2.DELETED = 0
           AND t3.id = #{buildId}
           <if test="queryType == '0'.toString()">
-              AND t2.house_status in ('0','3')
+              AND t2.house_status in ('新建','待初审')
           </if>
           <if test="queryType == '0'.toString() or queryType == '1'.toString()">
               <if test="authorityList != null and authorityList.size > 0">

@@ -76,6 +76,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 
         gridObjStore.proxy.extraParams = me.getParams();
         gridObjStore.loadPage(1);
+
     },
     getHouseListStore:function(){
         var houseListPanel = this.queryById("lshc-view-regi-HouseListView-itemId");
@@ -98,20 +99,6 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 		todoTb.setHtml('<div style="font-weight:bold;font-size:11;margin-right:50;">'+todoStatus+'</div>')
 	},
 	readOnly:function(){
-
-         var houseListView = this.queryById("lshc-view-regi-HouseListView-itemId");
-		 var view = Ext.ComponentQuery.query("textfield,button,checkbox,toolbar",houseListView);
-            for(var j=0;j<view.length;j++){
-                if(view[j].xtype=="button"){
-					if(view[j].text != '导出' && view[j].text != '审批'){
-						view[j].hide();
-					}
-                    
-                }else{
-                    view[j].readOnly=true;
-                }
-            }
-       
         var tabpanelView = this.queryById("lshc-regi-housedetail-parent-tabpanel-itemId");
         for(var i=0;i<tabpanelView.items.length;i++){
             if(tabpanelView.items.items[i].down("xgridpanel") && tabpanelView.items.items[i].down("xgridpanel").selModel){
@@ -144,6 +131,57 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
         }
 
     },
+    initBtn:function(){
+        // var me = this;
+        // var houseListView = this.queryById("lshc-view-regi-HouseListView-itemId");
+        // var view = Ext.ComponentQuery.query("button",houseListView);
+        // for(var j=0;j<view.length;j++){
+        //     if(view[j].xtype=="button"){
+        //
+        //         var btnText = view[j].text;
+        //         if(me.config.srcType == 1){//综合
+        //             if(btnText == "导出"){
+        //             }else{
+        //                 view[j].hide();
+        //             }
+        //         }else  if(me.config.srcType == 2){//待办
+        //             if(btnText == "导出" || btnText == "审批"){
+        //             }else{
+        //                 view[j].hide();
+        //             }
+        //         }else if(me.config.srcType == 3){//已办,//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
+        //             if(btnText == "导出"){
+        //             }else{
+        //                 view[j].hide();
+        //             }
+        //         }else{//管理
+        //             if(btnText == "审批"){
+        //                 view[j].hide();
+        //             }
+        //         }
+        //
+        //     }
+        // }
+        //
+        // var houseDetailView = this.queryById("lshc-view-regi-HouseDetailView-itemId");
+        // var view = Ext.ComponentQuery.query("button",houseDetailView);
+        // for(var j=0;j<view.length;j++){
+        //     if(view[j].xtype=="button"){
+        //         var btnText = view[j].text;
+        //         if(me.config.srcType != 0 && btnText != '打印'){
+        //             view[j].hide();
+        //         }
+        //     }
+        // }
+        //
+        // if(me.config.srcType != 0){
+        //     var uploadViews = Ext.ComponentQuery.query("fileuploadfield",houseDetailView);
+        //     for(var i=0;i<uploadViews.length;i++){
+        //         uploadViews[i].hidden=true;
+        //     }
+        // }
+
+    },
     initHouseDetail:function(hcId){
         var me = this
         var id = hcId;
@@ -159,7 +197,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 console.log(data)
 
                 //更新右侧顶部状态
-                var hStatus = formData.regiInfo.houseStatus;
+                var hStatus = data.regiInfo.houseStatus;
                 if(hStatus.indexOf("新") != -1
                 || hStatus.indexOf("录") != -1
                 || hStatus.indexOf("初审不通过") != -1){
@@ -370,7 +408,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                             autoScroll: true,
                             scrollable: true,
                             items: [
-                                {xtype: 'lshc-view-regi-HouseDetailView',srcType:me.config.srcType}
+                                {xtype: 'lshc-view-regi-HouseDetailView',parentContainer:me,srcType:me.config.srcType}
                             ]
                         }
 				]

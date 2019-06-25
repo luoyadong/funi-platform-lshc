@@ -28,7 +28,7 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 async: isAsync,
                 success: function (response) {
                     var data = JSON.parse(response.responseText);
-                    message = data.message != null ? data.message : exceptionStr;
+                    message = data.result != null ? data.result : exceptionStr;
                 },
                 failure: function () {
                     message = exceptionStr;
@@ -39,10 +39,10 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
             }
         },
         post_json: function (data, url, isAsync, allowTips) {
-            if (!url) {
-                throw new BizException('无效请求地址！');
-            }
-            RequestUtils.set(true);
+                if (!url) {
+                    throw new BizException('无效请求地址！');
+                }
+            app.platform.lshc.view.base.RequestUtils.setTask(true);
             var message = null;
             var exceptionStr = '服务器异常,请重试!';
             Ext.Ajax.request({
@@ -53,27 +53,54 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 contentType: "application/json;charset=UTF-8",
                 dataType: 'json',
                 success: function (response) {
-                    RequestUtils.setTask(false);
+                    app.platform.lshc.view.base.RequestUtils.setTask(false);
                     allowTips = true;
                     if(allowTips){
                         var data = JSON.parse(response.responseText);
-                        message = data.message != null ? data.message : exceptionStr;
+                        message = data.result != null ? data.result : exceptionStr;
                     }
                 },
                 failure: function () {
-                    RequestUtils.setTask(false);
+                    app.platform.lshc.view.base.RequestUtils.setTask(false);
                     message = exceptionStr;
                 }
             });
-            RequestUtils.setTask(false);
+            //RequestUtils.setTask(false);
             if (message != null && allowTips) {
                 Ext.Msg.alert('温馨提示', message);
             }
         },
+        return_post_json: function (data, url, isAsync, allowTips) {
+            if (!url) {
+                throw new BizException('无效请求地址！');
+            }
+            app.platform.lshc.view.base.RequestUtils.setTask(true);
+            var message = null;
+            var exceptionStr = '服务器异常,请重试!';
+            Ext.Ajax.request({
+                url: app.platform.lshc.view.base.RequestUtils.url(url),
+                method: 'post',
+                jsonData: data,
+                async: isAsync,
+                contentType: "application/json;charset=UTF-8",
+                dataType: 'json',
+                success: function (response) {
+                    app.platform.lshc.view.base.RequestUtils.setTask(false);
+                    var data = JSON.parse(response.responseText);
+                    message = data.result ;
+                },
+                failure: function () {
+                    app.platform.lshc.view.base.RequestUtils.setTask(false);
+                    message = exceptionStr;
+                    Ext.Msg.alert('温馨提示', message);
+                }
+            });
+            return message;
+        },
         setTask: function (show, message) {
             var myTask = Ext.lshc_task;
-            if (!myTask) {
-                if (!message) {
+            if (myTask == null) {
+                if (message == null) {
                     message = "请等待...";
                 }
                 var myTask = new Ext.LoadMask({
@@ -100,14 +127,16 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
             var result = null;
             var status = false;
             Ext.Ajax.request({
-                url: RequestUtils.url(url),
+                url: app.platform.lshc.view.base.RequestUtils.url(url),
                 method: 'post',
                 params: data,
                 async: false,
+                contentType: "application/json;charset=UTF-8",
+                dataType: 'json',
                 success: function (response) {
                     var data = JSON.parse(response.responseText);
                     if (!data.success || data.success == 'false') {
-                        message = data.message;
+                        message = data.result;
                         if (data.result) {
                             //返回false,result里面有值 视为通过数据展示异常信息
                             result = data.result;
@@ -115,7 +144,7 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                     } else {
                         status = true;
                         //有result则返回result，否则返回message
-                        result = data.result != null ? data.result : data.message;
+                        result = data.result != null ? data.result : data.result;
                     }
                 },
                 failure: function () {

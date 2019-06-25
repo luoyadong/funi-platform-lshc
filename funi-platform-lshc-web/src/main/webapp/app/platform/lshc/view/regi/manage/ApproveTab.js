@@ -3,13 +3,13 @@
  *@author 3
  */
 Ext.define("app.platform.lshc.view.regi.manage.ApproveTab",{
-    extend:"Ext.panel.Panel",
+    extend:"Ext.grid.Panel",
     requires:[
         "app.platform.lshc.view.base.RequestUtils"
     ],
     xtype:"lshc-regi-manage-approve",
 	itemId:"lshc-regi-manage-approve-itemId",
-    layout:"fit",
+    //layout:"fit",
     initComponent:function(){
         var me = this;
 		var store = Ext.create("Funi.data.ListStore",{
@@ -29,6 +29,7 @@ Ext.define("app.platform.lshc.view.regi.manage.ApproveTab",{
             itemId: 'approveGridpanel',
             border: true,
             store: store,
+            height:400,
             columnLines: true,
             viewConfig: {
                 enableTextSelection: false
@@ -36,7 +37,6 @@ Ext.define("app.platform.lshc.view.regi.manage.ApproveTab",{
             //selType: "checkboxmodel",
 		    columns:[
                    {text:"id",dataIndex:"id",hidden:true},
-                   {text:"序号",dataIndex:"id",hidden:true},
                    {text:"操作时间",dataIndex:"createDateStr",flex: 1},
                    {text:"操作动作",dataIndex:"conclusion",flex: 1},
                    {text:"操作账号",dataIndex:"auditName",flex: 1},

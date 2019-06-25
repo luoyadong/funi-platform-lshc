@@ -1,5 +1,6 @@
 package com.funi.platform.lshc.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.funi.framework.mvc.eic.vo.ResultVo;
 import com.funi.framework.workflow.eic.po.AuditConclusions;
 import com.funi.platform.lshc.dto.RegiInfoDto;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 管理界面，处理新建和初审不通过的数据
@@ -264,10 +266,13 @@ public class ManageRegiController {
     @ResponseBody
     public Object checkReturnRegiInfoList(MultipartFile uploadFile) {
         try {
-            return ResultVo.newResult(manageRegiInfoService.checkReturnRegiInfoList(uploadFile));
+            Map<String,Object> rtMap = manageRegiInfoService.checkReturnRegiInfoList(uploadFile);
+            ResultVo rVo = ResultVo.newResult((List<ExcelRegiInfoVo>)rtMap.get("regiList"));
+            rVo.setMessage(String.valueOf(rtMap.get("checkMsg")));
+            return rVo;
         } catch(Exception e) {
-            new ResultVo(false);
-            ResultVo resultVo = ResultVo.newResult("普查信息校验失败，原因：" + e.getMessage());
+            ResultVo resultVo = ResultVo.newResult(null);
+            resultVo.setMessage("普查信息校验失败，原因：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }
@@ -280,11 +285,11 @@ public class ManageRegiController {
     @RequestMapping("/importDataRegiInfoList")
     @ResponseBody
     public Object importDataRegiInfoList(@RequestBody List<ExcelRegiInfoVo> excelRegiInfoVoList) {
+//        List<ExcelRegiInfoVo> excelRegiInfoVoList = JSONObject.(jsonObject,ExcelRegiInfoVo.class);
         try {
             manageRegiInfoService.importRegiInfoList(excelRegiInfoVoList);
             return ResultVo.newResult("批量导入普查信息成功");
         } catch(Exception e) {
-            new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("批量导入普查信息失败，原因：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;

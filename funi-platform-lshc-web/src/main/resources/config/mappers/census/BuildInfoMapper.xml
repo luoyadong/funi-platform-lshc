@@ -60,7 +60,7 @@
           AND t2.ISVALIDE = '1'
           AND t2.DELETED =0
           <if test="queryType == '0'.toString()">
-              AND t2.house_status in ('0','3')
+              AND t2.house_status in ('新建','待初审')
           </if>
           <if test="queryType == '0'.toString() or queryType == '1'.toString()">
             <if test="authorityList != null and authorityList.size > 0">

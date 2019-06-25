@@ -5,7 +5,7 @@
 Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
     extend:"Ext.grid.Panel",
     requires:[
-		
+
     ],
     xtype:"lshc-regi-manage-file",
     //layout:"fit",
@@ -48,6 +48,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             store: store,
             columnLines: true,
             height:400,
+            selModel: {selType: 'checkboxmodel', mode: "SINGLE"},
             viewConfig: {
                 enableTextSelection: true
             },
@@ -68,9 +69,9 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                             if(tempUrl != null && tempUrl !="null"&& tempUrl !="NULL"){
                                 oper = '<a href="'+tempUrl+'"  target="_blank" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="preview-contr-url">预览</a>';
                             }
-                           if(!me.parentContainer.isHiddenBtn(8)){
-                               oper += '<a href="javascript:void(0)" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="del-contr-info">删除</a>';
-                           }
+                           // if(!me.parentContainer.isHiddenBtn(8)){
+                           //     oper += '<a href="javascript:void(0)" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="del-contr-info">删除</a>';
+                           // }
                             return oper;
 						}
 			   }
@@ -82,9 +83,10 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                             //删除票据信息
                             Ext.Msg.confirm('确认', '你确认要删除这条记录吗？', function (btn) {
                                 if (btn === 'yes') {
-                                    me.store.remove(me.store.getAt(rowIndex));
-                                    me.store.commitChanges();
-                                    me.getView().refresh();
+                                    var rData = me.getStore().getAt(rowIndex);
+                                    me.getStore().remove(rData);
+                                    //me.store.commitChanges();
+                                    //me.getView().refresh();
                                     // var result = Ext.appContext.invokeService(Funi.core.Context.path("ghouse","/template/delContrTemp"),{id: record.data.id});
                                     // if(result == null || result == '') {
                                     //     Ext.Msg.alert('提示', "删除失败，请联系管理员！");
@@ -106,6 +108,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             dock: 'top',
             items: [{
                         xtype: 'toolbar', columnWidth: 1, scope: me,
+                        width:82,
                         access:"AUTH_LSHC_FILELIST_UPLOAD",
                         items: [
                               {
@@ -115,7 +118,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                                 items: [{
                                     xtype: 'fileuploadfield',
                                     itemId: 'uploadFileItemId',
-                                    margin: '5 0 0 5',
+                                    margin: '0 0 0 5',
                                     buttonOnly: true,
                                     labelSeparator: '',
                                     name: 'uploadFile',
@@ -173,7 +176,32 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                             }
 
                         ]
-                    }]
+                    },
+                        {
+                            xtype: 'button', text: '删除文件', scope: me, glyph: 'xf014@FontAwesome',
+
+                            handler: function () {
+
+                                var selectObjArray = me.getSelectionModel().getSelection();
+                                if(selectObjArray.length!=1){
+                                    Ext.MessageBox.alert("温馨提示", "请选择文件!");
+                                    return;
+                                }
+
+                                Ext.Msg.confirm('提示',  '文件删除，保存后将不能查看文件，确定要删除吗？', function (btn) {
+                                    if (btn === 'yes') {
+
+                                        for(var i=0;i< selectObjArray.length;i++){
+                                            var record = selectObjArray[i];
+                                            me.getStore().remove(record);
+                                        }
+
+                                    }
+                                })
+
+                            }
+                        }
+                    ]
         }];
 
         this.callParent(arguments);

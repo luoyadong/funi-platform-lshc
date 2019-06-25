@@ -52,7 +52,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         //entView.getSelectionModel().selectAll(true);
 
         //文件列表
-        var approveView = this.queryById("lshc-file-houseedit-tabpanel-itemId");
+        var approveView = this.queryById("lshc-file-houseedit-tabpanel-itemId").down("gridpanel");
         approveView.store.loadData(null,false);
 
     },
@@ -68,7 +68,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
        var houseView = this.queryById("lshc-regi-manage-houseInfo-itemId");
        var fileView = this.queryById("lshc-regi-manage-file-itemId");
        app.platform.lshc.view.base.CommonUtils.extend(result,houseView.getData());
-       app.platform.lshc.view.base.CommonUtils.extend(result,fileView.getData());
+        result.fileList = fileView.getData()
+       //app.platform.lshc.view.base.CommonUtils.extend(result,fileView.getData());
 		console.log(result)
         return result;
     },
@@ -98,8 +99,10 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                         formData.regiInfo.id = hcId;
                                         app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editRegiInfo", false, false);
                                     }else{//新增
-                                        hcId = app.platform.lshc.view.base.RequestUtils.request(formData, "/manage/addRegiInfo");
+                                        hcId = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/addRegiInfo",false,false);
                                     }
+                                    //alert(hcId);
+                                    //调用错误会影响上面的值
                                     me.config.parentContainer.initHouseDetail(hcId);
                                     me.winContainer.close();
                                 }

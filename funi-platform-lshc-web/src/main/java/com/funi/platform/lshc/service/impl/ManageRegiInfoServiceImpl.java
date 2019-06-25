@@ -84,7 +84,7 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
                 if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
                     throw new RuntimeException("普查状态异常，无法进入审批流程");
                 }
-                // 修改普查信息的状态
+                // 修改普查信息的状态，
                 regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
                 lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
             }
@@ -485,15 +485,12 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         StringBuilder checkResultBuilder = new StringBuilder();
         for(int i = 0; i < excelRegiInfoVoList.size(); i ++) {
             // 获取当前行号
-            int rowNo = i + CensusConstants.EXCEL_CONTENT_START_ROW_NO + 1;
+            int rowNo = i + CensusConstants.EXCEL_CONTENT_HEAD_ROWS_NO + 1;
             List<Integer> repeatRowNoList = new ArrayList<>();
             ExcelRegiInfoVo currentExcelRegiInfoVo = excelRegiInfoVoList.get(i);
-            for(int j = i; j < excelRegiInfoVoList.size(); j ++) {
-//                if(i  == j) {
-//                    continue;
-//                }
-                int loopRowNo = j + CensusConstants.EXCEL_CONTENT_START_ROW_NO + 1;
-                ExcelRegiInfoVo currentLoopExcelRegiInfoVo = excelRegiInfoVoList.get(i);
+            for(int j = i+1; j < excelRegiInfoVoList.size(); j ++) {
+                int loopRowNo = j + CensusConstants.EXCEL_CONTENT_HEAD_ROWS_NO + 1;
+                ExcelRegiInfoVo currentLoopExcelRegiInfoVo = excelRegiInfoVoList.get(j);
                 if(currentExcelRegiInfoVo.equals(currentLoopExcelRegiInfoVo)) {
                     repeatRowNoList.add(loopRowNo);
                 }
