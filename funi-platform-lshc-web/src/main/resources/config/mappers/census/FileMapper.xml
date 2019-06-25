@@ -198,9 +198,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.funi.platform.lshc.entity.census.File">
     update LSHC_FILE
     <set>
-      DELETED =1,ISVALIDE='0', VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual)
-      <if test="hcId != null">
-        HC_ID = #{hcId,jdbcType=VARCHAR},
+      <if test="id != null">
+        VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),
       </if>
       <if test="rightNo != null">
         RIGHT_NO = #{rightNo,jdbcType=VARCHAR},
@@ -226,26 +225,8 @@
       <if test="unitName != null">
         UNIT_NAME = #{unitName,jdbcType=VARCHAR},
       </if>
-      <if test="version != null">
-        VERSION = #{version,jdbcType=DECIMAL},
-      </if>
-      <if test="createTime != null">
-        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createId != null">
-        CREATE_ID = #{createId,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateId != null">
         UPDATE_ID = #{updateId,jdbcType=VARCHAR},
-      </if>
-      <if test="deleted != null">
-        DELETED = #{deleted,jdbcType=DECIMAL},
-      </if>
-      <if test="isvalide != null">
-        ISVALIDE = #{isvalide,jdbcType=VARCHAR},
       </if>
     </set>
     where ID = #{id,jdbcType=VARCHAR}

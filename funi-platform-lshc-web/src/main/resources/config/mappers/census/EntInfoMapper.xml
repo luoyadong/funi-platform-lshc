@@ -226,7 +226,7 @@
     update LSHC_ENT_INFO
     <set>
       <if test="id != null">
-        VERSION=VERSION+1,
+        VERSION=VERSION+1,UPDATE_TIME=(select sysdate  from dual),
       </if>
       <if test="entName != null">
         ENT_NAME = #{entName,jdbcType=VARCHAR},

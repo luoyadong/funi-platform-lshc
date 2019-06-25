@@ -26,6 +26,15 @@
   <sql id="Blob_Column_List">
     CONTENT
   </sql>
+    <select id="selectIndexNoticeVoList" resultType="com.funi.platform.lshc.vo.census.IndexNoticeVo" parameterType="com.funi.platform.lshc.query.census.NoticeQuery">
+        select
+            ID as id,
+            NOTICE_TITLE as noticeTitle,
+            TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as noticeDate
+        from LSHC_INDEX_NOTICE
+        where ISVALIDE = '1'
+          AND DELETED = 0 AND NOTICE_TYPE = #{noticeType}
+    </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
