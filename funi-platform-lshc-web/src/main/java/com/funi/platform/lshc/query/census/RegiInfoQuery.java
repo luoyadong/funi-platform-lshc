@@ -20,6 +20,12 @@ public class RegiInfoQuery extends BaseQuery {
     /** 工作流数据权限控制类型，默认使用角色*/
     private String ownerType = "R";
 
+    /** 房屋编号*/
+    private String houseId;
+
+    /** 人员姓名*/
+    private String entName;
+
     public String getHouseStatus() {
         return houseStatus;
     }
@@ -58,5 +64,21 @@ public class RegiInfoQuery extends BaseQuery {
 
     public void setOwnerType(String ownerType) {
         this.ownerType = ownerType;
+    }
+
+    public String getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(String houseId) {
+        this.houseId = houseId;
+    }
+
+    public String getEntName() {
+        return entName;
+    }
+
+    public void setEntName(String entName) {
+        this.entName = entName;
     }
 }

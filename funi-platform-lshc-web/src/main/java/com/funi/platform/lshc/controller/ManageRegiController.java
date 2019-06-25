@@ -73,7 +73,8 @@ public class ManageRegiController {
     @RequestMapping("getRegiInfoVoList")
     @ResponseBody
     public List<ListRegiInfoVo> getRegiInfoVoList( RegiInfoQuery regiInfoQuery) {
-        return manageRegiInfoService.findRegiInfoVoList(regiInfoQuery);
+        List<ListRegiInfoVo>  rtList = manageRegiInfoService.findRegiInfoVoList(regiInfoQuery);
+        return rtList;
     }
 
     /**

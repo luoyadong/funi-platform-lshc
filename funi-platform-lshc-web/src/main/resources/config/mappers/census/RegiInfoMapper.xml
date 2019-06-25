@@ -358,8 +358,16 @@
           <if test="queryType == '3'.toString()">
               AND t5.auditor = #{ userId}
           </if>
-          <if test="houseStatus != null">
+          <if test="houseStatus != null and houseStatus != ''">
             AND t2.HOUSE_STATUS = #{houseStatus,jdbcType=VARCHAR}
+          </if>
+          <if test="houseId != null and houseId != ''">
+              AND t2.HOUSE_ID = #{houseId,jdbcType=VARCHAR}
+          </if>
+          <if test="entName != null and entName != ''">
+              AND exists(
+              select ent.id from lshc_ent_info ent where ent.hc_id = t2.id and ent.ent_name = #{entName}
+              )
           </if>
       ORDER BY
           t2.UPDATE_TIME DESC
