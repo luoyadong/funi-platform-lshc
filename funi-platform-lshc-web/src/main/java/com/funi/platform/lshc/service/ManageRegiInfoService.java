@@ -64,6 +64,12 @@ public interface ManageRegiInfoService {
     String createRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit);
 
     /**
+     * 根据ID提交普查信息审核
+     * @param id
+     */
+    void submitOnly(String id);
+
+    /**
      * 创建普查信息
      * @param regiInfoDto
      */

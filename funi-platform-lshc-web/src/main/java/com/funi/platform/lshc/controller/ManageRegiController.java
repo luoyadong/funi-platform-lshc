@@ -1,6 +1,5 @@
 package com.funi.platform.lshc.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.funi.framework.mvc.eic.vo.ResultVo;
 import com.funi.framework.workflow.eic.po.AuditConclusions;
 import com.funi.platform.lshc.dto.RegiInfoDto;
@@ -30,7 +29,6 @@ public class ManageRegiController {
 
     @Autowired
     private ManageRegiInfoService manageRegiInfoService;
-
     @Autowired
     private LshcWorkFlowService lshcWorkFlowService;
 
@@ -122,6 +120,26 @@ public class ManageRegiController {
             e.printStackTrace();
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("提交普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    /**
+     * 提交普查信息
+     * @param id
+     * @return
+     */
+    @RequestMapping(value="submitOnly",method = RequestMethod.POST)
+    @ResponseBody
+    public Object submitOnly(String id) {
+        try {
+            manageRegiInfoService.submitOnly(id);
+            return ResultVo.newResult("提交成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("提交失败：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }

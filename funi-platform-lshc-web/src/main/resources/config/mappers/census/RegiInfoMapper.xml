@@ -219,7 +219,7 @@
         </if>
         <if test="queryType == '0'.toString() or queryType == '1'.toString()">
           <if test="authorityList != null and authorityList.size > 0">
-            and t2.org_code in
+            and t2.common in
             <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
               #{authority.dm}
             </foreach>
@@ -342,7 +342,7 @@
           </if>
           <if test="queryType == '0'.toString() or queryType == '1'.toString()">
               <if test="authorityList != null and authorityList.size > 0">
-                  and t2.org_code in
+                  and t2.common in
                   <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
                       #{authority.dm}
                   </foreach>

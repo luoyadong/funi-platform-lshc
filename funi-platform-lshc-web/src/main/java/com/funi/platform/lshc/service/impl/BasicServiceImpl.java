@@ -5,9 +5,12 @@ import com.funi.framework.app.invocation.AppInvoker;
 import com.funi.framework.app.invocation.bo.AppInvocationResult;
 import com.funi.framework.biz.BizException;
 import com.funi.platform.lshc.dto.ComboboxDto;
+import com.funi.platform.lshc.dto.LshcRegion;
+import com.funi.platform.lshc.dto.SecurityRegionDto;
 import com.funi.platform.lshc.mapper.census.SysConfigMapper;
 import com.funi.platform.lshc.service.BasicService;
 import com.funi.platform.lshc.support.CensusConstants;
+import com.funi.platform.lshc.support.UserManager;
 import com.funi.platform.lshc.vo.census.LshcRegionVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +27,8 @@ public class BasicServiceImpl implements BasicService {
     private AppInvoker ccsAppInvoker;
     @Resource
     private SysConfigMapper sysConfigMapper;
+    @Resource
+    private UserManager userManager;
 
     @Override
     public List<ComboboxDto> findDictionaryListName(String type) {
@@ -74,6 +79,62 @@ public class BasicServiceImpl implements BasicService {
         return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_COUNTY, blockId));
     }
 
+    @Override
+    public String findCurrentUserRegionCode(String userId) {
+        if(StringUtils.isBlank(userId)) {
+            userId = userManager.findUser().getUserId();
+        }
+        String result = getAppInvocationResult("role.getRegionsByUserId",  userId);
+        if(StringUtils.isBlank(result)) {
+            throw new BizException("获取当前登录用户所属区域code异常：接口返回为空");
+        }
+        String data = JSONObject.parseObject(result).getString("data");
+        List<SecurityRegionDto> securityRegionDtoList = JSONObject.parseArray(data, SecurityRegionDto.class);
+        if(CollectionUtils.isEmpty(securityRegionDtoList)) {
+            throw new BizException("获取当前登录用户所属区域code异常：县区没有数据");
+        }
+        SecurityRegionDto securityRegionDto = securityRegionDtoList.get(0);
+        List<LshcRegion> regionsList = securityRegionDto.getRegionsList();
+        if(CollectionUtils.isEmpty(regionsList)) {
+            throw new BizException("获取当前登录用户所属区域code异常：街道办事处没有数据");
+        }
+        LshcRegion lshcRegion = regionsList.get(0);
+        String code = lshcRegion.getCode();
+        if(StringUtils.isBlank(code)) {
+            throw new BizException("获取当前登录用户所属区域code异常：村(居）委会没有数据");
+        }
+        return code;
+    }
+
+    @Override
+    public List<String> findCurrentUserRegionCodeList(String userId) {
+        if(StringUtils.isBlank(userId)) {
+            userId = userManager.findUser().getUserId();
+        }
+        String result = getAppInvocationResult("role.getRegionsByUserId", userId);
+        if(StringUtils.isBlank(result)) {
+            throw new BizException("获取当前登录用户所属区域code异常");
+        }
+        String data = JSONObject.parseObject(result).getString("data");
+        List<SecurityRegionDto> securityRegionDtoList = JSONObject.parseArray(data, SecurityRegionDto.class);
+        if(CollectionUtils.isEmpty(securityRegionDtoList)) {
+            throw new BizException("获取当前登录用户所属区域code异常：县区没有数据");
+        }
+        List<String> regionCodeList = new ArrayList<>();
+        // 第一级是县区数据
+        for(SecurityRegionDto securityRegionDto : securityRegionDtoList) {
+            // 第二级是街道数据
+            List<LshcRegion> regionsList = securityRegionDto.getRegionsList();
+            if(CollectionUtils.isNotEmpty(regionsList)) {
+                // 第三级是社区数据
+                for(LshcRegion lshcRegion : regionsList) {
+                    regionCodeList.add(lshcRegion.getCode());
+                }
+            }
+        }
+        return regionCodeList;
+    }
+
     private List<ComboboxDto> convertComboboxDto(List<LshcRegionVo> lshcRegionVoList) {
         List<ComboboxDto> comboboxDtoList = null;
         if(CollectionUtils.isNotEmpty(lshcRegionVoList)) {
@@ -114,5 +175,22 @@ public class BasicServiceImpl implements BasicService {
             throw new BizException(errorMessage + ",error code:" + errorCode);
         }
         return lshcRegionVoList;
+    }
+
+    /**
+     * 根据指定的RPC服务名称和json参数调用rpc服务，并返回结果
+     * @param rpcName
+     * @param jsonParam
+     * @return
+     */
+    private String getAppInvocationResult(String rpcName, String jsonParam) {
+        AppInvocationResult appInvocationResult = ccsAppInvoker.invoke(rpcName, jsonParam);
+        if (appInvocationResult.isSuccess()) {
+            return appInvocationResult.getData();
+        } else {
+            String errorCode = appInvocationResult.getCode();
+            String errorMessage = appInvocationResult.getMessage();
+            throw new BizException(errorMessage + ",error code:" + errorCode);
+        }
     }
 }

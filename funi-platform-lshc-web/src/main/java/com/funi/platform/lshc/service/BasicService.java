@@ -35,5 +35,19 @@ public interface BasicService {
      * @return
      */
     List<ComboboxDto> findAllStreetListByRegionId(String regionId);
+
+    /**
+     * 获取当前用户所属的区域code
+     * @param userId
+     * @return
+     */
+    String findCurrentUserRegionCode(String userId);
+
+    /**
+     * 获取当前用户权限范围内的区域code集合（包括自身的）
+     * @param userId
+     * @return
+     */
+    List<String> findCurrentUserRegionCodeList(String userId);
 }
 

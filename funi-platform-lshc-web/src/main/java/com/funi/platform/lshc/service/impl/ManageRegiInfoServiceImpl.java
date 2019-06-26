@@ -15,6 +15,7 @@ import com.funi.platform.lshc.mapper.census.RegiInfoMapper;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.BuildRegiQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
+import com.funi.platform.lshc.service.BasicService;
 import com.funi.platform.lshc.service.LshcWorkFlowService;
 import com.funi.platform.lshc.service.ManageRegiInfoService;
 import com.funi.platform.lshc.support.BasicHelper;
@@ -55,6 +56,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     private LshcWorkFlowService lshcWorkFlowService;
     @Resource
     private BasicHelper basicHelper;
+    @Resource
+    private BasicService basicService;
 
     @Override
     public List<BuildInfoVo> findBuildInfoList(BuildInfoQuery buildInfoQuery) {
@@ -154,6 +157,26 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         return id;
     }
 
+    @Override
+    public void submitOnly(String id) {
+        RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(id);
+        if (regiInfo == null) {
+            throw new RuntimeException("普查信息不存在");
+        }
+        String houseStatus = regiInfo.getHouseStatus();
+        if(! CensusConstants.HOUSE_STATUS_INPUT.equals(houseStatus)) {
+            throw new RuntimeException("普查信息状态异常");
+        }
+        CurrentUser userInfo = userManager.findUser();
+        try {
+            // 修改普查信息的状态
+            regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
+            lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 保存新增的房屋信息，更新或保存楼栋信息
      * @param regiInfo
@@ -173,6 +196,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         regiInfo.setUnitName(userInfo.getOrganization().getMc());
         regiInfo.setApplyUser(userInfo.getName());
         regiInfo.setReportDate(new Date());
+        // 设置普查信息的提交人区域编码
+        regiInfo.setCommon(basicService.findCurrentUserRegionCode(userInfo.getUserId()));
         // 保存房屋数据
         regiInfoMapper.insert(regiInfo);
         // 保存或更新楼栋信息
