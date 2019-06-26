@@ -32,7 +32,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
 
     exportExcel:function(){
         var me = this
-        var selectObjArray = me.getSelectionModel().getSelection();
+        var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
         if(selectObjArray.length!=1){
             Ext.MessageBox.alert("温馨提示", "请选择房屋!");
             return;
@@ -140,7 +140,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                 },
                                 {
                                     xtype: 'button', text: '退回', scope: me, glyph: 0xf044,
-
+                                    access:"AUTH_LSHC_QUERY_TH_BTN",
                                     handler: function () {
                                         var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
                                         if(selectObjArray.length < 1){
@@ -276,7 +276,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                     {text: '楼层', dataIndex: 'layer', width: '10%', align: 'center'},
                     {text: '房号', dataIndex: 'roomNo', BIZ_NO: '12%', align: 'center'},
                     {text: '状态', dataIndex: 'auditStatus', width: '15%', align: 'center'},
-                    {text: '图片', dataIndex: 'fileCount', width: '15%', align: 'center'}
+                    {text: '附件', dataIndex: 'fileCount', width: '15%', align: 'center'}
                 ],
                 listeners: {
                     cellclick: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {

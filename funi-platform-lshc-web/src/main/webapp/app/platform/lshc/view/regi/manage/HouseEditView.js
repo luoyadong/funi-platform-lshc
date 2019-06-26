@@ -158,7 +158,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 {xtype: 'lshc-regi-manage-houseInfo',isDetail:false}
                             ]
 						},{
-							title:'图片',
+							title:'附件',
 							glyph: 'xf0e0@FontAwesome',
 							disabled:false,
 							overflowY:'auto',

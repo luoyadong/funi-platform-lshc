@@ -110,26 +110,34 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                     return false;
                 })
             }
-            var view = Ext.ComponentQuery.query("textfield,button,checkbox,toolbar",tabpanelView.items.items[i]);
-            for(var j=0;j<view.length;j++){
-                if(view[j].xtype=="button" || view[j].xtype=="toolbar"){
-                    if(view[j].text != '导出' && view[j].text != '审批'){
-						view[j].hide();
-					}
-                }else{
-                    view[j].readOnly=true;
-					view[j].disabled = true;
-                }
 
+            if(tabpanelView.items.items[i].down("gridpanel") && tabpanelView.items.items[i].down("gridpanel").selModel){
+                tabpanelView.items.items[i].down("gridpanel").disableSelection=true;
+                tabpanelView.items.items[i].down("gridpanel").addListener("beforecellclick",function(){
+                    return false;
+                });
+                tabpanelView.items.items[i].down("gridpanel").addListener("beforedeselect",function(){
+                    return false;
+                })
             }
-        }
-       
-        //上传
-        var uploadViews = Ext.ComponentQuery.query("fileuploadfield,#delete_file",this);
-        for(var i=0;i<uploadViews.length;i++){
-            uploadViews[i].hidden=true;
-        }
 
+            var view = Ext.ComponentQuery.query("textfield,numberfield,xcombobox,checkbox",tabpanelView.items.items[i]);
+            for(var j=0;j<view.length;j++){
+                console.log(view[j].xtype)
+                //view[j].setDisabled(true);
+                view[j].setReadOnly(true);
+            }
+
+            var houseListView = this.queryById("lshc-view-regi-HouseDetailView-itemId");
+            var view = Ext.ComponentQuery.query("button",houseListView);
+            for(var j=0;j<view.length;j++){
+                if(view[j].xtype=="button"
+                    && (view[j].text == "添加" || view[j].text == "删除")){
+                    view[j].hide();
+                }
+            }
+
+        }
     },
     initBtn:function(){
         var me = this;
@@ -184,6 +192,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
             }
         //}
 
+        this.readOnly();
     },
     initHouseDetail:function(hcId){
         var me = this
@@ -340,7 +349,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 	          // xtype:'container',
 				height: '100%',
 				width:'100%',
-            padding:"0 0 0 5",
+                padding:"0 0 0 5",
 			   layout:{
 					type:'border'
 				//	regionWeights:{

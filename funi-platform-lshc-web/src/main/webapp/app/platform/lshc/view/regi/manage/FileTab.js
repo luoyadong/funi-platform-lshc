@@ -59,7 +59,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
 		    columns:[
 			   {text:"id",dataIndex:"id",hidden:true},
                {text:"isNew",dataIndex:"isNew",hidden:true},
-			   {text:"图片名称",dataIndex:"fileName",flex: 1},
+			   {text:"附件名称",dataIndex:"fileName",flex: 1},
 			   {text:"附件大小",dataIndex:"fileSize",flex: 1},
 			   {text:"上传时间",dataIndex:"submitDate",flex: 1},
 			   {text:"上传账号",dataIndex:"userName",flex: 1},
@@ -125,7 +125,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                                     buttonOnly: true,
                                     labelSeparator: '',
                                     name: 'uploadFile',
-                                    buttonText: "文件上传",
+                                    buttonText: "附件上传",
 
                                     listeners: {
                                         change: function () {

@@ -69,10 +69,11 @@ public class UndoneRegiController {
      * @param regiInfoAuditDto 批量审核普查信息数据传输对象
      */
     @RequestMapping("batchAuditRegiInfoList")
+    @ResponseBody
     public Object batchAuditRegiInfoList(@RequestBody RegiInfoAuditDto regiInfoAuditDto) {
         try {
             undoneRegiInfoService.batchAuditRegiInfoList(regiInfoAuditDto);
-            return ResultVo.newResult("审批成功");
+            return ResultVo.newResult("审批成功!");
         } catch (Exception e) {
             e.printStackTrace();
             new ResultVo(false);

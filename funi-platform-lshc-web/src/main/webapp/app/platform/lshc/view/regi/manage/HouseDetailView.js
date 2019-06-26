@@ -161,7 +161,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                     height:275,
                     disabled:false
                 },{
-                    title:'图片',
+                    title:'附件',
                     glyph: 'xf0e0@FontAwesome',
                     xtype:"lshc-regi-manage-file",
                     disabled:false,

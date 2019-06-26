@@ -37,25 +37,63 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText: "证件号码", allowBlank: false, fieldLabel: '证件号码',  width:300,
                             labelWidth: 90, margin: '11 0 0 0',name:'idNo',vtype:"idcard"
                         },
-						{
-                            xtype: "textfield", labelAlign:"right",
-                            emptyText: "性别", allowBlank: false, fieldLabel: '性别',  width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'sex'
+                        {
+                            xtype:'xcombobox',
+                            labelAlign:"right",
+                            itemId:'sexItemId',
+                            fieldLabel:'性别',
+                            emptyText:'全部',
+                            name:"sex",
+                            editable:false,
+                            width:300,
+                            labelWidth: 90,
+                            margin: '11 0 0 0',
+                            triggerAction:'all',
+                            dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=GENDER')
                         },
-						{
-                            xtype: "textfield", labelAlign:"right",
-                            emptyText: "人员类别", allowBlank: false, fieldLabel: '人员类别',  width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'entType'
+
+                        {
+                            xtype:'xcombobox',
+                            labelAlign:"right",
+                            itemId:'entTypeItemId',
+                            fieldLabel:'人员类别',
+                            emptyText:'全部',
+                            name:"entType",
+                            editable:false,
+                            width:300,
+                            labelWidth: 90,
+                            margin: '11 0 0 0',
+                            triggerAction:'all',
+                            dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=ENT_TYPE')
                         },
-						{
-                            xtype: "textfield", labelAlign:"right",
-                            emptyText: "民族", allowBlank: false, fieldLabel: '民族',  width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'entNation'
+
+                        {
+                            xtype:'xcombobox',
+                            labelAlign:"right",
+                            itemId:'entNationItemId',
+                            fieldLabel:'民族',
+                            emptyText:'全部',
+                            name:"entNation",
+                            editable:false,
+                            width:300,
+                            labelWidth: 90,
+                            margin: '11 0 0 0',
+                            triggerAction:'all',
+                            dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=ENT_NATION')
                         },
                         {
-                            xtype: "textfield", labelAlign:"right",
-                            emptyText: "籍贯", allowBlank: false, fieldLabel: '籍贯',  width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'entNative'
+                            xtype:'xcombobox',
+                            labelAlign:"right",
+                            itemId:'entNativeItemId',
+                            fieldLabel:'籍贯',
+                            emptyText:'全部',
+                            name:"entNative",
+                            editable:false,
+                            width:300,
+                            labelWidth: 90,
+                            margin: '11 0 0 0',
+                            triggerAction:'all',
+                            dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=ENT_NATIVE')
                         },
                         {
                             xtype: "textfield", labelAlign:"right",
@@ -63,9 +101,18 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             labelWidth: 90, margin: '11 0 0 0',name:'tel'
                         },
                         {
-                            xtype: "textfield", labelAlign:"right",width:300,
-                            emptyText: "婚姻状况", allowBlank: false, fieldLabel: '婚姻状况',
-                            labelWidth: 90, margin: '11 0 0 0',name:'marriageStatus'
+                            xtype:'xcombobox',
+                            labelAlign:"right",
+                            itemId:'marriageStatusItemId',
+                            fieldLabel:'婚姻状况',
+                            emptyText:'全部',
+                            name:"marriageStatus",
+                            editable:false,
+                            width:300,
+                            labelWidth: 90,
+                            margin: '11 0 0 0',
+                            triggerAction:'all',
+                            dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=MARRIAGE_STATUS')
                         }
 
                     ]
