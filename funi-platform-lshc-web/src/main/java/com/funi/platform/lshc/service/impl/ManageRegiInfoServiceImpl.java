@@ -158,6 +158,47 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
+    public String saveOrUpdateRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) {
+        RegiInfo regiInfo = regiInfoDto.getRegiInfo();
+        if (regiInfo == null) {
+            throw new RuntimeException("普查信息不能为空");
+        }
+        String mapCode = regiInfo.getMapCode();
+        if(StringUtils.isBlank(mapCode)) {
+            throw new RuntimeException("楼栋地图编号不能为空");
+        }
+        CurrentUser userInfo = userManager.findUser();
+        String id = regiInfo.getId();
+        CurrentUser user = userManager.findUser();
+        // 如果普查信息ID不为空，则此次操作为更新操作
+        if(StringUtils.isNotBlank(id)) {
+            RegiInfo existRegiInfo = regiInfoMapper.selectByPrimaryKey(id);
+            if (existRegiInfo == null) {
+                throw new RuntimeException("普查信息不存在");
+            }
+            // 编辑普查信息
+            updateRegiInfo(regiInfo, existRegiInfo, user);
+        } else {
+            // 保存普查信息和楼栋信息
+            saveNewRegiInfo(regiInfo, userInfo, isSubmit);
+        }
+        // 编辑普查信息关联的入住人信息
+        modifyEntInfoList(regiInfoDto.getEntInfoList(), id, user);
+        // 编辑普查信息关联的附件信息
+        modifyFileList(regiInfoDto.getFileList(), id, user);
+        if(isSubmit) {
+            try {
+                // 修改普查信息的状态
+                regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
+                lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return id;
+    }
+
+    @Override
     public void submitOnly(String id) {
         RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(id);
         if (regiInfo == null) {

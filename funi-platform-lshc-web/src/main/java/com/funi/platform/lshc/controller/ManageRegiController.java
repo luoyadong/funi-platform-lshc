@@ -107,6 +107,25 @@ public class ManageRegiController {
     }
 
     /**
+     * 编辑并提交普查信息
+     * @param regiInfoDto
+     * @return
+     */
+    @RequestMapping("editAndSubmitRegiInfo")
+    @ResponseBody
+    public Object editAndSubmitRegiInfo(@RequestBody RegiInfoDto regiInfoDto) {
+        try {
+            return ResultVo.newResult(manageRegiInfoService.saveOrUpdateRegiInfo(regiInfoDto, true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            new ResultVo(false);
+            ResultVo resultVo = ResultVo.newResult("添加普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
+        }
+    }
+
+    /**
      * 提交普查信息
      * @param regiInfoDto
      * @return
