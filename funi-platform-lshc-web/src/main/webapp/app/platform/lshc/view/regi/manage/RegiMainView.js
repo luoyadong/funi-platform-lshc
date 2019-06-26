@@ -37,8 +37,14 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         var formElements = Ext.ComponentQuery.query("textfield",this);
         var obj = new Object();
         for(var i=0;i<formElements.length;i++){
-            obj[formElements[i].name] =formElements[i].value;
+            //下拉菜单存储展示的值
+            if(formElements[i].name == 'region' || formElements[i].name =='street'){
+                obj[formElements[i].name] = this.queryById(formElements[i].name+"ItemId").getRawValue()
+            }else{
+                obj[formElements[i].name] =formElements[i].value;
+            }
         }
+
         return obj;
     },
 	resetParams:function(){

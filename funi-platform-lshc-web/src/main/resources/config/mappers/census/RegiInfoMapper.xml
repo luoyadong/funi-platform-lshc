@@ -99,7 +99,7 @@
     AND t1.ISVALIDE = '1'
     AND t2.DELETED = 0
     AND t2.ISVALIDE = '1'
-    AND T2.HOUSE_STATUS NOT IN ('新建','待初审','退回')
+    AND T2.HOUSE_STATUS NOT IN ('新建','初审退回')
     AND t1.id in
     <foreach collection="list" separator=","  item="id" open="(" close=")">
       #{id}

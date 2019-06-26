@@ -31,6 +31,10 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
         var rtJson = {};
         if(form.isValid()){
 			 rtJson.regiInfo = form.getValues();
+
+			rtJson.regiInfo.region = this.queryById("regionItemId2").getRawValue();
+			rtJson.regiInfo.street = this.queryById("streetItemId2").getRawValue();
+
 			 rtJson.entInfoList = entView.getData();
 			 return rtJson;
         }

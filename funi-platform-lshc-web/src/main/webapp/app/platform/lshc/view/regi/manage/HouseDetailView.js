@@ -27,6 +27,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
         this.callParent(arguments);
     },
 	fillForm:function(formData){
+        this.config.houseStatus = formData.regiInfo.houseStatus;
         //房屋信息 regiInfo entInfoList fileList
         var houseView = this.queryById("lshc-regi-manage-houseInfo-form-itemId");
         houseView.getForm().setValues(formData.regiInfo);
@@ -103,10 +104,15 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                             glyph: 0xf044,
                             handler:function() {
 								if(me.config.bizId == null){
-									alert("请选择左侧的房屋数据！");
+                                    Ext.MessageBox.alert("温馨提示","请选择左侧的房屋数据！");
 									return;
 								}
 								var id = me.config.bizId ;
+                                var hStatus = me.config.houseStatus;
+                                if(hStatus != '新建' && hStatus != '初审不通过'){
+                                    Ext.MessageBox.alert("温馨提示","审批中的数据不能被编辑！");
+                                    return;
+                                }
 								var editWin = Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView",
                                     {config:{parentContainer:me.config.parentContainer}});
 							    editWin.show();

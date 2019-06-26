@@ -29,6 +29,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         this.callParent(arguments);
     },
     fillForm:function(formData){
+        this.config.houseStatus = formData.regiInfo.houseStatus;
         //房屋信息 regiInfo entInfoList fileList
         var houseView = this.queryById("lshc-regi-houseedit-tabpanel-itemId").queryById("lshc-regi-manage-houseInfo-form-itemId");
         houseView.getForm().setValues(formData.regiInfo);
@@ -41,6 +42,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         var approveView = this.queryById("lshc-file-houseedit-tabpanel-itemId").down("gridpanel");
         approveView.store.loadData(formData.fileList,false);
 
+        this.isShowSubmitBtn();
     },
     resetForm:function(){
         //房屋信息 regiInfo entInfoList fileList
@@ -74,12 +76,22 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         return result;
     },
     isShowSubmitBtn:function(){
-        var showSubmitBtn = true;
-        if(this.config.bizId != null && this.config.bizId != undefined){
-            showSubmitBtn = false;
+
+        var me = this;
+        var resetSubmitBtn = me.queryById("submitAndResetItemId")
+        var submitBtn = me.queryById("submitItemId")
+        if(me.config.houseStatus != null && me.config.houseStatus != '新建'){
+            resetSubmitBtn.hide();
+            submitBtn.hide();
         }
-        return showSubmitBtn;
+
+        // var showSubmitBtn = true;
+        // if(this.config.bizId != null && this.config.bizId != undefined){
+        //     showSubmitBtn = false;
+        // }
+        // return showSubmitBtn;
     },
+
     initComponent: function () {
         var me = this;
         Ext.apply(me, {
@@ -112,7 +124,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 }
                             },
 							{
-                                xtype: 'button',hidden:!me.isShowSubmitBtn(), text: '提交', scope: me,glyph: 'xf234@FontAwesome',
+                                xtype: 'button',itemId:"submitItemId", text: '提交', scope: me,glyph: 'xf234@FontAwesome',
                                 handler: function () {
                                     var formData = me.getData();
                                     var hcId = me.config.bizId;
@@ -132,7 +144,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 }
                             },
 							 {
-                                xtype: 'button',hidden:!me.isShowSubmitBtn(), text: '提交后继续新增', scope: me,glyph: 'xf234@FontAwesome',
+                                xtype: 'button',itemId:"submitAndResetItemId",text: '提交后继续新增', scope: me,glyph: 'xf234@FontAwesome',
 								margin:'0 50 0 0',
                                 handler: function () {
                                     Ext.Msg.alert('提示', '暂未提供！');

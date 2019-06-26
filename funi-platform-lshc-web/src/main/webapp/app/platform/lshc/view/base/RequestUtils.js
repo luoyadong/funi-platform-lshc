@@ -56,16 +56,21 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                     if(allowTips){
                         var data = JSON.parse(response.responseText);
                         message = data.result != null?data.result:data.message;
-
+                        if(data.success){
+                            Ext.Msg.alert('温馨提示', "操作成功！");
+                        }else{
+                            Ext.Msg.alert('温馨提示', data.result);
+                        }
                     }
                 },
                 failure: function () {
                     message = exceptionStr;
+                    Ext.Msg.alert('温馨提示', message);
                 }
             });
-            if (message != null && allowTips) {
-                Ext.Msg.alert('温馨提示', message);
-            }
+            // if (message != null && allowTips) {
+            //     Ext.Msg.alert('温馨提示', message);
+            // }
         },
         return_post_json: function (data, url, isAsync, allowTips) {
             if (!url) {

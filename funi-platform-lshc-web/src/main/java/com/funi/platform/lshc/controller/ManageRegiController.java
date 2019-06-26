@@ -252,7 +252,7 @@ public class ManageRegiController {
         } catch (Exception e) {
             e.printStackTrace();
             new ResultVo(false);
-            ResultVo resultVo = ResultVo.newResult("删除楼栋信息失败");
+            ResultVo resultVo = ResultVo.newResult("删除楼栋信息失败:"+e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }
