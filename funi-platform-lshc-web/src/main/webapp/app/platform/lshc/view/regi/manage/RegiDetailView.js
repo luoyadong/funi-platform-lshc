@@ -242,13 +242,13 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     setTask: function (show, message) {
         var myTask = Ext.lshc_task;
         var me = this;
-        if (myTask == null) {
-            if (message == null) {
+        if (!myTask) {
+            if (!message) {
                 message = "请等待...";
             }
             var myTask = new Ext.LoadMask({
                 msg: message,
-                target: me
+                target: Ext.mainFrame
             });
             Ext.lshc_task = myTask;
         }

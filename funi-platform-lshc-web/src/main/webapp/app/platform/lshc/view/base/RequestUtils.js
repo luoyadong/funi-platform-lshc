@@ -42,7 +42,6 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 if (!url) {
                     throw new BizException('无效请求地址！');
                 }
-            app.platform.lshc.view.base.RequestUtils.setTask(true);
             var message = null;
             var exceptionStr = '服务器异常,请重试!';
             Ext.Ajax.request({
@@ -53,19 +52,17 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 contentType: "application/json;charset=UTF-8",
                 dataType: 'json',
                 success: function (response) {
-                    app.platform.lshc.view.base.RequestUtils.setTask(false);
                     allowTips = true;
                     if(allowTips){
                         var data = JSON.parse(response.responseText);
-                        message = data.result != null ? data.result : exceptionStr;
+                        message = data.result != null?data.result:data.message;
+
                     }
                 },
                 failure: function () {
-                    app.platform.lshc.view.base.RequestUtils.setTask(false);
                     message = exceptionStr;
                 }
             });
-            //RequestUtils.setTask(false);
             if (message != null && allowTips) {
                 Ext.Msg.alert('温馨提示', message);
             }
@@ -74,7 +71,6 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
             if (!url) {
                 throw new BizException('无效请求地址！');
             }
-            app.platform.lshc.view.base.RequestUtils.setTask(true);
             var message = null;
             var exceptionStr = '服务器异常,请重试!';
             Ext.Ajax.request({
@@ -85,39 +81,20 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 contentType: "application/json;charset=UTF-8",
                 dataType: 'json',
                 success: function (response) {
-                    app.platform.lshc.view.base.RequestUtils.setTask(false);
                     var data = JSON.parse(response.responseText);
-                    message = data.result ;
+                    if(data.success){
+                        message = data.result
+                        Ext.Msg.alert('温馨提示', "操作成功！");
+                    }else{
+                        Ext.Msg.alert('温馨提示', data.result);
+                    }
                 },
                 failure: function () {
-                    app.platform.lshc.view.base.RequestUtils.setTask(false);
                     message = exceptionStr;
                     Ext.Msg.alert('温馨提示', message);
                 }
             });
             return message;
-        },
-        setTask: function (show, message) {
-            var myTask = Ext.lshc_task;
-            if (myTask == null) {
-                if (message == null) {
-                    message = "请等待...";
-                }
-                var myTask = new Ext.LoadMask({
-                    msg: message,
-                    target: Ext.mainFrame
-                });
-                Ext.lshc_task = myTask;
-            }
-            if (message) {
-                myTask.msg = message;
-            }
-            if (show) {
-                myTask.show();
-            } else {
-                myTask.hide();
-            }
-            return myTask;
         },
         request: function (data, url) {
             if (!url) {

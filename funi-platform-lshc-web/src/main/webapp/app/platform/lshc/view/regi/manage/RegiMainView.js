@@ -52,7 +52,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
     exportExcel:function(){
         var me = this
         var selectObjArray = me.getSelectionModel().getSelection();
-        if(selectObjArray.length!=1){
+        if(selectObjArray.length < 1){
             Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
             return;
         }
@@ -64,9 +64,32 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         }
         var url = "/manage/exportBuildInfoVoList";
         ExcelUtils.exportExcel({"ids":ids}, url);
+        Ext.Msg.alert('提示', '数据导出结束！');
     },
     initHouseDetail:function(hcId){
         this.initHouseList();
+    },
+    setTask: function (show, message) {
+        var myTask = Ext.lshc_task;
+        if (!myTask) {
+            if (!message) {
+                message = "请等待...";
+            }
+            var myTask = new Ext.LoadMask({
+                msg: message,
+                target: Ext.mainFrame
+            });
+            Ext.lshc_task = myTask;
+        }
+        if (message) {
+            myTask.msg = message;
+        }
+        if (show) {
+            myTask.show();
+        } else {
+            myTask.hide();
+        }
+        return myTask;
     },
     initComponent: function () {
         var me = this;
@@ -204,10 +227,6 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                             var store = me.store;//需要刷新的store
                                             ExcelUtils.importExcel(url, store);
 
-                                            //先校验
-
-                                            //再上传
-
                                         }
                                     },
                                     {
@@ -215,7 +234,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         glyph: 'xf014@FontAwesome',
                                         handler: function () {
                                             var selectObjArray = me.getSelectionModel().getSelection();
-                                            if(selectObjArray.length!=1){
+                                            if(selectObjArray.length < 1){
                                                 Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
                                                 return;
                                             }
@@ -253,7 +272,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                     border: true,
                     store: store,
                     columnLines: true,
-                    selModel: {selType: 'checkboxmodel',mode:"SINGLE",title:'全选'},
+                    selModel: {selType: 'checkboxmodel',title:'全选'},
                     dockedItems :[{
                         xtype: 'pagingtoolbar',
                         store: store,

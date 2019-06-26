@@ -170,11 +170,15 @@ public class ManageRegiController {
      */
     @RequestMapping(value = "batchSubmitRegiInfo", method = RequestMethod.POST)
     @ResponseBody
-    public void batchSubmitRegiInfo(@RequestBody List<String> ids) {
+    public Object batchSubmitRegiInfo(@RequestBody List<String> ids) {
         try {
             manageRegiInfoService.batchSubmitRegiInfo(ids);
+            return ResultVo.newResult("批量提交普查成功！");
         } catch (Exception e) {
             e.printStackTrace();
+            ResultVo resultVo = ResultVo.newResult("批量提交普查失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
         }
     }
 

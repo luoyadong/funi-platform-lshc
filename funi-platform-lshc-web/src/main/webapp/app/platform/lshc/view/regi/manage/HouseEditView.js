@@ -93,6 +93,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 							 {
                                 xtype: 'button', text: '保存', scope: me,glyph: 0xf0fe,
                                 handler: function () {
+                                    me.config.parentContainer.setTask(true)
 									var formData = me.getData();
                                     var hcId = me.config.bizId;
                                     if(me.config.bizId != null){
@@ -103,7 +104,9 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                     }
                                     //alert(hcId);
                                     //调用错误会影响上面的值
+                                    me.config.parentContainer.initHouseList();
                                     me.config.parentContainer.initHouseDetail(hcId);
+                                    me.config.parentContainer.setTask(false)
                                     me.winContainer.close();
                                     //me.winContainer.destroy();
                                 }
@@ -112,12 +115,20 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 xtype: 'button',hidden:!me.isShowSubmitBtn(), text: '提交', scope: me,glyph: 'xf234@FontAwesome',
                                 handler: function () {
                                     var formData = me.getData();
-                                    app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/submitRegiInfo",false,false);
+                                    var hcId = me.config.bizId;
+                                    if(me.config.bizId != null){
+                                        formData.regiInfo.id = hcId;
+                                        app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editAndSubmitRegiInfo", false, false);
+                                    }else{//新增
+                                        hcId = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/submitRegiInfo",false,false);
+                                    }
                                     me.winContainer.close();
 
                                     //刷新左侧的房屋列表
                                     me.config.parentContainer.initHouseList();
-                                	//Ext.Msg.alert('提示', '已新增！');
+                                    me.config.parentContainer.initHouseDetail(hcId);
+                                    me.winContainer.close();
+
                                 }
                             },
 							 {

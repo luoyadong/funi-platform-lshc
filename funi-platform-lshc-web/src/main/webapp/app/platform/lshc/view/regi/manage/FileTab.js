@@ -51,7 +51,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             store: store,
             columnLines: true,
             height:400,
-            selModel: {selType: 'checkboxmodel', mode: "SINGLE"},
+            selModel: {selType: 'checkboxmodel'},
             viewConfig: {
                 enableTextSelection: true
             },
@@ -187,7 +187,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                             handler: function () {
 
                                 var selectObjArray = me.getSelectionModel().getSelection();
-                                if(selectObjArray.length!=1){
+                                if(selectObjArray.length < 1){
                                     Ext.MessageBox.alert("温馨提示", "请选择文件!");
                                     return;
                                 }

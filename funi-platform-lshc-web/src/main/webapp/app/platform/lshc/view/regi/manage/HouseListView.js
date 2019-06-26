@@ -33,7 +33,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
     exportExcel:function(){
         var me = this
         var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
-        if(selectObjArray.length!=1){
+        if(selectObjArray.length < 1){
             Ext.MessageBox.alert("温馨提示", "请选择房屋!");
             return;
         }
@@ -45,6 +45,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
         }
         var url = "/regiInfo/exportRegiInfoVoList";
         ExcelUtils.exportExcel({"ids":ids}, url);
+        Ext.Msg.alert('提示', '数据导出结束！');
     },
     initComponent: function () {
         var me = this;
@@ -87,7 +88,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
 
                                     handler: function () {
                                         var url = "/manage/checkReturnRegiInfoList";///manage/importRegiInfoList
-                                        var store = me.store;//需要刷新的store
+                                        var store = me.down("gridpanel").store;//需要刷新的store
                                         ExcelUtils.importExcel(url, store);
 
                                     }
@@ -97,7 +98,6 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                     handler: function () {
                                         //导出数据
                                         me.exportExcel();
-
                                     }
                                 },
                                 {
@@ -257,7 +257,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 border: true,
                 store: store,
                 columnLines: true,
-                selModel: {selType: 'checkboxmodel',mode:"SINGLE",title:'全选'},
+                selModel: {selType: 'checkboxmodel',title:'全选'},
                 dockedItems: [{
                     xtype: 'pagingtoolbar',
                     store: store,

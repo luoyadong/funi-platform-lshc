@@ -46,7 +46,7 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
     exportExcel:function(){
         var me = this
         var selectObjArray = me.getSelectionModel().getSelection();
-        if(selectObjArray.length!=1){
+        if(selectObjArray.length < 1){
             Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
             return;
         }
@@ -196,7 +196,7 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
                     border: true,
                     store: store,
                     columnLines: true,
-                    selModel: {selType: 'checkboxmodel',mode:"SINGLE",title:'全选'},
+                    selModel: {selType: 'checkboxmodel',title:'全选'},
                     dockedItems :[{
                         xtype: 'pagingtoolbar',
                         store: store,
