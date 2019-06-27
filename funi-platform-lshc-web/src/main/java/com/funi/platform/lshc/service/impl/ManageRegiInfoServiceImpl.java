@@ -325,6 +325,7 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     private void updateRegiInfo(RegiInfo paramRegiInfo, RegiInfo existRegiInfo, CurrentUser currentUser) {
         new SuperEntityUtils().copyEntity(existRegiInfo, paramRegiInfo, currentUser);
         paramRegiInfo.setHouseId(existRegiInfo.getHouseId());
+        paramRegiInfo.setCommon(existRegiInfo.getCommon());
         paramRegiInfo.setHouseStatus(existRegiInfo.getHouseStatus());
         paramRegiInfo.setOrgCode(existRegiInfo.getOrgCode());
         paramRegiInfo.setOrgName(existRegiInfo.getOrgName());
