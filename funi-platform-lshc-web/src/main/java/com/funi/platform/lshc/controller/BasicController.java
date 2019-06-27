@@ -1,5 +1,6 @@
 package com.funi.platform.lshc.controller;
 
+import com.funi.framework.mvc.eic.vo.ResultVo;
 import com.funi.platform.lshc.dto.ComboboxDto;
 import com.funi.platform.lshc.service.BasicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,16 @@ public class BasicController {
     @ResponseBody
     public List<ComboboxDto> getDictionaryListName(String type) {
         return basicService.findDictionaryListName(type);
+    }
+
+    /**
+     * 查询拉萨市全部社区信息
+     * @return
+     */
+    @RequestMapping("getRegionList")
+    @ResponseBody
+    public List<ComboboxDto> getRegionList() {
+        return basicService.findRegionList();
     }
 
     /**
@@ -59,5 +70,15 @@ public class BasicController {
     @ResponseBody
     public List<ComboboxDto> getAllStreetListByRegionId(String blockId) {
         return basicService.findAllStreetListByRegionId(blockId);
+    }
+
+    /**
+     * 获取打印信息
+     * @return
+     */
+    @RequestMapping("getPrintInfo")
+    @ResponseBody
+    public Object getPrintInfo() {
+        return ResultVo.newResult(basicService.findCurrentUserRegionCodeString());
     }
 }

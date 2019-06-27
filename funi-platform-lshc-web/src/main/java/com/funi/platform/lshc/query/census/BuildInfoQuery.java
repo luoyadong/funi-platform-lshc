@@ -25,6 +25,14 @@ public class BuildInfoQuery extends BaseQuery {
     private String ownerType = "R";
     /** 查询类型*/
     private String queryType;
+    /** 楼栋名称*/
+    private String buildName;
+    /** 社区名称*/
+    private String communityName;
+    /** 证件号码 */
+    private String idNo;
+    /** 房屋编号*/
+    private String houseId;
 
     public String getRegion() {
         return region;
@@ -88,5 +96,37 @@ public class BuildInfoQuery extends BaseQuery {
 
     public void setQueryType(String queryType) {
         this.queryType = queryType;
+    }
+
+    public String getBuildName() {
+        return buildName;
+    }
+
+    public void setBuildName(String buildName) {
+        this.buildName = buildName;
+    }
+
+    public String getCommunityName() {
+        return communityName;
+    }
+
+    public void setCommunityName(String communityName) {
+        this.communityName = communityName;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
+    }
+
+    public String getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(String houseId) {
+        this.houseId = houseId;
     }
 }

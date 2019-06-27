@@ -65,6 +65,37 @@ public class BasicServiceImpl implements BasicService {
     }
 
     @Override
+    public List<ComboboxDto> findRegionList() {
+        List<LshcRegionVo> allRegionList = new ArrayList<>();
+        // 查询全部区县
+        List<LshcRegionVo> regionVoList1 = getRegionVoList(CensusConstants.REGION_TYPE_CITY, null);
+        if(CollectionUtils.isNotEmpty(regionVoList1)) {
+            // 遍历查询街道信息
+            for(LshcRegionVo lshcRegionVo1 : regionVoList1) {
+                String code1 = lshcRegionVo1.getCode();
+                List<LshcRegionVo> regionVoList2 = getRegionVoList(CensusConstants.REGION_TYPE_REGION, code1);
+                if(CollectionUtils.isNotEmpty(regionVoList2)) {
+                    for(LshcRegionVo lshcRegionVo2 : regionVoList2) {
+                        String code2 = lshcRegionVo2.getCode();
+                        List<LshcRegionVo> regionVoList3 = getRegionVoList(CensusConstants.REGION_TYPE_COUNTY, code2);
+                        if(CollectionUtils.isNotEmpty(regionVoList3)) {
+                            allRegionList.addAll(regionVoList3);
+                        }
+                    }
+                }
+            }
+        }
+        if(CollectionUtils.isNotEmpty(allRegionList)) {
+            List<ComboboxDto> comboboxDtoList = new ArrayList<>();
+            for(LshcRegionVo lshcRegionVo : allRegionList) {
+                comboboxDtoList.add(new ComboboxDto(lshcRegionVo.getName()));
+            }
+            return comboboxDtoList;
+        }
+        return null;
+    }
+
+    @Override
     public List<ComboboxDto> findAllRegionList() {
         return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_CITY, null));
     }
@@ -81,6 +112,15 @@ public class BasicServiceImpl implements BasicService {
 
     @Override
     public String findCurrentUserRegionCode(String userId) {
+        LshcRegion lshcRegion = getCurrentUserRegion(userId);
+        String code = lshcRegion.getCode();
+        if(StringUtils.isBlank(code)) {
+            throw new BizException("获取当前登录用户所属区域code异常：村(居）委会没有数据");
+        }
+        return code;
+    }
+
+    private LshcRegion getCurrentUserRegion(String userId) {
         if(StringUtils.isBlank(userId)) {
             userId = userManager.findUser().getUserId();
         }
@@ -98,12 +138,17 @@ public class BasicServiceImpl implements BasicService {
         if(CollectionUtils.isEmpty(regionsList)) {
             throw new BizException("获取当前登录用户所属区域code异常：街道办事处没有数据");
         }
-        LshcRegion lshcRegion = regionsList.get(0);
-        String code = lshcRegion.getCode();
-        if(StringUtils.isBlank(code)) {
+        return regionsList.get(0);
+    }
+
+    @Override
+    public String findCurrentUserRegionName(String userId) {
+        LshcRegion lshcRegion = getCurrentUserRegion(userId);
+        String name = lshcRegion.getName();
+        if(StringUtils.isBlank(name)) {
             throw new BizException("获取当前登录用户所属区域code异常：村(居）委会没有数据");
         }
-        return code;
+        return name;
     }
 
     @Override
@@ -133,6 +178,15 @@ public class BasicServiceImpl implements BasicService {
             }
         }
         return regionCodeList;
+    }
+
+    @Override
+    public String findCurrentUserRegionCodeString() {
+        List<String> currentUserRegionCodeList = findCurrentUserRegionCodeList(null);
+        if(CollectionUtils.isNotEmpty(currentUserRegionCodeList)) {
+            return StringUtils.join(currentUserRegionCodeList, ",");
+        }
+        return null;
     }
 
     private List<ComboboxDto> convertComboboxDto(List<LshcRegionVo> lshcRegionVoList) {

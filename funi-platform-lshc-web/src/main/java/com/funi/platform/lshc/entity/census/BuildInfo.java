@@ -11,24 +11,22 @@ import java.io.Serializable;
 public class BuildInfo extends SuperEntity implements Serializable {
     /** 序号 */
     private Integer serialNo;
-
     /** 区县 */
     private String region;
-
     /** 街道 */
     private String street;
-
     /** 项目名称 */
     private String projectName;
-
     /** 楼栋地图编号 */
     private String mapCode;
-
     /** 实际地址 */
     private String address;
-
     /** 备用 */
     private String common;
+    /** 楼栋名称*/
+    private String buildName;
+    /** 社区名称*/
+    private String communityName;
 
     private static final long serialVersionUID = 1L;
 
@@ -86,5 +84,21 @@ public class BuildInfo extends SuperEntity implements Serializable {
 
     public void setCommon(String common) {
         this.common = common;
+    }
+
+    public String getBuildName() {
+        return buildName;
+    }
+
+    public void setBuildName(String buildName) {
+        this.buildName = buildName;
+    }
+
+    public String getCommunityName() {
+        return communityName;
+    }
+
+    public void setCommunityName(String communityName) {
+        this.communityName = communityName;
     }
 }

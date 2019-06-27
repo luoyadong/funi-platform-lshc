@@ -234,15 +234,19 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         regiInfo.setHouseStatus(houseStatus);
         regiInfo.setOrgCode(userInfo.getOrganization().getDm());
         regiInfo.setOrgName(userInfo.getOrganization().getMc());
-        regiInfo.setUnitName(userInfo.getOrganization().getMc());
-        regiInfo.setApplyUser(userInfo.getName());
-        regiInfo.setReportDate(new Date());
+        // 社区名称由当前登录人权限社区获取
+        regiInfo.setCommunityName(basicService.findCurrentUserRegionName(null));
+        // 填报单位、填报时间、填报人由前端来传
+//        regiInfo.setUnitName(userInfo.getOrganization().getMc());
+//        regiInfo.setApplyUser(userInfo.getName());
+//        regiInfo.setReportDate(DateUtils.getCurrentDate());
         // 设置普查信息的提交人区域编码
         regiInfo.setCommon(basicService.findCurrentUserRegionCode(userInfo.getUserId()));
         // 保存房屋数据
         regiInfoMapper.insert(regiInfo);
         // 保存或更新楼栋信息
         saveOrUpdateBuildInfo(regiInfo, userInfo);
+        regiInfoMapper.updateSameBuildRegiInfo(regiInfo);
     }
 
     /**
@@ -293,6 +297,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         buildInfo.setProjectName(regiInfo.getProjectName());
         buildInfo.setMapCode(regiInfo.getMapCode());
         buildInfo.setAddress(getActualAddress(regiInfo));
+        buildInfo.setBuildName(regiInfo.getBuildName());
+        buildInfo.setCommunityName(regiInfo.getCommunityName());
     }
 
 
@@ -335,6 +341,7 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         regiInfoMapper.updateByPrimaryKey(paramRegiInfo);
         // 保存或更新楼栋信息
         saveOrUpdateBuildInfo(paramRegiInfo, currentUser);
+        regiInfoMapper.updateSameBuildRegiInfo(paramRegiInfo);
     }
 
     /**
@@ -673,13 +680,14 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
 
     private String getActualAddress(RegiInfo regiInfo) {
         StringBuilder addressBuilder = new StringBuilder();
-        String addressRegion = regiInfo.getAddressRegion();
-        if(StringUtils.isNotBlank(addressRegion)) {
-            addressBuilder.append(addressRegion + "区");
+        String region = regiInfo.getRegion();
+
+        if(StringUtils.isNotBlank(region)) {
+            addressBuilder.append(region + "区(县)");
         }
-        String addressCounty = regiInfo.getAddressCounty();
-        if(StringUtils.isNotBlank(addressCounty)) {
-            addressBuilder.append(addressCounty + "乡");
+        String street = regiInfo.getStreet();
+        if(StringUtils.isNotBlank(street)) {
+            addressBuilder.append(street + "乡（街道）");
         }
         String apt = regiInfo.getApt();
         if(StringUtils.isNotBlank(apt)) {

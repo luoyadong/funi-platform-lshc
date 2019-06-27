@@ -24,6 +24,11 @@ public class ComboboxDto {
         this.value = lshcRegionVo.getCode();
     }
 
+    public ComboboxDto(String name) {
+        this.name = name;
+        this.value = name;
+    }
+
     public String getName() {
         return name;
     }

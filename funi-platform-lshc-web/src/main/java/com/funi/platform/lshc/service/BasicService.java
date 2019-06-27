@@ -20,6 +20,12 @@ public interface BasicService {
      * 查询西藏全部市信息
      * @return
      */
+    List<ComboboxDto> findRegionList();
+
+    /**
+     * 查询西藏全部市信息
+     * @return
+     */
     List<ComboboxDto> findAllRegionList();
 
     /**
@@ -44,10 +50,23 @@ public interface BasicService {
     String findCurrentUserRegionCode(String userId);
 
     /**
+     * 获取当前用户所属的区域名称
+     * @param userId
+     * @return
+     */
+    String findCurrentUserRegionName(String userId);
+
+    /**
      * 获取当前用户权限范围内的区域code集合（包括自身的）
      * @param userId
      * @return
      */
     List<String> findCurrentUserRegionCodeList(String userId);
+
+    /**
+     * 获取当前登录用户权限范围内全部区域编码的字符串表示，多个社区编码间使用逗号分隔
+     * @return
+     */
+    String findCurrentUserRegionCodeString();
 }
 

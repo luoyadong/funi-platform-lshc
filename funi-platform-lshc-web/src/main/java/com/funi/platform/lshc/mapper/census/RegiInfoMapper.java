@@ -92,4 +92,11 @@ public interface RegiInfoMapper {
      * @return
      */
     RegiInfo selectByHouseId(String houseId);
+
+    /**
+     * 更新其他相同mapCode普查信息中的楼栋信息
+     * @param regiInfo
+     * @return
+     */
+    int updateSameBuildRegiInfo(RegiInfo regiInfo);
 }

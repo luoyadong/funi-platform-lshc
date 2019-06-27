@@ -17,13 +17,15 @@
     <result column="UPDATE_ID" jdbcType="VARCHAR" property="updateId" />
     <result column="DELETED" jdbcType="DECIMAL" property="deleted" />
     <result column="ISVALIDE" jdbcType="VARCHAR" property="isvalide" />
+    <result column="BUILD_NAME" jdbcType="VARCHAR" property="buildName" />
+    <result column="COMMUNITY_NAME" jdbcType="VARCHAR" property="communityName" />
   </resultMap>
   <resultMap id="BuildInfoVoMap" type="com.funi.platform.lshc.vo.census.BuildInfoVo" extends="BaseResultMap">
     <result column="houseCount" property="houseCount" />
   </resultMap>
   <sql id="Base_Column_List">
     ID, SERIAL_NO, REGION, STREET, PROJECT_NAME, MAP_CODE, ADDRESS, COMMON, VERSION,
-    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE
+    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE,BUILD_NAME,COMMUNITY_NAME
   </sql>
 
   <update id="batchDeleteBuildInfo">
@@ -44,6 +46,8 @@
           t1.PROJECT_NAME AS projectName,
           t1.MAP_CODE AS mapCode,
           t1.ADDRESS AS address,
+          t1.BUILD_NAME AS buildName,
+          t1.COMMUNITY_NAME AS communityName,
           count( t2.id ) over ( partition BY t1.id ) AS houseCount
           FROM
           LSHC_BUILD_INFO t1
@@ -95,6 +99,20 @@
         <if test="address != null and address != ''">
           AND t1.ADDRESS LIKE '%'||#{address}||'%'
         </if>
+      <if test="buildName != null and buildName != ''">
+          AND t1.BUILD_NAME LIKE '%'||#{buildName}||'%'
+      </if>
+      <if test="communityName != null and communityName != ''">
+          AND t1.COMMUNITY_NAME LIKE '%'||#{communityName}||'%'
+      </if>
+      <if test="houseId != null and houseId != ''">
+          AND t2.HOUSE_ID LIKE '%'||#{houseId}||'%'
+      </if>
+      <if test="idNo != null and idNo != ''">
+          AND t2.ID IN
+          (SELECT t11.id FROM LSHC_REGI_INFO t11 INNER JOIN LSHC_ENT_INFO t22 ON t11.id = t22.HC_ID
+          WHERE t22.ID_NO = #{idNo} GROUP BY t11.id)
+      </if>
         ORDER BY t1.SERIAL_NO
   </select>
 
@@ -123,12 +141,12 @@
     PROJECT_NAME, MAP_CODE, ADDRESS,
     COMMON, VERSION, CREATE_TIME,
     CREATE_ID, UPDATE_TIME, UPDATE_ID,
-    DELETED, ISVALIDE)
+    DELETED, ISVALIDE,BUILD_NAME,COMMUNITY_NAME)
     values ( #{id,jdbcType=VARCHAR}, #{serialNo,jdbcType=DECIMAL}, #{region,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR},
     #{projectName,jdbcType=VARCHAR}, #{mapCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
     #{common,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
     #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
-    #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR})
+    #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR}, #{buildName,jdbcType=VARCHAR}, #{communityName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.census.BuildInfo">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
@@ -181,6 +199,12 @@
       <if test="isvalide != null">
         ISVALIDE,
       </if>
+      <if test="buildName != null">
+        BUILD_NAME,
+      </if>
+      <if test="communityName != null">
+        COMMUNITY_NAME,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -227,6 +251,13 @@
       </if>
       <if test="isvalide != null">
         #{isvalide,jdbcType=VARCHAR},
+      </if>
+
+      <if test="buildName != null">
+        #{buildName,jdbcType=VARCHAR},
+      </if>
+      <if test="communityName != null">
+        #{communityName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -275,6 +306,12 @@
       <if test="isvalide != null">
         ISVALIDE = #{isvalide,jdbcType=VARCHAR},
       </if>
+      <if test="buildName != null">
+        BUILD_NAME = #{buildName,jdbcType=VARCHAR},
+      </if>
+      <if test="communityName != null">
+        COMMUNITY_NAME = #{communityName,jdbcType=VARCHAR},
+      </if>
     </set>
     where ID = #{id,jdbcType=VARCHAR}
   </update>
@@ -289,7 +326,9 @@
       COMMON = #{common,jdbcType=VARCHAR},
       VERSION = VERSION + 1,
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
-      UPDATE_ID = #{updateId,jdbcType=VARCHAR}
+      UPDATE_ID = #{updateId,jdbcType=VARCHAR},
+      BUILD_NAME = #{buildName,jdbcType=VARCHAR},
+      COMMUNITY_NAME = #{communityName,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

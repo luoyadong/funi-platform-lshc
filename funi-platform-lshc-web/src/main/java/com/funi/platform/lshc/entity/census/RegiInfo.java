@@ -140,12 +140,53 @@ public class RegiInfo extends SuperEntity implements Serializable {
     private String applyUser;
 
     /** 填报时间 */
-    private Date reportDate;
+    private String reportDate;
 
     /** 备用 */
     private String common;
 
+    /** 楼栋名称*/
+    private String buildName;
+    /** 社区名称*/
+    private String communityName;
+    /** 总层数 */
+    private String totalLayer;
+    /** 房屋坐落*/
+    private String located;
+
     private static final long serialVersionUID = 1L;
+
+    public String getBuildName() {
+        return buildName;
+    }
+
+    public void setBuildName(String buildName) {
+        this.buildName = buildName;
+    }
+
+    public String getCommunityName() {
+        return communityName;
+    }
+
+    public void setCommunityName(String communityName) {
+        this.communityName = communityName;
+    }
+
+    public String getTotalLayer() {
+        return totalLayer;
+    }
+
+    public void setTotalLayer(String totalLayer) {
+        this.totalLayer = totalLayer;
+    }
+
+    public String getLocated() {
+        return located;
+    }
+
+    public void setLocated(String located) {
+        this.located = located;
+    }
 
     public String getHouseId() {
         return houseId;
@@ -496,11 +537,11 @@ public class RegiInfo extends SuperEntity implements Serializable {
         this.applyUser = applyUser;
     }
 
-    public Date getReportDate() {
+    public String getReportDate() {
         return reportDate;
     }
 
-    public void setReportDate(Date reportDate) {
+    public void setReportDate(String reportDate) {
         this.reportDate = reportDate;
     }
 

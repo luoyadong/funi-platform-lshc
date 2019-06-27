@@ -32,6 +32,10 @@ public abstract class DateUtils {
         return SDF.format(date);
     }
 
+    public static String getCurrentDate() {
+        return parseFormatDate(new Date());
+    }
+
     /**
      * 得到两个日期之间相差的天数,两头不算,取出数据后，可以根据需要再加
      *
