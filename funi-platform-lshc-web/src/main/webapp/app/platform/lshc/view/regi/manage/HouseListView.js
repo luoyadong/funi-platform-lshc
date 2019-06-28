@@ -155,6 +155,10 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                                 Ext.MessageBox.alert("温馨提示", "无状态数据!房屋编号:"+record.houseId);
                                                 return;
                                             }
+                                            if(record.auditStatus != '复审通过'){
+                                                Ext.MessageBox.alert("温馨提示", "当前房屋状态:"+record.auditStatus+",不能退回!房屋编号:"+record.houseId);
+                                                return;
+                                            }
                                             for(var j=i+1;j< selectObjArray.lenght;j++){
                                                 var record2 = selectObjArray[j].data;
                                                 if(record.auditStatus != record2.auditStatus){//状态相等
@@ -213,7 +217,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                     }
                                 },
                                 {
-                                    xtype: 'button', text: '批量提交', scope: me, glyph: 'xf014@FontAwesome',
+                                    xtype: 'button', text: '批量提交', scope: me, glyph: 'xf234@FontAwesome',
 
                                     handler: function () {
 
@@ -271,12 +275,13 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                     {text: '业务ID', hidden: true, dataIndex: 'id', align: 'center'},
                     {text: '审批受理ID', hidden: true, dataIndex: 'jobAcceptId', align: 'center'},
                     {text: '节点名称', hidden: true, dataIndex: 'nodeName', align: 'center'},
-                    {text: '房屋编号', dataIndex: 'houseId', width: '25%', align: 'center'},
-                    {text: '单元', dataIndex: 'unitNo', width: '10%', align: 'center'},
-                    {text: '楼层', dataIndex: 'layer', width: '10%', align: 'center'},
-                    {text: '房号', dataIndex: 'roomNo', BIZ_NO: '12%', align: 'center'},
-                    {text: '状态', dataIndex: 'auditStatus', width: '15%', align: 'center'},
-                    {text: '附件', dataIndex: 'fileCount', width: '15%', align: 'center'}
+                    {text: '房屋编号', dataIndex: 'houseId', flex:1.5, align: 'center'},
+                    {text: '单元', dataIndex: 'unitNo', flex:1, align: 'center'},
+                    {text: '楼层', dataIndex: 'layer', flex:1, align: 'center'},
+                    {text: '房号', dataIndex: 'roomNo', flex:1, align: 'center'},
+                    {text: '附件', dataIndex: 'fileCount', flex:1, align: 'center'},
+                    {text: '状态', dataIndex: 'auditStatus', flex:1.5, align: 'center'}
+
                 ],
                 listeners: {
                     cellclick: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {

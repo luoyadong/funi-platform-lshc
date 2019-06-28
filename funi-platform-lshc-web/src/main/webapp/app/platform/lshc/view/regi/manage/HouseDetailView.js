@@ -7,12 +7,14 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
 	xtype: 'lshc-view-regi-HouseDetailView',
 	itemId:"lshc-view-regi-HouseDetailView-itemId",
     layout:"fit",
+    margin:"-3 0 0 0",
     requires:[
 		"app.platform.lshc.view.regi.manage.HouseTab",
 		"app.platform.lshc.view.regi.manage.FileTab",
 		"app.platform.lshc.view.regi.manage.ApproveTab",
 		"app.platform.lshc.view.regi.manage.RightEntWin",
-		'app.platform.lshc.view.regi.manage.NewInfoWinView'
+		'app.platform.lshc.view.regi.manage.NewInfoWinView',
+        'app.platform.lshc.view.base.PrintInfoWindow'
     ],
 	config: {
         //主容器
@@ -47,18 +49,6 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
         var approveView = this.queryById("lshc-regi-approve-tabpanel-itemId");
         approveView.store.proxy.extraParams = obj;
         approveView.store.loadPage(1);
-
-        //承租人
-       // var lesseeFormView = this.queryById("ghouse-rent-contract-lessee-form-itemId");
-       // lesseeFormView.getForm().setValues(formData.lessee);
-      //  lesseeFormView.initHide(formData);
-     //   var lesseeUpload = lesseeFormView.queryById("FileUploadUtilsId");
-     //   lesseeUpload.config.bizId=formData.contract.lesseeId;
-      //  lesseeUpload.findFileList();
-       // lesseeFormView.setDisabled(true);
-        //住户
-      //  var residentView = this.queryById("ghouse-rent-contract-resident");
-      //  residentView.store.loadData(formData.residentList,false);
     },
     isHiddenBtn:function(btnType){//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
         var me = this;
@@ -101,6 +91,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                         {
                             xtype:'button',
                             text:'编辑',
+                           // margin:"4 0 0 0",
                             glyph: 0xf044,
                             handler:function() {
 								if(me.config.bizId == null){
@@ -141,10 +132,19 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                         },
                         {
                             xtype:'button',text:"打印",glyph: 'xf02f@FontAwesome',itemId:"commit",
+                            //margin:"4 0 0 0",
                             handler:function(){
-                                        Ext.create("app.platform.lshc.view.regi.manage.RightEntWin", {
-                                            
-                                        }).show();
+                                if(me.config.bizId == null){
+                                    Ext.MessageBox.alert("温馨提示","请选择左侧的房屋数据！");
+                                    return;
+                                }
+                                var id = me.config.bizId ;
+                                var   printInfoWin = Ext.create("app.platform.lshc.view.base.PrintInfoWindow", {
+                                    bizTypeId: '1',
+                                    bizId: id
+                                });
+                                printInfoWin.initStore();
+                                printInfoWin.show();
                             }
                         }
                     ]
@@ -164,7 +164,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                     title:'普查信息',
                     overflowY:'auto',
                     width:"100%",
-                    height:275,
+                    height:320,
                     disabled:false
                 },{
                     title:'附件',

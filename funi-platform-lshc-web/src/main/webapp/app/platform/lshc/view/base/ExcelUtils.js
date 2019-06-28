@@ -36,8 +36,8 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
             var formTmp = this;
             var win = Ext.create("Ext.Window",{
                 itemId: 'ghouse-detail-excel-win-itemId',
-                height:100,
-                width:400,
+                height:110,
+                width:350,
                 items: [
                     {
                         tbar: {
@@ -221,7 +221,6 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                     xtype: 'tbtext',
                                     html: '<a href="http://rjyscm.funi.com/group1/M00/04/42/wKgB510TjSmAft99AABOAD_6jgM090.xls">下载填报模板</a>',
                                     margin: '0 0 0 70'
-
                                 }
 
                             ]

@@ -75,6 +75,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                                 {
                                     xtype: 'button',
                                     text: '添加',
+                                    glyph: 0xf0fe,
                                     //access:"AUTH_GHOUSE_HOUSE_ENT_ADD",
                                     handler: function () {
                                         Ext.create("app.platform.lshc.view.regi.manage.RightEntWin", {

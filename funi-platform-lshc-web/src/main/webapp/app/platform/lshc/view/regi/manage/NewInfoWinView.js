@@ -25,9 +25,10 @@ Ext.define('app.platform.lshc.view.regi.manage.NewInfoWinView', {
     width: 760,
     height:480,
     autoScroll: false,
-    resizable: true,
+    //resizable: true,
     buttonAlign: 'center',
     modal: true,
+    maskDisabled:false,
     initWinEdit:function(){
         var me = this;
         var editHouseView = me.queryById("lshc-view-regi-HouseEditView-itemId");

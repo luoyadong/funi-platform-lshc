@@ -123,7 +123,6 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 
             var view = Ext.ComponentQuery.query("textfield,numberfield,xcombobox,checkbox",tabpanelView.items.items[i]);
             for(var j=0;j<view.length;j++){
-                console.log(view[j].xtype)
                 //view[j].setDisabled(true);
                 view[j].setReadOnly(true);
             }
@@ -300,19 +299,21 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 								labelAlign:'right',
 								itemId:"houseIdItemId",
 								name:"houseId",
-								labelWidth:65,
+								labelWidth:56,
 								fieldLabel:'房屋编码',
-								width:240,
+								width:160,
 								emptyText:"房屋编码"
 						  },
                             {
-								xtype:"textfield",
-								labelAlign:'right',
-								itemId:"entNameItemId",
-								name:"entName",labelWidth:65,fieldLabel:'人员姓名',
-								width:240,
-								emptyText:"人员姓名"
-						  },
+                                xtype:"textfield",
+                                labelAlign:'right',
+                                itemId:"idNoItemId4",
+                                name:"idNo",
+                                labelWidth:105,
+                                fieldLabel:'人员/单位证件号',
+                                width:220,
+                                emptyText:"人员/单位证件号"
+                            },
                            {
                                 xtype: 'button', text: '查询', scope: me,
                                 glyph:0xf002,
@@ -339,6 +340,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 glyph: 0xf0a5,
                                 handler:function() {
                                     me.config.parentContainer.show();
+                                    me.config.parentContainer.initHouseList();
                                     me.destroy();
                                 }
                             }
@@ -422,7 +424,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 				]
             }, {
                 region: 'west',//左方
-                width: '45%',
+                width: '39%',
                 items:[
 					{
                            // title: '房屋列表信息',
@@ -444,6 +446,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                             itemId: 'tab2',
                             autoScroll: true,
                             scrollable: true,
+                            border:true,
                             items: [
                                 {xtype: 'lshc-view-regi-HouseDetailView',parentContainer:me,srcType:me.config.srcType}
                             ]

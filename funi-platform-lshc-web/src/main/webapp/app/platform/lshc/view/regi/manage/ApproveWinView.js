@@ -27,6 +27,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
     resizable: false,
     buttonAlign: 'center',
     modal: true,
+    maskDisabled:false,
     checkSameStatus:function(){
 
     },
@@ -100,7 +101,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                 }
             }
             if(displayVal == ""){
-                Ext.MessageBox.alert("温馨提示","没有可用的什么结论！");
+                Ext.MessageBox.alert("温馨提示","没有可用的结论！");
                 return
             }
             var jobResultId = values.jobResult;
@@ -108,7 +109,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
             return {"ids":this.config.ids,
                 "result":jobResult,"jobResultId":jobResultId,"nodeName":this.config.nodeName,"desc":values.jobOpinion};
         }
-        throw {message:"请填写审批意见"};
+        //throw {message:"请填写审批意见"};
     },
     sumitAudit:function(){
         var me = this;
@@ -173,7 +174,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                                     height:180,
                                     labelWidth: 80,
                                     margin: '0 0 0 10',
-                                    allowBlank:false,
+                                    allowBlank:true
                                 },
                                 {
                                     xtype: 'textfield', itemId: "lshc-base-worknodepanel-nodeName-itemId", hidden: true,

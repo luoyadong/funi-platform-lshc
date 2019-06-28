@@ -38,7 +38,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         var obj = new Object();
         for(var i=0;i<formElements.length;i++){
             //下拉菜单存储展示的值
-            if(formElements[i].name == 'region' || formElements[i].name =='street'){
+            if(formElements[i].name == 'region'
+                || formElements[i].name =='street'
+                || formElements[i].name =='communityName'){
                 obj[formElements[i].name] = this.queryById(formElements[i].name+"ItemId").getRawValue()
             }else{
                 obj[formElements[i].name] =formElements[i].value;
@@ -96,6 +98,11 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
             myTask.hide();
         }
         return myTask;
+
+        // var myTask = new Ext.LoadMask(target,{
+        //     msg: "sasa",
+        //     removeMask:true//完成后移除
+        // });
     },
     initComponent: function () {
         var me = this;
@@ -127,7 +134,10 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                 {type:"string",name:"projectName"},
                 {type:"string",name:"mapCode"},
                 {type:"string",name:"address"},
-                {type:"string",name:"houseCount"}
+                {type:"string",name:"houseCount"},
+
+                {type:"string",name:"communityName"},
+                {type:"string",name:"buildName"}
             ],
             pageSize:15
         });
@@ -142,10 +152,11 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                    // '->',
                                     {xtype:'xcombobox',
                                         itemId:'regionItemId',
+                                        labelAlign:'right',
                                         fieldLabel:'区(县)',
                                         labelWidth:56,
                                         emptyText:'全部',
-                                        width:156,
+                                        width:186,
                                         name:"region",
                                         editable:false,
                                         triggerAction:'all',
@@ -156,19 +167,41 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                                 cabinet.store.proxy.extraParams = {regionId:arguments[1]};
                                                 cabinet.store.load();
                                                 me.queryById("streetItemId").clearValue();
+                                                me.queryById("communityNameItemId").clearValue();
                                             }
                                         }
                                     },
                                     {xtype:'xcombobox',
                                         itemId:'streetItemId',
                                         fieldLabel:'街道(乡镇)',
-                                        labelWidth: 75,
-                                        width: 170,
+                                        labelAlign:'right',
+                                        labelWidth: 90,
+                                        width: 200,
                                         emptyText:'全部',
                                         name:"street",
                                         editable:false,
                                         triggerAction:'all',
-                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId')
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId'),
+                                        listeners:{
+                                            change:function(){
+                                                var cabinet = me.queryById("communityNameItemId");
+                                                cabinet.store.proxy.extraParams = {blockId:arguments[1]};
+                                                cabinet.store.load();
+                                                me.queryById("communityNameItemId").clearValue();
+                                            }
+                                        }
+                                    },
+                                    {xtype:'xcombobox',
+                                        itemId:'communityNameItemId',
+                                        fieldLabel:'社区名称',
+                                        labelAlign:'right',
+                                        labelWidth: 65,
+                                        width: 190,
+                                        emptyText:'全部',
+                                        name:"communityName",
+                                        editable:false,
+                                        triggerAction:'all',
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllStreetListByRegionId')
                                     },
                                     {
                                         xtype:"textfield",
@@ -177,31 +210,12 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         name:"projectName",
                                         labelWidth:60,
                                         fieldLabel:'小区名称',
-                                        width:170,
+                                        width:200,
                                         emptyText:"小区名称"
                                     },
-                                    {
-                                        xtype:"textfield",
-                                        labelAlign:'right',
-                                        itemId:"buildtemId",
-                                        name:"mapCode",
-                                        labelWidth:90,
-                                        fieldLabel:'楼栋地图编号',
-                                        width:190,
-                                        emptyText:"楼栋地图编号"
-                                    },
-                                    {
-                                        xtype:"textfield",
-                                        labelAlign:'right',
-                                        itemId:"addrItemId",
-                                        name:"address",
-                                        labelWidth:60,
-                                        fieldLabel:'实际地址',
-                                        width:190,
-                                        emptyText:"实际地址"
-                                    }
-                                    ,
-                                    {xtype: 'button',text:"查询",glyph:0xf002,handler:function(){
+                                    {xtype: 'button',
+                                        margin:'0 0 0 105',
+                                        text:"查询",glyph:0xf002,handler:function(){
                                         console.log(me.getParams())
                                         store.proxy.extraParams = me.getParams();//获取列表store
                                         store.loadPage(1);
@@ -212,6 +226,63 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         handler: function () {
                                             me.resetParams();
                                         }
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: 'toolbar', columnWidth: 1, scope: me,
+                                items: [
+                                    // '->',
+                                    {
+                                        xtype:"textfield",
+                                        labelAlign:'right',
+                                        itemId:"addrItemId",
+                                        name:"address",
+                                        labelWidth:56,
+                                        fieldLabel:'实际地址',
+                                        width:186,
+                                        emptyText:"实际地址"
+                                    }
+                                    ,
+                                    {
+                                        xtype:"textfield",
+                                        labelAlign:'right',
+                                        itemId:"buildtemId",
+                                        name:"mapCode",
+                                        labelWidth:90,
+                                        fieldLabel:'楼栋地图编号',
+                                        width:200,
+                                        emptyText:"楼栋地图编号"
+                                    },
+                                    {
+                                        xtype:"textfield",
+                                        labelAlign:'right',
+                                        itemId:"buildNameItemId",
+                                        name:"buildName",
+                                        labelWidth:65,
+                                        fieldLabel:'楼栋名称',
+                                        width:190,
+                                        emptyText:"楼栋名称"
+                                    },
+                                    {
+                                        xtype:"textfield",
+                                        labelAlign:'right',
+                                        itemId:"houseIdItemId",
+                                        name:"houseId",
+                                        labelWidth:60,
+                                        fieldLabel:'房屋编号',
+                                        width:200,
+                                        emptyText:"房屋编号"
+                                    },
+                                    {
+                                        xtype:"textfield",
+                                        labelAlign:'right',
+                                        itemId:"idNoItemId4",
+                                        name:"idNo",
+                                        labelWidth:105,
+                                        fieldLabel:'人员/单位证件号',
+                                        width:220,
+                                        emptyText:"人员/单位证件号"
                                     }
                                 ]
                             },
@@ -291,16 +362,18 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                     columns: [
                         {text: '业务ID',hidden:true, dataIndex: 'id', align: 'center'},
                        // {text: '序号', dataIndex: 'serialNo', width: '5%', align: 'center'},
-                        {text: '楼栋地图编号', dataIndex: 'mapCode', width: '20%', align: 'center'
-                        , renderer : function(data, metadata, record, rowIndex, columnIndex,store) {
-                                return  '<a href="javascript:void(0)" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="build-detail-info">'+record.data.mapCode+'</a>';
-                            }
-                        },
-                        {text: '区（县）', dataIndex: 'region', width: '10%', align: 'center'},
-                        {text: '街道（乡镇）', dataIndex: 'street', width: '15%', align: 'center'},
-                        {text: '项目（小区）名称', dataIndex: 'projectName', width: '19%', align: 'center'},
-                        {text: '房屋套数', dataIndex: 'houseCount', width: '14%', align: 'center'},
-                        {text: '实际地址', dataIndex: 'address', width: '20%', align: 'center'}
+                        {text: '区（县）', dataIndex: 'region', flex:1, align: 'center'},
+                        {text: '街道（乡镇）', dataIndex: 'street', flex:1, align: 'center'},
+                        {text: '社区名称', dataIndex: 'communityName', flex:1, align: 'center'},
+                        {text: '项目（小区）名称', dataIndex: 'projectName', flex:1, align: 'center'},
+                        {text: '楼栋地图编号', dataIndex: 'mapCode', flex:1, align: 'center'},
+                        //     , renderer : function(data, metadata, record, rowIndex, columnIndex,store) {
+                        //     return  '<a href="javascript:void(0)" style="color: #1f18ff;margin-right:14px;margin-left:2px" class="build-detail-info">'+record.data.mapCode+'</a>';
+                        // }
+                       // },
+                        {text: '楼栋名称', dataIndex: 'buildName', flex:1, align: 'center'},
+                        {text: '房屋套数', dataIndex: 'houseCount', flex:1, align: 'center'},
+                        {text: '实际地址', dataIndex: 'address', flex:1.5, align: 'center'}
                     ],
                     listeners: {
                         cellclick: function (table, td, cellIndex, record, tr, rowIndex, e, eOpts) {
@@ -322,13 +395,17 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                         },
                         itemdblclick: function (dataview, record, item, index, e) {
 
-                            // var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
-                            //     config:{parentContainer:me,bizId:record.data.id,mapCode:record.data.mapCode,address:record.data.address}
-                            // });
-                            //
-                            // var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
-                            // me.hide();
-                            // currentActiveTab.add(createContractView);
+                            //参数不可乱传，穿错参数会导致无法渲染
+                            var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
+                                config:{parentContainer:me,bizId:record.data.id}
+                            });
+
+                            var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();
+                            me.hide();
+                            currentActiveTab.add(createContractView);
+                            createContractView.config.srcType = 0
+                            createContractView.initDetail(record.data.mapCode,record.data.address);
+                            createContractView.initBtn();
 
                         }
                     }
