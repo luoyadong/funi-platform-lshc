@@ -1,10 +1,6 @@
 package com.funi.platform.lshc.vo.census;
 
-import org.jeecgframework.poi.excel.annotation.Excel;
-
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by sam on 2019/6/15.1:09 PM

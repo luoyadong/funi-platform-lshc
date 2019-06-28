@@ -72,22 +72,10 @@ public interface ManageRegiInfoService {
     String saveOrUpdateRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit);
 
     /**
-     * 根据ID提交普查信息审核
-     * @param id
-     */
-    void submitOnly(String id);
-
-    /**
      * 创建普查信息
      * @param regiInfoDto
      */
     void modifyRegiInfo(RegiInfoDto regiInfoDto);
-
-    /**
-     * 批量导入普查信息
-     * @param uploadFile
-     */
-    void importRegiInfoList(MultipartFile uploadFile) throws IOException;
 
     /**
      * 校验批量导入的普查信息是否有效，在本excel范围内查找重复

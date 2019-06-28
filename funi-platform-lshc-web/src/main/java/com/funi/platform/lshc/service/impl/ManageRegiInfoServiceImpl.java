@@ -198,26 +198,6 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         return id;
     }
 
-    @Override
-    public void submitOnly(String id) {
-        RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(id);
-        if (regiInfo == null) {
-            throw new RuntimeException("普查信息不存在");
-        }
-        String houseStatus = regiInfo.getHouseStatus();
-        if(! CensusConstants.HOUSE_STATUS_INPUT.equals(houseStatus)) {
-            throw new RuntimeException("普查信息状态异常");
-        }
-        CurrentUser userInfo = userManager.findUser();
-        try {
-            // 修改普查信息的状态
-            regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
-            lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 保存新增的房屋信息，更新或保存楼栋信息
      * @param regiInfo
@@ -447,46 +427,6 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
-    public void importRegiInfoList(MultipartFile uploadFile) throws IOException {
-        List<ExcelRegiInfoVo> excelRegiInfoVoList = getRegiInfoByExcle(uploadFile);
-        // 校验Excel数据有效性
-        if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
-            throw new RuntimeException("Excel中没有数据，请检查Excel格式是否正确或是否存在有效数据");
-        }
-        for(ExcelRegiInfoVo excelRegiInfoVo : excelRegiInfoVoList) {
-            RegiInfo regiInfo = new RegiInfo();
-            EntInfo entInfo = new EntInfo();
-            // 拷贝房屋对象属性
-            BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
-            // 拷贝入住人员属性
-            BeanUtils.copyProperties(excelRegiInfoVo, entInfo);
-            // 使用普查信息编号是否为空来判断是新增还是编辑操作
-            String houseId = regiInfo.getHouseId();
-            CurrentUser userInfo = userManager.findUser();
-            if(StringUtils.isBlank(houseId)) {
-                // 保存普查信息和楼栋信息
-                saveNewRegiInfo(regiInfo, userInfo, false);
-                // 普查信息主键ID
-                String id = regiInfo.getId();
-                if(entInfo != null) {
-                    // 保存人口信息
-                    saveNewEntInfo(entInfo, id, userInfo);
-                }
-            } else {
-                RegiInfo existRegiInfo = regiInfoMapper.selectByHouseId(houseId);
-                // 编辑普查信息
-                updateRegiInfo(regiInfo, existRegiInfo, userInfo);
-                if(entInfo != null) {
-                    List<EntInfo> entInfoList = new ArrayList<>();
-                    entInfoList.add(entInfo);
-                    // 编辑普查信息关联的入住人信息
-                    modifyEntInfoList(entInfoList, houseId, userInfo);
-                }
-            }
-        }
-    }
-
-    @Override
     public String checkRegiInfoList(MultipartFile uploadFile) throws IOException {
         List<ExcelRegiInfoVo> excelRegiInfoVoList = getRegiInfoByExcle(uploadFile);
         // 校验Excel数据有效性
@@ -562,6 +502,12 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             int rowNo = i + CensusConstants.EXCEL_CONTENT_HEAD_ROWS_NO + 1;
             List<Integer> repeatRowNoList = new ArrayList<>();
             ExcelRegiInfoVo currentExcelRegiInfoVo = excelRegiInfoVoList.get(i);
+            // 获取房屋编号，并校验有效性
+            String houseId = currentExcelRegiInfoVo.getHouseId();
+            RegiInfo regiInfo = regiInfoMapper.selectByHouseId(houseId);
+            if (regiInfo == null) {
+                throw new RuntimeException("房屋编号为" + houseId + ",的普查信息在系统中不存在，请核实");
+            }
             for(int j = i+1; j < excelRegiInfoVoList.size(); j ++) {
                 int loopRowNo = j + CensusConstants.EXCEL_CONTENT_HEAD_ROWS_NO + 1;
                 ExcelRegiInfoVo currentLoopExcelRegiInfoVo = excelRegiInfoVoList.get(j);

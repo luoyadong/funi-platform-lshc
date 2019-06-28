@@ -119,7 +119,7 @@ public class ManageRegiController {
         } catch (Exception e) {
             e.printStackTrace();
             new ResultVo(false);
-            ResultVo resultVo = ResultVo.newResult("添加普查信息失败：" + e.getMessage());
+            ResultVo resultVo = ResultVo.newResult("编辑提交普查信息失败：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }
@@ -139,26 +139,6 @@ public class ManageRegiController {
             e.printStackTrace();
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("提交普查信息失败：" + e.getMessage());
-            resultVo.setSuccess(false);
-            return resultVo;
-        }
-    }
-
-    /**
-     * 提交普查信息
-     * @param id
-     * @return
-     */
-    @RequestMapping(value="submitOnly",method = RequestMethod.POST)
-    @ResponseBody
-    public Object submitOnly(String id) {
-        try {
-            manageRegiInfoService.submitOnly(id);
-            return ResultVo.newResult("提交成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-            new ResultVo(false);
-            ResultVo resultVo = ResultVo.newResult("提交失败：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }
@@ -215,24 +195,6 @@ public class ManageRegiController {
         } catch(Exception e) {
             new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("普查信息校验失败，原因：" + e.getMessage());
-            resultVo.setSuccess(false);
-            return resultVo;
-        }
-    }
-
-    /**
-     * 批量导入普查信息
-     * @throws Exception
-     */
-    @RequestMapping("/importRegiInfoList")
-    @ResponseBody
-    public Object importRegiInfoList(MultipartFile uploadFile) {
-        try {
-            manageRegiInfoService.importRegiInfoList(uploadFile);
-            return ResultVo.newResult("批量导入普查信息成功");
-        } catch(Exception e) {
-            new ResultVo(false);
-            ResultVo resultVo = ResultVo.newResult("批量导入普查信息失败，原因：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;
         }
@@ -321,8 +283,6 @@ public class ManageRegiController {
     @RequestMapping("/importDataRegiInfoList")
     @ResponseBody
     public Object importDataRegiInfoList(@RequestBody ExcelRegiInfoBo excelRegiInfo) {
-//        List<ExcelRegiInfoVo> excelRegiInfoVoList = JSONObject.(jsonObject,ExcelRegiInfoVo.class);
-
         List<ExcelRegiInfoVo> excelRegiInfoVoList = excelRegiInfo.getExcelRegiInfo();
         try {
             manageRegiInfoService.importRegiInfoList(excelRegiInfoVoList);
