@@ -18,6 +18,12 @@ public class ExcelRegiInfoVo {
     /** 楼栋地图编号 */
     @Excel(name="楼栋地图编号")
     private String mapCode;
+    /** 楼栋名称*/
+    @Excel(name="楼栋名称")
+    private String buildName;
+    /** 楼栋总层数 */
+    @Excel(name="楼栋总层数")
+    private String totalLayer;
     /** 房屋编号 */
     @Excel(name="房屋编号")
     private String houseId;
@@ -42,14 +48,14 @@ public class ExcelRegiInfoVo {
     /** 房屋号 */
     @Excel(name="号")
     private String roomNo;
-    /** 产权证地址 */
-    @Excel(name="产权证书地址")
-    private String rightAddr;
+    /** 房屋坐落*/
+    @Excel(name="房屋坐落")
+    private String located;
     /** 建筑面积 */
-    @Excel(name="建筑面积")
+    @Excel(name="建筑面积（m²）")
     private BigDecimal houseArea;
     /** 套内面积 */
-    @Excel(name="套内面积")
+    @Excel(name="套内面积（m²）")
     private BigDecimal innerHouseArea;
     /** 房屋户型(室) */
     @Excel(name="室")
@@ -157,6 +163,30 @@ public class ExcelRegiInfoVo {
         return Objects.hash(getMapCode(), getRegion(), getStreet(), getApt(), getBuildNo(), getUnitNo(), getLayer(), getRoomNo());
     }
 
+    public String getBuildName() {
+        return buildName;
+    }
+
+    public void setBuildName(String buildName) {
+        this.buildName = buildName;
+    }
+
+    public String getTotalLayer() {
+        return totalLayer;
+    }
+
+    public void setTotalLayer(String totalLayer) {
+        this.totalLayer = totalLayer;
+    }
+
+    public String getLocated() {
+        return located;
+    }
+
+    public void setLocated(String located) {
+        this.located = located;
+    }
+
     public String getProjectName() {
         return projectName;
     }
@@ -243,14 +273,6 @@ public class ExcelRegiInfoVo {
 
     public void setRoomNo(String roomNo) {
         this.roomNo = roomNo;
-    }
-
-    public String getRightAddr() {
-        return rightAddr;
-    }
-
-    public void setRightAddr(String rightAddr) {
-        this.rightAddr = rightAddr;
     }
 
     public BigDecimal getHouseArea() {

@@ -3,7 +3,6 @@ package com.funi.platform.lshc.service.impl;
 import com.funi.framework.biz.eic.bo.CurrentUser;
 import com.funi.platform.lshc.dto.JobLogDto;
 import com.funi.platform.lshc.dto.RegiInfoAuditDto;
-import com.funi.platform.lshc.entity.census.RegiInfo;
 import com.funi.platform.lshc.entity.sys.JobAccept;
 import com.funi.platform.lshc.entity.sys.JobLog;
 import com.funi.platform.lshc.mapper.census.BuildInfoMapper;
