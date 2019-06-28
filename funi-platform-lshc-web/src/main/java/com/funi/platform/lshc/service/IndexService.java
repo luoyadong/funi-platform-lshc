@@ -2,7 +2,6 @@ package com.funi.platform.lshc.service;
 
 import com.funi.platform.lshc.entity.census.IndexNotice;
 import com.funi.platform.lshc.query.census.NoticeQuery;
-import com.funi.platform.lshc.vo.census.IndexNoticeVo;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface IndexService {
      * @param noticeQuery
      * @return
      */
-    List<IndexNoticeVo> findIndexNoticeList(NoticeQuery noticeQuery);
+    List<IndexNotice> findIndexNoticeList(NoticeQuery noticeQuery);
 
     /**
      * 根据文章ID查询文章详情

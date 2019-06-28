@@ -2,9 +2,9 @@ package com.funi.platform.lshc.controller;
 
 import com.funi.framework.mvc.eic.controller.BaseController;
 import com.funi.framework.mvc.eic.vo.ResultVo;
+import com.funi.platform.lshc.entity.census.IndexNotice;
 import com.funi.platform.lshc.query.census.NoticeQuery;
 import com.funi.platform.lshc.service.IndexService;
-import com.funi.platform.lshc.vo.census.IndexNoticeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +29,7 @@ public class IndexController extends BaseController {
      */
     @RequestMapping("getIndexNoticeList")
     @ResponseBody
-    public List<IndexNoticeVo> getIndexNoticeList(@RequestBody NoticeQuery noticeQuery) {
+    public List<IndexNotice> getIndexNoticeList(@RequestBody NoticeQuery noticeQuery) {
         return indexService.findIndexNoticeList(noticeQuery);
     }
 

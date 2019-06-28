@@ -4,7 +4,6 @@ import com.funi.platform.lshc.entity.census.IndexNotice;
 import com.funi.platform.lshc.mapper.census.IndexNoticeMapper;
 import com.funi.platform.lshc.query.census.NoticeQuery;
 import com.funi.platform.lshc.service.IndexService;
-import com.funi.platform.lshc.vo.census.IndexNoticeVo;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,8 +16,8 @@ public class IndexServiceImpl implements IndexService {
     private IndexNoticeMapper indexNoticeMapper;
 
     @Override
-    public List<IndexNoticeVo> findIndexNoticeList(NoticeQuery noticeQuery) {
-        return null;
+    public List<IndexNotice> findIndexNoticeList(NoticeQuery noticeQuery) {
+        return indexNoticeMapper.selectIndexNoticeList(noticeQuery);
     }
 
     @Override

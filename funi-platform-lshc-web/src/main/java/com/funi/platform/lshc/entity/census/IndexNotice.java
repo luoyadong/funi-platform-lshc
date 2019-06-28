@@ -2,7 +2,6 @@ package com.funi.platform.lshc.entity.census;
 
 import com.funi.platform.lshc.entity.SuperEntity;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 首页公告信息
@@ -17,7 +16,7 @@ public class IndexNotice extends SuperEntity implements Serializable {
     private String noticeTitle;
 
     /** 公告日期 */
-    private Date noticeDate;
+    private String noticeDate;
 
     /** url */
     private String url;
@@ -46,11 +45,11 @@ public class IndexNotice extends SuperEntity implements Serializable {
         this.noticeTitle = noticeTitle;
     }
 
-    public Date getNoticeDate() {
+    public String getNoticeDate() {
         return noticeDate;
     }
 
-    public void setNoticeDate(Date noticeDate) {
+    public void setNoticeDate(String noticeDate) {
         this.noticeDate = noticeDate;
     }
 

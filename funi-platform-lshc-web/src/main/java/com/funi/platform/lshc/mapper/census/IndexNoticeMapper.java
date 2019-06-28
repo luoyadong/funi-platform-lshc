@@ -2,7 +2,8 @@ package com.funi.platform.lshc.mapper.census;
 
 import com.funi.platform.lshc.entity.census.IndexNotice;
 import com.funi.platform.lshc.query.census.NoticeQuery;
-import com.funi.platform.lshc.vo.census.IndexNoticeVo;
+
+import java.util.List;
 
 public interface IndexNoticeMapper {
     int deleteByPrimaryKey(String id);
@@ -24,5 +25,5 @@ public interface IndexNoticeMapper {
      * @param noticeQuery
      * @return
      */
-    IndexNoticeVo selectIndexNoticeVoList(NoticeQuery noticeQuery);
+    List<IndexNotice> selectIndexNoticeList(NoticeQuery noticeQuery);
 }

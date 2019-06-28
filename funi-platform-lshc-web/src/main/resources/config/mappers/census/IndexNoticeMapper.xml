@@ -5,7 +5,7 @@
     <id column="ID" jdbcType="VARCHAR" property="id" />
     <result column="NOTICE_TYPE" jdbcType="VARCHAR" property="noticeType" />
     <result column="NOTICE_TITLE" jdbcType="VARCHAR" property="noticeTitle" />
-    <result column="NOTICE_DATE" jdbcType="TIMESTAMP" property="noticeDate" />
+    <result column="NOTICE_DATE" jdbcType="VARCHAR" property="noticeDate" />
     <result column="URL" jdbcType="VARCHAR" property="url" />
     <result column="COMMON" jdbcType="VARCHAR" property="common" />
     <result column="VERSION" jdbcType="DECIMAL" property="version" />
@@ -26,14 +26,16 @@
   <sql id="Blob_Column_List">
     CONTENT
   </sql>
-    <select id="selectIndexNoticeVoList" resultType="com.funi.platform.lshc.vo.census.IndexNoticeVo" parameterType="com.funi.platform.lshc.query.census.NoticeQuery">
+    <select id="selectIndexNoticeList" resultMap="BaseResultMap" parameterType="com.funi.platform.lshc.query.census.NoticeQuery">
         select
-            ID as id,
-            NOTICE_TITLE as noticeTitle,
-            TO_CHAR(NOTICE_DATE, 'YYYY-MM-DD') as noticeDate
+            <include refid="Base_Column_List" />
         from LSHC_INDEX_NOTICE
         where ISVALIDE = '1'
-          AND DELETED = 0 AND NOTICE_TYPE = #{noticeType}
+          AND DELETED = 0
+          <if test="noticeType != null">
+            AND NOTICE_TYPE = #{noticeType}
+          </if>
+
     </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 
@@ -56,7 +58,7 @@
       CREATE_TIME, CREATE_ID, UPDATE_TIME, 
       UPDATE_ID, DELETED, ISVALIDE, 
       CONTENT)
-    values (#{id,jdbcType=VARCHAR}, #{noticeType,jdbcType=VARCHAR}, #{noticeTitle,jdbcType=VARCHAR}, #{noticeDate,jdbcType=TIMESTAMP},
+    values (#{id,jdbcType=VARCHAR}, #{noticeType,jdbcType=VARCHAR}, #{noticeTitle,jdbcType=VARCHAR}, #{noticeDate,jdbcType=VARCHAR},
       #{url,jdbcType=VARCHAR}, #{common,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateId,jdbcType=VARCHAR}, #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR}, 
@@ -122,7 +124,7 @@
         #{noticeTitle,jdbcType=VARCHAR},
       </if>
       <if test="noticeDate != null">
-        #{noticeDate,jdbcType=TIMESTAMP},
+        #{noticeDate,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
@@ -166,7 +168,7 @@
         NOTICE_TITLE = #{noticeTitle,jdbcType=VARCHAR},
       </if>
       <if test="noticeDate != null">
-        NOTICE_DATE = #{noticeDate,jdbcType=TIMESTAMP},
+        NOTICE_DATE = #{noticeDate,jdbcType=VARCHAR},
       </if>
       <if test="url != null">
         URL = #{url,jdbcType=VARCHAR},
@@ -205,7 +207,7 @@
     update LSHC_INDEX_NOTICE
     set NOTICE_TYPE = #{noticeType,jdbcType=VARCHAR},
       NOTICE_TITLE = #{noticeTitle,jdbcType=VARCHAR},
-      NOTICE_DATE = #{noticeDate,jdbcType=TIMESTAMP},
+      NOTICE_DATE = #{noticeDate,jdbcType=VARCHAR},
       URL = #{url,jdbcType=VARCHAR},
       COMMON = #{common,jdbcType=VARCHAR},
       VERSION = #{version,jdbcType=DECIMAL},
@@ -222,7 +224,7 @@
     update LSHC_INDEX_NOTICE
     set NOTICE_TYPE = #{noticeType,jdbcType=VARCHAR},
       NOTICE_TITLE = #{noticeTitle,jdbcType=VARCHAR},
-      NOTICE_DATE = #{noticeDate,jdbcType=TIMESTAMP},
+      NOTICE_DATE = #{noticeDate,jdbcType=VARCHAR},
       URL = #{url,jdbcType=VARCHAR},
       COMMON = #{common,jdbcType=VARCHAR},
       VERSION = #{version,jdbcType=DECIMAL},
