@@ -32,9 +32,7 @@ public class BasicServiceImpl implements BasicService {
 
     @Override
     public List<ComboboxDto> findDictionaryListName(String type) {
-        List<ComboboxDto> rtList = new ArrayList<>();
-        ComboboxDto allDto = new ComboboxDto("全部", "");
-        rtList.add(allDto);
+        List<ComboboxDto> rtList = initNewSelect(true);
         if(CensusConstants.DICTIONARY_TYPE_HOUSE_STATUS.equals(type)){
             return CensusConstants.DICTIONARY_HOUSE_STATUS;
         }
@@ -46,6 +44,17 @@ public class BasicServiceImpl implements BasicService {
         if(CollectionUtils.isNotEmpty(comboboxDtoList)) {
             rtList.addAll(comboboxDtoList);
         }
+        return rtList;
+    }
+
+    /**
+     * 初始化选择框集合数据
+     * @param addAllSelect 是否添加'全部'选项
+     * @return
+     */
+    private List<ComboboxDto> initNewSelect(boolean addAllSelect) {
+        List<ComboboxDto> rtList = new ArrayList<>();
+        rtList.add(new ComboboxDto("全部", ""));
         return rtList;
     }
 
@@ -86,7 +95,7 @@ public class BasicServiceImpl implements BasicService {
             }
         }
         if(CollectionUtils.isNotEmpty(allRegionList)) {
-            List<ComboboxDto> comboboxDtoList = new ArrayList<>();
+            List<ComboboxDto> comboboxDtoList = initNewSelect(true);
             for(LshcRegionVo lshcRegionVo : allRegionList) {
                 comboboxDtoList.add(new ComboboxDto(lshcRegionVo.getName()));
             }
@@ -192,7 +201,7 @@ public class BasicServiceImpl implements BasicService {
     private List<ComboboxDto> convertComboboxDto(List<LshcRegionVo> lshcRegionVoList) {
         List<ComboboxDto> comboboxDtoList = null;
         if(CollectionUtils.isNotEmpty(lshcRegionVoList)) {
-            comboboxDtoList = new ArrayList<>();
+            comboboxDtoList = initNewSelect(true);
             for(LshcRegionVo lshcRegionVo : lshcRegionVoList) {
                 comboboxDtoList.add(new ComboboxDto(lshcRegionVo));
             }
