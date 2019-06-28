@@ -138,16 +138,24 @@ public class BasicServiceImpl implements BasicService {
             throw new BizException("获取当前登录用户所属区域code异常：接口返回为空");
         }
         String data = JSONObject.parseObject(result).getString("data");
+        // 获得区县信息
         List<SecurityRegionDto> securityRegionDtoList = JSONObject.parseArray(data, SecurityRegionDto.class);
         if(CollectionUtils.isEmpty(securityRegionDtoList)) {
             throw new BizException("获取当前登录用户所属区域code异常：县区没有数据");
         }
         SecurityRegionDto securityRegionDto = securityRegionDtoList.get(0);
+        // 获取街道信息
         List<LshcRegion> regionsList = securityRegionDto.getRegionsList();
         if(CollectionUtils.isEmpty(regionsList)) {
             throw new BizException("获取当前登录用户所属区域code异常：街道办事处没有数据");
         }
-        return regionsList.get(0);
+        // 获取社区信息
+        LshcRegion lshcRegion = regionsList.get(0);
+        List<LshcRegion> regionsList1 = lshcRegion.getRegionsList();
+        if(CollectionUtils.isEmpty(regionsList1)) {
+            throw new BizException("获取当前登录用户所属区域code异常：社区没有数据");
+        }
+        return regionsList1.get(0);
     }
 
     @Override
