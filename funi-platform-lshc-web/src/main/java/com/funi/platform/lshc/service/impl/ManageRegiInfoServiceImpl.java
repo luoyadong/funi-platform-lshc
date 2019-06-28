@@ -145,7 +145,6 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             }
         }
         if(isSubmit) {
-            // TODO 添加工作流
             try {
                 // 修改普查信息的状态
                 regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
@@ -188,6 +187,9 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         modifyFileList(regiInfoDto.getFileList(), id, user);
         if(isSubmit) {
             try {
+                if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
+                    throw new RuntimeException("普查状态异常，无法进入审批流程");
+                }
                 // 修改普查信息的状态
                 regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
                 lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
@@ -208,9 +210,6 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         regiInfo.setHouseId(regiInfoMapper.generateHouseId());
         // 默认状态是录入
         String houseStatus = CensusConstants.HOUSE_STATUS_INPUT;
-        if(isSubmit) {
-            houseStatus = CensusConstants.HOUSE_STATUS_SUBMIT;
-        }
         regiInfo.setHouseStatus(houseStatus);
         regiInfo.setOrgCode(userInfo.getOrganization().getDm());
         regiInfo.setOrgName(userInfo.getOrganization().getMc());
