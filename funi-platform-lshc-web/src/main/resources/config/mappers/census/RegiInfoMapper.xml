@@ -336,7 +336,7 @@
           <if test="queryType == '2'.toString()">
             t4.task_name as nodeName,
           </if>
-          count( t2.id ) over ( partition BY t2.id ) AS fileCount
+          count( t1.id ) over ( partition BY t2.id ) AS fileCount
       FROM
           LSHC_REGI_INFO t2 LEFT JOIN LSHC_FILE t1 ON t1.HC_ID = t2.id AND t1.ISVALIDE = '1' AND t1.DELETED = 0
           LEFT JOIN LSHC_BUILD_INFO t3 ON t2.map_code = t3.map_code

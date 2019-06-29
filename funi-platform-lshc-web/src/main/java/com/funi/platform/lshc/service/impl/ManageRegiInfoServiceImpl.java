@@ -307,6 +307,7 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         paramRegiInfo.setHouseStatus(existRegiInfo.getHouseStatus());
         paramRegiInfo.setOrgCode(existRegiInfo.getOrgCode());
         paramRegiInfo.setOrgName(existRegiInfo.getOrgName());
+        paramRegiInfo.setCommunityName(existRegiInfo.getCommunityName());
 //        paramRegiInfo.setUnitName(existRegiInfo.getUnitName());
 //        paramRegiInfo.setApplyUser(existRegiInfo.getApplyUser());
 //        paramRegiInfo.setReportDate(existRegiInfo.getReportDate());

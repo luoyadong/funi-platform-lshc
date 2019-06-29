@@ -33,7 +33,7 @@ public class SuperEntityUtils <T extends SuperEntity> {
     public void copyEntity(T sourceEntity, T targetEntity, CurrentUser currentUser){
         targetEntity.setId(sourceEntity.getId());
         targetEntity.setCreateId(sourceEntity.getCreateId());
-        targetEntity.setCreateTime(sourceEntity.getUpdateTime());
+        targetEntity.setCreateTime(sourceEntity.getCreateTime());
         targetEntity.setUpdateId(currentUser.getUserId());
         targetEntity.setUpdateTime(new Date());
         targetEntity.setVersion(sourceEntity.getVersion() + 1);
