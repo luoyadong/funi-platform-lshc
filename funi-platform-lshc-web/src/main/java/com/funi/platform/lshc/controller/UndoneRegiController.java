@@ -45,6 +45,7 @@ public class UndoneRegiController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
+    @ResponseBody
     public Object exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             undoneRegiInfoService.exportBuildInfoVoList(ids, response);

@@ -49,6 +49,7 @@ public class ManageRegiController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
+    @ResponseBody
     public Object exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             manageRegiInfoService.exportBuildInfoVoList(ids, response);

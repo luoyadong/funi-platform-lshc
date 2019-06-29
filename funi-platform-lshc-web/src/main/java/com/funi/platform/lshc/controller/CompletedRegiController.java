@@ -42,6 +42,7 @@ public class CompletedRegiController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
+    @ResponseBody
     public Object exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             completedRegiService.exportBuildInfoVoList(ids, response);

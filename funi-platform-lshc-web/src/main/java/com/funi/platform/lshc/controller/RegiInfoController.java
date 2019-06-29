@@ -45,6 +45,7 @@ public class RegiInfoController extends BaseController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
+    @ResponseBody
     public Object exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             regiInfoService.exportBuildInfoVoList(ids, response);
@@ -85,6 +86,7 @@ public class RegiInfoController extends BaseController {
      * @param response
      */
     @RequestMapping("exportRegiInfoVoList")
+    @ResponseBody
     public Object exportRegiInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             regiInfoService.exportRegiInfoVoList(ids, response);
