@@ -59,7 +59,7 @@ public class ExcelRegiInfoVo {
     private String roomNo;
     /** 房屋坐落*/
     @Excel(name="房屋坐落")
-    private String located;
+    private String rightAddr;
     /** 建筑面积 */
     @Excel(name="建筑面积（m²）")
     private BigDecimal houseArea;
@@ -212,12 +212,12 @@ public class ExcelRegiInfoVo {
         this.totalLayer = totalLayer;
     }
 
-    public String getLocated() {
-        return located;
+    public String getRightAddr() {
+        return rightAddr;
     }
 
-    public void setLocated(String located) {
-        this.located = located;
+    public void setRightAddr(String rightAddr) {
+        this.rightAddr = rightAddr;
     }
 
     public String getProjectName() {

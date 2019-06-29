@@ -19,12 +19,12 @@
 
   <select id="selectSysConfDetaNameByType" resultType="com.funi.platform.lshc.dto.ComboboxDto">
     SELECT
-        name AS value,
-        name AS name
+      trim( name )  AS value,
+      trim( name )  AS name
     FROM
         ${tableName}
     WHERE
-        ISONLINE = 1
+        ISONLINE = 1 AND name IS NOT NULL
     <if test="type != null and type != ''">
       AND CONFIG_TYPE = #{type}
     </if>

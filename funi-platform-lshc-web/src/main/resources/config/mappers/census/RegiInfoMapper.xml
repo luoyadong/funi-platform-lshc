@@ -56,7 +56,6 @@
       <result column="BUILD_NAME" jdbcType="VARCHAR" property="buildName" />
       <result column="COMMUNITY_NAME" jdbcType="VARCHAR" property="communityName" />
       <result column="TOTAL_LAYER" jdbcType="DECIMAL" property="totalLayer" />
-      <result column="LOCATED" jdbcType="VARCHAR" property="located" />
   </resultMap>
   <sql id="Base_Column_List">
     ID, HOUSE_ID, SYS_CODE, HOUSE_STATUS, APPROVAL_STATUS, REGION, STREET, PROJECT_NAME,
@@ -65,7 +64,7 @@
     HOUSE_BATHROOM, IS_REGI, RIGHT_NO, BUILD_DATE, HOUSE_TYPE, HOUSE_STRUCTURE, HOUSE_USE,
     LAND_STATUS, PRE_SALE_NO, FIT_STATUS, IS_CHECK_IN, PERSON_NUM, IS_RENT, RENT_START_DATE,
     RENT_END_DATE, ORG_CODE, ORG_NAME, UNIT_NAME, APPLY_USER, REPORT_DATE, COMMON, VERSION,
-    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE,BUILD_NAME,COMMUNITY_NAME,TOTAL_LAYER,LOCATED
+    CREATE_TIME, CREATE_ID, UPDATE_TIME, UPDATE_ID, DELETED, ISVALIDE,BUILD_NAME,COMMUNITY_NAME,TOTAL_LAYER
   </sql>
     <update id="updateSameBuildRegiInfo" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
         UPDATE LSHC_REGI_INFO
@@ -185,13 +184,13 @@
         t2.UNIT_NO AS unitNo,
         t2.layer AS layer,
         t2.room_no AS roomNo,
-        t2.right_no AS rightAddr,
+        t2.right_no AS rightNo,
+        t2.RIGHT_ADDR AS rightAddr,
         t2.HOUSE_AREA AS houseArea,
         t2.INNER_HOUSE_AREA AS innerHouseArea,
         t2.HOUSE_ROOM AS houseRoom,
         t2.HOUSE_HALL AS houseHall,
         t2.IS_REGI AS isRegi,
-        t2.right_no AS rightNo,
         t2.build_date AS buildDate,
         t2.house_type AS houseType,
         t2.HOUSE_STRUCTURE AS houseStructure,
@@ -206,7 +205,6 @@
         t2.PERSON_NUM AS personNum,
         t2.BUILD_NAME AS buildName,
         t2.TOTAL_LAYER AS totalLayer,
-        t2.LOCATED AS located,
         t1.ENT_NAME AS entName,
         t1.ENT_TYPE AS entType,
         t1.SEX AS sex,
@@ -420,7 +418,7 @@
     UNIT_NAME, APPLY_USER, REPORT_DATE,
     COMMON, VERSION, CREATE_TIME,
     CREATE_ID, UPDATE_TIME, UPDATE_ID,
-    DELETED, ISVALIDE,BUILD_NAME,COMMUNITY_NAME,TOTAL_LAYER,LOCATED)
+    DELETED, ISVALIDE,BUILD_NAME,COMMUNITY_NAME,TOTAL_LAYER)
     values (#{id,jdbcType=VARCHAR},#{houseId,jdbcType=VARCHAR}, #{sysCode,jdbcType=VARCHAR}, #{houseStatus,jdbcType=VARCHAR},
     #{approvalStatus,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, #{street,jdbcType=VARCHAR},
     #{projectName,jdbcType=VARCHAR}, #{mapCode,jdbcType=VARCHAR}, #{estateUnitName,jdbcType=VARCHAR},
@@ -438,7 +436,7 @@
     #{common,jdbcType=VARCHAR}, #{version,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP},
     #{createId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=VARCHAR},
     #{deleted,jdbcType=DECIMAL}, #{isvalide,jdbcType=VARCHAR}, #{buildName,jdbcType=VARCHAR},
-      #{communityName,jdbcType=VARCHAR}, #{totalLayer,jdbcType=DECIMAL}, #{located,jdbcType=VARCHAR})
+      #{communityName,jdbcType=VARCHAR}, #{totalLayer,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.funi.platform.lshc.entity.census.RegiInfo">
     <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
@@ -608,9 +606,6 @@
         <if test="totalLayer != null">
             TOTAL_LAYER,
         </if>
-        <if test="located != null">
-            LOCATED,
-        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -774,9 +769,6 @@
         </if>
         <if test="totalLayer != null">
             #{totalLayer,jdbcType=DECIMAL},
-        </if>
-        <if test="located != null">
-            #{located,jdbcType=VARCHAR},
         </if>
     </trim>
   </insert>
@@ -942,9 +934,6 @@
         <if test="totalLayer != null">
             TOTAL_LAYER = #{totalLayer,jdbcType=DECIMAL},
         </if>
-        <if test="located != null">
-            LOCATED = #{located,jdbcType=VARCHAR},
-        </if>
     </set>
     where ID = #{id,jdbcType=VARCHAR}
   </update>
@@ -1002,8 +991,7 @@
       ISVALIDE = #{isvalide,jdbcType=VARCHAR},
       BUILD_NAME = #{buildName,jdbcType=VARCHAR},
       COMMUNITY_NAME = #{communityName,jdbcType=VARCHAR},
-      TOTAL_LAYER = #{totalLayer,jdbcType=DECIMAL},
-      LOCATED = #{located,jdbcType=VARCHAR}
+      TOTAL_LAYER = #{totalLayer,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

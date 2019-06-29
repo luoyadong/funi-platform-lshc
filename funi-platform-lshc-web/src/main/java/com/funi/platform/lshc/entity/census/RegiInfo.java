@@ -150,8 +150,6 @@ public class RegiInfo extends SuperEntity implements Serializable {
     private String communityName;
     /** 总层数 */
     private String totalLayer;
-    /** 房屋坐落*/
-    private String located;
 
     private static final long serialVersionUID = 1L;
 
@@ -177,14 +175,6 @@ public class RegiInfo extends SuperEntity implements Serializable {
 
     public void setTotalLayer(String totalLayer) {
         this.totalLayer = totalLayer;
-    }
-
-    public String getLocated() {
-        return located;
-    }
-
-    public void setLocated(String located) {
-        this.located = located;
     }
 
     public String getHouseId() {
