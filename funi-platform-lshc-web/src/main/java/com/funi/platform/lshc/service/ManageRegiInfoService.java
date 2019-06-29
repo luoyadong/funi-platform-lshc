@@ -38,7 +38,7 @@ public interface ManageRegiInfoService {
      * 批量提交普查信息
      * @param ids
      */
-    void batchSubmitRegiInfo(List<String> ids);
+    void batchSubmitRegiInfo(List<String> ids) throws Exception;
 
     /**
      * 分页查询房屋列表
@@ -61,7 +61,7 @@ public interface ManageRegiInfoService {
      * @param isSubmit 是否是提交操作
      * @return 普查信息ID
      */
-    String createRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit);
+    String createRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) throws Exception;
 
     /**
      * 创建普查信息
@@ -69,7 +69,7 @@ public interface ManageRegiInfoService {
      * @param isSubmit 是否是提交操作
      * @return 普查信息ID
      */
-    String saveOrUpdateRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit);
+    String saveOrUpdateRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) throws Exception;
 
     /**
      * 创建普查信息

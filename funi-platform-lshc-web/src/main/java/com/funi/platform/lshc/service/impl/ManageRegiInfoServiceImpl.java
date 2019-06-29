@@ -76,23 +76,19 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
-    public void batchSubmitRegiInfo(List<String> ids) {
-        try {
-            CurrentUser userInfo = userManager.findUser();
-            for(String id : ids) {
-                RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(id);
-                if (regiInfo == null) {
-                    throw new RuntimeException("普查信息不存在，请核实普查信息ID");
-                }
-                if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
-                    throw new RuntimeException("普查状态异常，无法进入审批流程");
-                }
-                // 修改普查信息的状态，
-                regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
-                lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
+    public void batchSubmitRegiInfo(List<String> ids) throws Exception {
+        CurrentUser userInfo = userManager.findUser();
+        for(String id : ids) {
+            RegiInfo regiInfo = regiInfoMapper.selectByPrimaryKey(id);
+            if (regiInfo == null) {
+                throw new RuntimeException("普查信息不存在，请核实普查信息ID");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
+                throw new RuntimeException("普查状态异常，无法进入审批流程");
+            }
+            // 修改普查信息的状态，
+            regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
+            lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
         }
     }
 
@@ -114,7 +110,7 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
     }
 
     @Override
-    public String createRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) {
+    public String createRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) throws Exception {
         RegiInfo regiInfo = regiInfoDto.getRegiInfo();
         if (regiInfo == null) {
             throw new RuntimeException("普查信息不能为空");
@@ -145,19 +141,15 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             }
         }
         if(isSubmit) {
-            try {
-                // 修改普查信息的状态
-                regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
-                lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            // 修改普查信息的状态
+            regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
+            lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
         }
         return id;
     }
 
     @Override
-    public String saveOrUpdateRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) {
+    public String saveOrUpdateRegiInfo(RegiInfoDto regiInfoDto, boolean isSubmit) throws Exception {
         RegiInfo regiInfo = regiInfoDto.getRegiInfo();
         if (regiInfo == null) {
             throw new RuntimeException("普查信息不能为空");
@@ -186,16 +178,12 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         // 编辑普查信息关联的附件信息
         modifyFileList(regiInfoDto.getFileList(), id, user);
         if(isSubmit) {
-            try {
-                if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
-                    throw new RuntimeException("普查状态异常，无法进入审批流程");
-                }
-                // 修改普查信息的状态
-                regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
-                lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
+                throw new RuntimeException("普查状态异常，无法进入审批流程");
             }
+            // 修改普查信息的状态
+            regiInfoMapper.updateRegiInfoStatus(id, CensusConstants.HOUSE_STATUS_SUBMIT, userInfo.getUserId());
+            lshcWorkFlowService.startWorkFlow(BusinessType.pnew,id,"LSHC_REGI_INFO",null);
         }
         return id;
     }
