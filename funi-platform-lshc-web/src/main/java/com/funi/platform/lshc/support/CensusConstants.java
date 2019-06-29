@@ -122,4 +122,7 @@ public class CensusConstants {
             DICTIONARY_HOUSE_STATUS.add(allDto);
         }
     }
+
+    /** 默认城市名称*/
+    public static final String DEFAULT_CITY_NAME = "拉萨";
 }

@@ -207,6 +207,11 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
      */
     private void saveNewRegiInfo(RegiInfo regiInfo, CurrentUser userInfo, boolean isSubmit) {
         new SuperEntityUtils<>().buildCreateEntity(regiInfo, userInfo);
+        String addressCity = regiInfo.getAddressCity();
+        // 批量上传时没有城市名称，默认为拉萨市
+        if(StringUtils.isBlank(addressCity)) {
+            regiInfo.setAddressCity(CensusConstants.DEFAULT_CITY_NAME);
+        }
         regiInfo.setHouseId(regiInfoMapper.generateHouseId());
         // 默认状态是录入
         String houseStatus = CensusConstants.HOUSE_STATUS_INPUT;
@@ -314,9 +319,9 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         paramRegiInfo.setHouseStatus(existRegiInfo.getHouseStatus());
         paramRegiInfo.setOrgCode(existRegiInfo.getOrgCode());
         paramRegiInfo.setOrgName(existRegiInfo.getOrgName());
-        paramRegiInfo.setUnitName(existRegiInfo.getUnitName());
-        paramRegiInfo.setApplyUser(existRegiInfo.getApplyUser());
-        paramRegiInfo.setReportDate(existRegiInfo.getReportDate());
+//        paramRegiInfo.setUnitName(existRegiInfo.getUnitName());
+//        paramRegiInfo.setApplyUser(existRegiInfo.getApplyUser());
+//        paramRegiInfo.setReportDate(existRegiInfo.getReportDate());
         regiInfoMapper.updateByPrimaryKey(paramRegiInfo);
         // 保存或更新楼栋信息
         saveOrUpdateBuildInfo(paramRegiInfo, currentUser);
