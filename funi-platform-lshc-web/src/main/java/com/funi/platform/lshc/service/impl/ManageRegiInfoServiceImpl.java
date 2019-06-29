@@ -214,7 +214,7 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         regiInfo.setOrgCode(userInfo.getOrganization().getDm());
         regiInfo.setOrgName(userInfo.getOrganization().getMc());
         // 社区名称由当前登录人权限社区获取
-        regiInfo.setCommunityName(basicService.findCurrentUserRegionName(null));
+        regiInfo.setCommunityName(basicService.findCurrentUserRegionName(userInfo.getUserId()));
         // 填报单位、填报时间、填报人由前端来传
 //        regiInfo.setUnitName(userInfo.getOrganization().getMc());
 //        regiInfo.setApplyUser(userInfo.getName());
@@ -628,11 +628,11 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         String region = regiInfo.getRegion();
 
         if(StringUtils.isNotBlank(region)) {
-            addressBuilder.append(region + "区(县)");
+            addressBuilder.append(region);
         }
         String street = regiInfo.getStreet();
         if(StringUtils.isNotBlank(street)) {
-            addressBuilder.append(street + "乡（街道）");
+            addressBuilder.append(street);
         }
         String apt = regiInfo.getApt();
         if(StringUtils.isNotBlank(apt)) {
