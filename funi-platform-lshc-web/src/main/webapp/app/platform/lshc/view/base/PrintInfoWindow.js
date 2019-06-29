@@ -9,7 +9,7 @@ Ext.define("Funi.biz.Printer", {
         me.webReportHost = Funi.core.Context.path("WebReport", "/ReportServer");
         if (me.webReportHost.indexOf("localhost") != -1 ||
             me.webReportHost.indexOf("127.0.0.1") != -1) {
-            me.webReportHost = "http://192.168.0.102:8075/WebReport/ReportServer";
+            me.webReportHost = "http://localhost:8075/WebReport/ReportServer";
         }
         return (me.webReportHost + "?reportlets=")
             + ( encode ? encodeURI(JSON.stringify(reportlet)) : JSON.stringify(reportlet))

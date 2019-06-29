@@ -134,7 +134,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 }
                             },
 							{
-                                xtype: 'button',itemId:"submitItemId", text: '提交', scope: me,glyph: 'xf234@FontAwesome',
+                                xtype: 'button',itemId:"submitItemId", text: '提交', scope: me,glyph: 0xf0a4,
                                 handler: function () {
                                     var formData = me.getData();
                                     var hcId = me.config.bizId;
@@ -150,6 +150,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                     if(flag){
                                         me.config.parentContainer.initHouseList();
                                         me.config.parentContainer.resetForm();
+                                        me.config.parentContainer.initStatus("无", "", "", "无");
                                         //me.config.parentContainer.initHouseDetail(hcId);
                                         me.winContainer.close();
                                     }
@@ -178,6 +179,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                         //刷新左侧的房屋列表
                                         me.config.parentContainer.initHouseList();
                                         me.config.parentContainer.resetForm();
+                                        me.config.parentContainer.initStatus("无", "", "", "无");
                                         //me.config.parentContainer.initHouseDetail(hcId);
                                         //me.winContainer.close();
                                     }

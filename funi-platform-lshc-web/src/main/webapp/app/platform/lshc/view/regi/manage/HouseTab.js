@@ -32,8 +32,16 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
         if(form.isValid()){
 			 rtJson.regiInfo = form.getValues();
 
-			rtJson.regiInfo.region = this.queryById("regionItemId2").getRawValue();
-			rtJson.regiInfo.street = this.queryById("streetItemId2").getRawValue();
+			if("" != rtJson.regiInfo.region
+				&& null != rtJson.regiInfo.region
+			    && " " !=rtJson.regiInfo.region){
+				rtJson.regiInfo.region = this.queryById("regionItemId2").getRawValue();
+			}
+			if("" != rtJson.regiInfo.street
+				&& null != rtJson.regiInfo.street
+				&& " " !=rtJson.regiInfo.street){
+				rtJson.regiInfo.street = this.queryById("streetItemId2").getRawValue();
+			}
 
 			 rtJson.entInfoList = entView.getData();
 			 return rtJson;

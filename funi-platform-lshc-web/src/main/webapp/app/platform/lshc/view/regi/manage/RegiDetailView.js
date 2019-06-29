@@ -222,7 +222,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 }else if(hStatus.indexOf("复审通过") != -1){
                     me.initStatus(hStatus, "①社区->②街道办->③区政府", "->④市住建局", "");
                 }else{
-                    me.initStatus(hStatus, "", "", "①社区->②街道办->③区政府->④市住建局");
+                    me.config.parentContainer.initStatus("无", "", "", "无");
+                    //me.initStatus(hStatus, "", "", "①社区->②街道办->③区政府->④市住建局");
                 }
 
                 var houseDetalPanel = me.queryById("lshc-view-regi-HouseDetailView-itemId");

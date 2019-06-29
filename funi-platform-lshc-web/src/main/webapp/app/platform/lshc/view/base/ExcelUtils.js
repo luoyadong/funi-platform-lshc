@@ -24,7 +24,7 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                 form: Ext.fly('frmDummy'),
                 params : param,
                 success:function(response,opts){
-                    Ext.Msg.alert('提示', '导出数据成功！');
+                    Ext.Msg.alert('提示', '导出数据失败！');
                 },
                 failure:function(response,opts){
                     Ext.Msg.alert('提示', '导出数据失败！');

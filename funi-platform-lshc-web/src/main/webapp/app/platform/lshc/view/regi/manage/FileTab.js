@@ -125,7 +125,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                                     buttonOnly: true,
                                     labelSeparator: '',
                                     name: 'uploadFile',
-                                    buttonText: "附件上传",
+                                    buttonText: "+附件上传",
 
                                     listeners: {
                                         change: function () {

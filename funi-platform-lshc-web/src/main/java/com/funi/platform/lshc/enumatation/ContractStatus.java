@@ -12,13 +12,7 @@ public enum ContractStatus {
     CSBTG("初审不通过"),
     FSTG("复审通过"),
     FSBTG("复审不通过"),
-    TH("退回"),
-
-    VALID("有效"),
-    EXAMINING("审批中"),
-    INVALID("未生效"),
-    CANCEL("已注销"),
-    OVERDUE("已过期");
+    TH("退回");
 
     private String description;
 

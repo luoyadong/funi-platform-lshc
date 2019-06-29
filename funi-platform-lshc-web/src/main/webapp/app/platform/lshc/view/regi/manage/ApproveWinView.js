@@ -123,6 +123,8 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
 
         //刷新列表
         me.config.parentContainer.initHouseList();
+        me.config.parentContainer.resetForm();
+        me.config.parentContainer.initStatus("无", "", "", "无");
     },
     initComponent: function () {
         var me = this;
@@ -188,6 +190,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                                 {
                                     xtype: 'button',
                                     margin: '5 0 0 250',
+                                    glyph: 0xf0a4,
                                     text: '提交',
                                     handler:function(){
                                         me.sumitAudit();
@@ -198,6 +201,7 @@ Ext.define('app.platform.lshc.view.regi.manage.ApproveWinView', {
                                     xtype: 'button',
                                     margin: '5 0 0 5',
                                     text: '取消',
+                                    glyph: 0xf00d,
                                     handler:function(){
                                         me.close();
                                     }

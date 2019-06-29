@@ -38,9 +38,12 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         var obj = new Object();
         for(var i=0;i<formElements.length;i++){
             //下拉菜单存储展示的值
-            if(formElements[i].name == 'region'
+            if((formElements[i].name == 'region'
                 || formElements[i].name =='street'
-                || formElements[i].name =='communityName'){
+                || formElements[i].name =='communityName')
+                && null != formElements[i].value
+                && "" != formElements[i].value
+                && " " != formElements[i].value){
                 obj[formElements[i].name] = this.queryById(formElements[i].name+"ItemId").getRawValue()
             }else{
                 obj[formElements[i].name] =formElements[i].value;
@@ -105,6 +108,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         // });
     },
     resetForm:function(){
+
+    },
+    initStatus:function(){
 
     },
     initComponent: function () {
@@ -338,7 +344,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                     },
                                     {
                                         xtype: 'button', text: '导出', scope: me,
-                                        glyph: 0xf158,
+                                        glyph: 0xf1c3,
                                         handler: function () {
                                             me.exportExcel();
                                         }
@@ -409,6 +415,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                             createContractView.config.srcType = 0
                             createContractView.initDetail(record.data.mapCode,record.data.address);
                             createContractView.initBtn();
+                            createContractView.resetParams();
 
                         }
                     }

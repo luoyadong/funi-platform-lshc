@@ -95,7 +95,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                     }
                                 },
                                 {
-                                    xtype: 'button', text: '导出', scope: me, glyph: 'xf234@FontAwesome',
+                                    xtype: 'button', text: '导出', scope: me, glyph: 0xf1c3,
                                     handler: function () {
                                         //导出数据
                                         me.exportExcel();
@@ -218,7 +218,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                     }
                                 },
                                 {
-                                    xtype: 'button', text: '提交', scope: me, glyph: 'xf234@FontAwesome',
+                                    xtype: 'button', text: '提交', scope: me, glyph: 0xf0a4,
 
                                     handler: function () {
 
@@ -240,13 +240,15 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                             ids.push(record.id);
                                         }
 
-                                        Ext.Msg.confirm('提示',  '提交后,选择的房屋将发起审批流程，确定要发起提交吗？', function (btn) {
+                                        Ext.Msg.confirm('提示',  '提交后,将发起审批流程，确定要提交吗？', function (btn) {
                                             if (btn === 'yes') {
                                                 //执行删除
                                                 app.platform.lshc.view.base.RequestUtils.post_json(ids,"/manage/batchSubmitRegiInfo",false,false);
                                                 //刷新列表
-                                                me.store.proxy.extraParams = me.getParams();
-                                                me.store.loadPage(1);
+                                                me.config.parentContainer.initHouseList();
+                                                me.config.parentContainer.resetForm();
+                                                me.config.parentContainer.initStatus("无", "", "", "无");
+
                                             }
                                         })
 
