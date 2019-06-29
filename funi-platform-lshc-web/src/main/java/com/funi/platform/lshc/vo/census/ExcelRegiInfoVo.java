@@ -9,6 +9,15 @@ import java.util.Objects;
  * Created by sam on 2019/6/15.1:09 PM
  */
 public class ExcelRegiInfoVo {
+    /** 填报单位 */
+    @Excel(name="填报单位")
+    private String unitName;
+    /** 填报人员 */
+    @Excel(name="填报人员")
+    private String applyUser;
+    /** 填报时间 */
+    @Excel(name="填报时间")
+    private String reportDate;
     /** 项目名称 */
     @Excel(name="项目（小区）名称")
     private String projectName;
@@ -161,6 +170,30 @@ public class ExcelRegiInfoVo {
     @Override
     public int hashCode() {
         return Objects.hash(getMapCode(), getRegion(), getStreet(), getApt(), getBuildNo(), getUnitNo(), getLayer(), getRoomNo());
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public String getApplyUser() {
+        return applyUser;
+    }
+
+    public void setApplyUser(String applyUser) {
+        this.applyUser = applyUser;
+    }
+
+    public String getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(String reportDate) {
+        this.reportDate = reportDate;
     }
 
     public String getBuildName() {
