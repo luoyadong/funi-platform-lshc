@@ -356,7 +356,7 @@
           <if test="queryType == '0'.toString()">
               AND t2.house_status in ('新建','初审不通过')
           </if>
-          <if test="queryType == '0'.toString() or queryType == '1'.toString()">
+          <if test="queryType == '0'.toString() or queryType == '1'.toString() or queryType == '2'.toString()">
               <if test="authorityList != null and authorityList.size > 0">
                   and t2.common in
                   <foreach collection="authorityList" index="idx" item="authority" open="(" close=")" separator=",">
