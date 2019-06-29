@@ -279,11 +279,11 @@ public class RegiInfo extends SuperEntity implements Serializable {
         if(StringUtils.isNotBlank(addressCity)) {
             regiInfoBuilder.append(addressCity);
         }
-        String addressRegion = getAddressRegion();
+        String addressRegion = getRegion();
         if(StringUtils.isNotBlank(addressRegion)) {
             regiInfoBuilder.append(addressRegion);
         }
-        String addressCounty = getAddressCounty();
+        String addressCounty = getStreet();
         if(StringUtils.isNotBlank(addressCounty)) {
             regiInfoBuilder.append(addressCounty);
         }
