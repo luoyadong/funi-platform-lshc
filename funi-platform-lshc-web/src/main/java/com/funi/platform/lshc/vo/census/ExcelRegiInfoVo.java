@@ -144,9 +144,6 @@ public class ExcelRegiInfoVo {
     /** 证件号码 */
     @Excel(name="证件号码")
     private String idNo;
-    /** 职业 */
-    @Excel(name="职业")
-    private String career;
 
     @Override
     public boolean equals(Object o) {
@@ -532,11 +529,4 @@ public class ExcelRegiInfoVo {
         this.idNo = idNo;
     }
 
-    public String getCareer() {
-        return career;
-    }
-
-    public void setCareer(String career) {
-        this.career = career;
-    }
 }

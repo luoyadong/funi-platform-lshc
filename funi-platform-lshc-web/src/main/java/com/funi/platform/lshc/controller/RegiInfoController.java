@@ -45,11 +45,15 @@ public class RegiInfoController extends BaseController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
-    public void exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
+    public Object exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             regiInfoService.exportBuildInfoVoList(ids, response);
+            return ResultVo.newResult("导出普查信息成功");
         } catch (Exception e) {
             e.printStackTrace();
+            ResultVo resultVo = ResultVo.newResult("导出普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
         }
     }
 
@@ -81,11 +85,15 @@ public class RegiInfoController extends BaseController {
      * @param response
      */
     @RequestMapping("exportRegiInfoVoList")
-    public void exportRegiInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
+    public Object exportRegiInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             regiInfoService.exportRegiInfoVoList(ids, response);
+            return ResultVo.newResult("导出普查信息成功");
         } catch (Exception e) {
             e.printStackTrace();
+            ResultVo resultVo = ResultVo.newResult("导出普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
         }
     }
 
@@ -103,7 +111,6 @@ public class RegiInfoController extends BaseController {
             return ResultVo.newResult("审批退回成功");
         } catch (Exception e) {
             e.printStackTrace();
-            new ResultVo(false);
             ResultVo resultVo = ResultVo.newResult("审批退回失败：" + e.getMessage());
             resultVo.setSuccess(false);
             return resultVo;

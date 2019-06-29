@@ -113,14 +113,14 @@
           (SELECT t11.id FROM LSHC_REGI_INFO t11 INNER JOIN LSHC_ENT_INFO t22 ON t11.id = t22.HC_ID
           WHERE t22.ID_NO = #{idNo} GROUP BY t11.id)
       </if>
-        ORDER BY t1.SERIAL_NO
+        ORDER BY t1.SERIAL_NO DESC
   </select>
 
   <select id="selectBuildInfoByMapCode" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from LSHC_BUILD_INFO
-    where MAP_CODE = #{mapCode,jdbcType=VARCHAR}
+    where MAP_CODE = #{mapCode,jdbcType=VARCHAR} AND ISVALIDE = '1' AND DELETED = 0
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">

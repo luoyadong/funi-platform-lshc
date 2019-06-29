@@ -205,6 +205,9 @@
         t2.PERSON_NUM AS personNum,
         t2.BUILD_NAME AS buildName,
         t2.TOTAL_LAYER AS totalLayer,
+        t2.UNIT_NAME AS unitName,
+        t2.APPLY_USER AS applyUser,
+        t2.REPORT_DATE AS reportDate,
         t1.ENT_NAME AS entName,
         t1.ENT_TYPE AS entType,
         t1.SEX AS sex,
@@ -213,11 +216,10 @@
         t1.tel AS tel,
         t1.marriage_status AS marriageStatus,
         t1.ID_TYPE AS idType,
-        t1.ID_NO AS idNo,
-        t1.career AS career
+        t1.ID_NO AS idNo
       FROM
-        LSHC_ENT_INFO t1
-        LEFT JOIN LSHC_REGI_INFO t2 ON t1.HC_ID = t2.ID
+        LSHC_REGI_INFO t2
+        LEFT JOIN LSHC_ENT_INFO t1 ON t1.HC_ID = t2.ID AND t1.DELETED = 0 AND t1.ISVALIDE = '1'
         LEFT JOIN LSHC_BUILD_INFO t3 ON t2.map_code = t3.map_code
         <if test="queryType == '2'.toString()">
           INNER JOIN BUSINESS_TASK t4 ON t2.id = t4.business_id
@@ -226,9 +228,7 @@
           INNER JOIN job_log t5 ON t2.id = t5.business_id AND t5.is_deleted = 0
         </if>
     WHERE
-        t1.DELETED = 0
-        AND t1.ISVALIDE = '1'
-        AND t2.DELETED = 0
+        t2.DELETED = 0
         AND t2.ISVALIDE = '1'
         <if test="queryType == '0'.toString()">
           AND t2.house_status in ('新建','待初审')
@@ -299,12 +299,10 @@
         t1.ID_NO AS idNo,
         t1.career AS career
     FROM
-        LSHC_ENT_INFO t1
-        LEFT JOIN LSHC_REGI_INFO t2 ON t1.HC_ID = t2.ID
+        LSHC_REGI_INFO t2
+        LEFT JOIN LSHC_ENT_INFO t1 ON t1.HC_ID = t2.ID AND t1.DELETED = 0 AND t1.ISVALIDE = '1'
     WHERE
-        t1.DELETED = 0
-        AND t1.ISVALIDE = '1'
-        AND t2.DELETED = 0
+         t2.DELETED = 0
         AND t2.ISVALIDE = '1'
         AND t2.id in
       <foreach collection="list" separator=","  item="id" open="(" close=")">
@@ -332,7 +330,7 @@
           t2.UNIT_NO AS unitNo,
           t2.LAYER AS layer,
           t2.room_no AS roomNo,
-          t2.UPDATE_TIME,
+          t2.CREATE_TIME,
           ja.id as jobAcceptId,ja.type_name as businessTypeName,
           t2.house_status as auditStatus,
           <if test="queryType == '2'.toString()">
@@ -386,7 +384,7 @@
               WHERE t22.ID_NO = #{idNo} GROUP BY t11.id)
           </if>
       ORDER BY
-          t2.UPDATE_TIME DESC
+          t2.CREATE_TIME DESC
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
@@ -990,7 +988,6 @@
       DELETED = #{deleted,jdbcType=DECIMAL},
       ISVALIDE = #{isvalide,jdbcType=VARCHAR},
       BUILD_NAME = #{buildName,jdbcType=VARCHAR},
-      COMMUNITY_NAME = #{communityName,jdbcType=VARCHAR},
       TOTAL_LAYER = #{totalLayer,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=VARCHAR}
   </update>

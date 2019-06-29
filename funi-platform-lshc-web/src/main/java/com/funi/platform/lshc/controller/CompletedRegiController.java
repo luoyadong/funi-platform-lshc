@@ -1,5 +1,6 @@
 package com.funi.platform.lshc.controller;
 
+import com.funi.framework.mvc.eic.vo.ResultVo;
 import com.funi.platform.lshc.query.census.BuildInfoQuery;
 import com.funi.platform.lshc.query.census.RegiInfoQuery;
 import com.funi.platform.lshc.service.CompletedRegiService;
@@ -7,7 +8,6 @@ import com.funi.platform.lshc.vo.census.BuildInfoVo;
 import com.funi.platform.lshc.vo.census.ListRegiInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,11 +42,15 @@ public class CompletedRegiController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
-    public void exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
+    public Object exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             completedRegiService.exportBuildInfoVoList(ids, response);
+            return ResultVo.newResult("导出普查信息成功");
         } catch (Exception e) {
             e.printStackTrace();
+            ResultVo resultVo = ResultVo.newResult("导出普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
         }
     }
 

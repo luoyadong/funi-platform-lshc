@@ -49,11 +49,15 @@ public class ManageRegiController {
      * @param response
      */
     @RequestMapping("exportBuildInfoVoList")
-    public void exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
+    public Object exportBuildInfoVoList(@RequestParam("ids") List<String> ids, HttpServletResponse response) {
         try {
             manageRegiInfoService.exportBuildInfoVoList(ids, response);
+            return ResultVo.newResult("导出普查信息成功");
         } catch (Exception e) {
             e.printStackTrace();
+            ResultVo resultVo = ResultVo.newResult("导出普查信息失败：" + e.getMessage());
+            resultVo.setSuccess(false);
+            return resultVo;
         }
     }
 
