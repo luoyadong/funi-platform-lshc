@@ -4,11 +4,9 @@ import com.funi.framework.biz.eic.bo.CurrentUser;
 import com.funi.framework.biz.eic.bo.Dict;
 import com.funi.framework.biz.support.CurrentUserAccessor;
 import com.funi.platform.lshc.enumatation.Conclusion;
-import com.funi.platform.lshc.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +18,6 @@ public class UserManagerImpl implements UserManager {
 
     @Autowired(required = false)
     private CurrentUserAccessor currentUserAccessor;
-    @Resource
-    private CommonService commonService;
 
     @Override
     public CurrentUser findUser() {
