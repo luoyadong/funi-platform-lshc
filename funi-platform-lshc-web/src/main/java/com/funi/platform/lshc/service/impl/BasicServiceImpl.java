@@ -143,6 +143,7 @@ public class BasicServiceImpl implements BasicService {
         if(CollectionUtils.isEmpty(securityRegionDtoList)) {
             throw new BizException("获取当前登录用户所属区域code异常：县区没有数据");
         }
+        // 获取区数据
         SecurityRegionDto securityRegionDto = securityRegionDtoList.get(0);
         // 获取街道信息
         List<LshcRegion> regionsList = securityRegionDto.getRegionsList();
@@ -183,14 +184,19 @@ public class BasicServiceImpl implements BasicService {
             throw new BizException("获取当前登录用户所属区域code异常：县区没有数据");
         }
         List<String> regionCodeList = new ArrayList<>();
-        // 第一级是县区数据
         for(SecurityRegionDto securityRegionDto : securityRegionDtoList) {
-            // 第二级是街道数据
+            // 第一级是县区数据
             List<LshcRegion> regionsList = securityRegionDto.getRegionsList();
             if(CollectionUtils.isNotEmpty(regionsList)) {
-                // 第三级是社区数据
+                // 第二级是街道数据
                 for(LshcRegion lshcRegion : regionsList) {
-                    regionCodeList.add(lshcRegion.getCode());
+                    // 第三级是社区数据
+                    List<LshcRegion> regionsList1 = lshcRegion.getRegionsList();
+                    if(CollectionUtils.isNotEmpty(regionsList1)) {
+                        for(LshcRegion lshcRegion1 : regionsList1) {
+                            regionCodeList.add(lshcRegion1.getCode());
+                        }
+                    }
                 }
             }
         }
