@@ -104,6 +104,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         //     removeMask:true//完成后移除
         // });
     },
+    resetForm:function(){
+
+    },
     initComponent: function () {
         var me = this;
         var mStore = Ext.create('Ext.data.Store', {
@@ -139,7 +142,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                 {type:"string",name:"communityName"},
                 {type:"string",name:"buildName"}
             ],
-            pageSize:15
+            pageSize:10
         });
         Ext.apply(me, {
 

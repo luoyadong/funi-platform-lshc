@@ -113,26 +113,24 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
 							 {
                                 xtype: 'button', text: '保存', scope: me,glyph: 0xf0fe,
                                 handler: function () {
-                                    me.config.parentContainer.setTask(true)
-
-                                    myTask2.show()
-
+                                    // me.config.parentContainer.setTask(true)
 									var formData = me.getData();
                                     var hcId = me.config.bizId;
+                                    var flag = true;
                                     if(me.config.bizId != null){
                                         formData.regiInfo.id = hcId;
-                                        app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editRegiInfo", false, false);
+                                        flag = app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editRegiInfo", false, false);
                                     }else{//新增
-                                        hcId = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/addRegiInfo",false,false);
+                                        var rtObj = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/addRegiInfo",false,false);
+                                        hcId = rtObj.data
+                                        flag = rtObj.flag
                                     }
-
-                                    //alert(hcId);
                                     //调用错误会影响上面的值
-                                    me.config.parentContainer.initHouseList();
-                                    me.config.parentContainer.initHouseDetail(hcId);
-                                    me.config.parentContainer.setTask(false)
-                                    me.winContainer.close();
-                                    //me.winContainer.destroy();
+                                    if(flag){
+                                        me.config.parentContainer.initHouseList();
+                                        me.config.parentContainer.initHouseDetail(hcId);
+                                        me.winContainer.close();
+                                    }
                                 }
                             },
 							{
@@ -140,17 +138,21 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 handler: function () {
                                     var formData = me.getData();
                                     var hcId = me.config.bizId;
+                                    var flag = true;
                                     if(me.config.bizId != null){
                                         formData.regiInfo.id = hcId;
-                                        app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editAndSubmitRegiInfo", false, false);
+                                        flag = app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editAndSubmitRegiInfo", false, false);
                                     }else{//新增
-                                        hcId = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/submitRegiInfo",false,false);
+                                        var rtObj = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/submitRegiInfo",false,false);
+                                        hcId = rtObj.data
+                                        flag = rtObj.flag
                                     }
-                                    me.winContainer.close();
-
-                                    //刷新左侧的房屋列表
-                                    me.config.parentContainer.initHouseList();
-                                    me.config.parentContainer.initHouseDetail(hcId);
+                                    if(flag){
+                                        me.config.parentContainer.initHouseList();
+                                        me.config.parentContainer.resetForm();
+                                        //me.config.parentContainer.initHouseDetail(hcId);
+                                        me.winContainer.close();
+                                    }
 
                                 }
                             },
@@ -160,20 +162,25 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
                                 handler: function () {
                                     var formData = me.getData();
                                     var hcId = me.config.bizId;
+                                    var flag = true;
                                     if(me.config.bizId != null){
                                         formData.regiInfo.id = hcId;
-                                        app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editAndSubmitRegiInfo", false, false);
+                                        flag = app.platform.lshc.view.base.RequestUtils.post_json(formData, "/manage/editAndSubmitRegiInfo", false, false);
                                     }else{//新增
-                                        hcId = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/submitRegiInfo",false,false);
+                                        var rtObj = app.platform.lshc.view.base.RequestUtils.return_post_json(formData, "/manage/submitRegiInfo",false,false);
+                                        hcId = rtObj.data
+                                        flag = rtObj.flag
                                     }
 
-                                    //重新设置编辑界面
-                                    me.resetForm();
-
-                                    //刷新左侧的房屋列表
-                                    me.config.parentContainer.initHouseList();
-                                    me.config.parentContainer.initHouseDetail(hcId);
-                                    //me.winContainer.close();
+                                    if(flag) {
+                                        //重新设置编辑界面
+                                        me.resetForm();
+                                        //刷新左侧的房屋列表
+                                        me.config.parentContainer.initHouseList();
+                                        me.config.parentContainer.resetForm();
+                                        //me.config.parentContainer.initHouseDetail(hcId);
+                                        //me.winContainer.close();
+                                    }
 
                                 }
                             }

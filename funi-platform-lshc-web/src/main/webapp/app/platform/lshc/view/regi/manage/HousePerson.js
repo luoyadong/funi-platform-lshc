@@ -44,6 +44,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                 {type:"string",name:"entNation"},
                 {type:"string",name:"entNative"},
 				{type:"string",name:"tel"},
+                {type:"string",name:"idType"},
                 {type:"string",name:"marriageStatus"}
             ],
 			load:false,
@@ -56,7 +57,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                     itemId: 'lshc-manage-housePerson-panelList',
                     border: true,
                     minHeight: 100,
-                    width: "100%",
+                    width: 580,
                     store: store,
                     margin: '0 0 20 0',
                     columnLines: true,
@@ -69,7 +70,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                         '->', {
                             xtype: "container",
                             defaults: {
-                                margin: '0 5 0 5'
+                                margin: '0 25 0 5'
                             },
                             items: [
                                 {
@@ -113,14 +114,15 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                     columns: [
                         {text: 'id', dataIndex: 'id',hidden:true},
                         {text:"isNew",dataIndex:"isNew",hidden:true},
-						 {text: '姓名', dataIndex: 'entName',flex: 1, align: 'center'},
+						 {text: '人员名称', dataIndex: 'entName',flex: 1.3, align: 'center'},
 						 {text: '证件号码', dataIndex: 'idNo',flex: 1.5, align: 'center'},
+                         {text: '证件类型', dataIndex: 'idType',flex: 1.2, align: 'center'},
 						 {text: '性别', dataIndex: 'sex',flex: 0.5, align: 'center'},
-						 {text: '人员类别', dataIndex: 'entType',flex: 0.5, align: 'center'},
+						 {text: '人员类别', dataIndex: 'entType',flex: 1.2, align: 'center'},
                         {text: '民族', dataIndex: 'entNation',flex: 1, align: 'center'},
                         {text: '籍贯', dataIndex: 'entNative', flex: 1, align: 'center'},
-                        {text: '联系电话', dataIndex: 'tel', flex: 1, align: 'center'},
-                        {text: '婚姻状况', dataIndex: 'marriageStatus', flex: 1, align: 'center'}
+                        {text: '联系电话', dataIndex: 'tel', flex: 1.5, align: 'center'},
+                        {text: '婚姻状况', dataIndex: 'marriageStatus', flex: 1.2, align: 'center'}
                     ]
                 }
             ]

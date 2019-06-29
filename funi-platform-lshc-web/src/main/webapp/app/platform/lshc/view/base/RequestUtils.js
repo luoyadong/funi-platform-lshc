@@ -39,10 +39,11 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
             }
         },
         post_json: function (data, url, isAsync, allowTips) {
-                if (!url) {
-                    throw new BizException('无效请求地址！');
-                }
+            if (!url) {
+                throw new BizException('无效请求地址！');
+            }
             var message = null;
+            var flag = true;
             var exceptionStr = '服务器异常,请重试!';
             Ext.Ajax.request({
                 url: app.platform.lshc.view.base.RequestUtils.url(url),
@@ -59,15 +60,18 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                         if(data.success){
                             Ext.Msg.alert('温馨提示', "操作成功！");
                         }else{
+                            flag = false;
                             Ext.Msg.alert('温馨提示', data.result);
                         }
                     }
                 },
                 failure: function () {
+                    flag = false;
                     message = exceptionStr;
                     Ext.Msg.alert('温馨提示', message);
                 }
             });
+            return flag;
             // if (message != null && allowTips) {
             //     Ext.Msg.alert('温馨提示', message);
             // }
@@ -77,6 +81,8 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 throw new BizException('无效请求地址！');
             }
             var message = null;
+            var flag = true;
+            var rtObj = {};
             var exceptionStr = '服务器异常,请重试!';
             Ext.Ajax.request({
                 url: app.platform.lshc.view.base.RequestUtils.url(url),
@@ -91,15 +97,19 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                         message = data.result
                         Ext.Msg.alert('温馨提示', "操作成功！");
                     }else{
+                        flag = false;
                         Ext.Msg.alert('温馨提示', data.result);
                     }
                 },
                 failure: function () {
                     message = exceptionStr;
+                    flag = false;
                     Ext.Msg.alert('温馨提示', message);
                 }
             });
-            return message;
+            rtObj['flag'] = flag;
+            rtObj['data'] = message
+            return rtObj;
         },
         request: function (data, url) {
             if (!url) {

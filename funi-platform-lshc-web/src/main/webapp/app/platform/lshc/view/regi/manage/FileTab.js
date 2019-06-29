@@ -112,7 +112,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
             items: [{
                         xtype: 'toolbar', columnWidth: 1, scope: me,
                         width:82,
-                        access:"AUTH_LSHC_FILELIST_UPLOAD",
+                        // access:"AUTH_LSHC_FILELIST_UPLOAD",
                         items: [
                               {
                                 xtype: 'form',
@@ -182,7 +182,7 @@ Ext.define("app.platform.lshc.view.regi.manage.FileTab",{
                         ]
                     },
                         {
-                            xtype: 'button', text: '删除文件', scope: me, glyph: 'xf014@FontAwesome',
+                            xtype: 'button', text: '删除文件',margin:'0 0 0 10', scope: me, glyph: 'xf014@FontAwesome',
 
                             handler: function () {
 

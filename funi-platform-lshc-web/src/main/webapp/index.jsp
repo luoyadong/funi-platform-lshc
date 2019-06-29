@@ -4,12 +4,12 @@
     <head>
 <meta charset="UTF-8"/>
 <title>房屋普查系统</title>
-            <%--
+            <%--http://dtt.funi.com
             <mvc:theme name="eic.v1"/>
             --%>
-<link href="http://dtt.funi.com/fcy/style.css" rel="stylesheet" type="text/css"/>
-<script src="http://dtt.funi.com/fcy/ext/bootstrap.js" charset="utf-8" language="JavaScript"></script>
-<script src="http://dtt.funi.com/fcy/app.js" charset="utf-8" language="JavaScript"></script>
+<link href="http://rjyscm.funi.com/fcy/style.css" rel="stylesheet" type="text/css"/>
+<script src="http://rjyscm.funi.com/fcy/ext/bootstrap.js" charset="utf-8" language="JavaScript"></script>
+<script src="http://rjyscm.funi.com/fcy/app.js" charset="utf-8" language="JavaScript"></script>
 <script language="javascript">
     (function () {
     //上下文对象

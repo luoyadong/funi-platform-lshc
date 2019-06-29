@@ -64,6 +64,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                 {type:"string",name:"nodeName"},
                 {type:"string",name:"auditStatus"}
             ]
+            ,pageSize:9
         });
         Ext.apply(me, {
             items:[{
@@ -217,7 +218,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                     }
                                 },
                                 {
-                                    xtype: 'button', text: '批量提交', scope: me, glyph: 'xf234@FontAwesome',
+                                    xtype: 'button', text: '提交', scope: me, glyph: 'xf234@FontAwesome',
 
                                     handler: function () {
 
@@ -239,7 +240,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                             ids.push(record.id);
                                         }
 
-                                        Ext.Msg.confirm('提示',  '提交后将发起审批流程，确定要发起批量提交吗？', function (btn) {
+                                        Ext.Msg.confirm('提示',  '提交后,选择的房屋将发起审批流程，确定要发起提交吗？', function (btn) {
                                             if (btn === 'yes') {
                                                 //执行删除
                                                 app.platform.lshc.view.base.RequestUtils.post_json(ids,"/manage/batchSubmitRegiInfo",false,false);
@@ -255,7 +256,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                         }
                     ]
                 },
-                height:405,
+                height:355,
                 xtype: 'gridpanel',
                 itemId: 'houseGridpanel',
                 border: true,

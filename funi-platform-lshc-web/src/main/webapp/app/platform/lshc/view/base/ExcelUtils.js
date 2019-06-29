@@ -219,7 +219,7 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    html: '<a href="http://rjyscm.funi.com/group1/M00/04/42/wKgB510TjSmAft99AABOAD_6jgM090.xls">下载填报模板</a>',
+                                    html: '<a href="'+Funi.core.Context.path("lshc", "/temp.xlsx")+'">下载填报模板</a>',
                                     margin: '0 0 0 70'
                                 }
 

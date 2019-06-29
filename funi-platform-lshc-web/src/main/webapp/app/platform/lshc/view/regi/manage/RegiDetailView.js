@@ -196,7 +196,6 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     initHouseDetail:function(hcId){
         var me = this
         var id = hcId;
-        me.setTask(true);
         //加载普查详情tabs
         Ext.Ajax.request({
             url: app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoDetail"),
@@ -235,8 +234,11 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
             }
         });
-        me.setTask(false)
 
+    },
+    resetForm:function(){
+        var houseDetailView = this.queryById("lshc-view-regi-HouseDetailView-itemId");
+        houseDetailView.resetForm();
     },
     setTask: function (show, message) {
         var myTask = Ext.lshc_task;
@@ -318,11 +320,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                                 xtype: 'button', text: '查询', scope: me,
                                 glyph:0xf002,
                                 handler: function () {
-                                     me.setTask(true)
                                      gridObjStore = me.getHouseListStore();
                                      gridObjStore.proxy.extraParams = me.getParams();//获取列表store
 								     gridObjStore.loadPage(1);
-                                     me.setTask(false)
 									 //点击第一条记录
                                 }
                             },
@@ -376,13 +376,13 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 								margin: '0 0 0 0',
 								//width:'98px',
 							    itemId:"mapCodeTbItemId",
-								html:'<div style="font-weight:bold;font-size:10">XS1234561</div>'
+								html:'<div style="font-weight:bold;font-size:10"></div>'
 							},
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
 							    itemId:"addressTbItemId",
-								html:'<div style="font-weight:bold;font-size:10;margin-left:10;float:right">城关区纳金乡1001号2栋</div>'
+								html:'<div style="font-weight:bold;font-size:10;margin-left:10;float:right"></div>'
 							},
 								"->",
 							{   xtype: 'tbtext',
@@ -394,7 +394,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 								margin: '0 0 0 0',
 								//width:'98px',
 						       itemId:"statusTbItemId",
-								html:'<div style="font-weight:bold;font-size:10;color:green;">审核通过</div>'
+								html:'<div style="font-weight:bold;font-size:10;color:green;"></div>'
 							},
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
@@ -405,33 +405,33 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 								margin: '0 0 0 0',
 								//width:'98px',
 						       itemId:"doneTbItemId",
-								html:'<div style="font-weight:bold;font-size:11;color:green;">①社区->②街道办</div>'
+								html:'<div style="font-weight:bold;font-size:11;color:green;"></div>'
 							},
                            {   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
 						        itemId:"doingTbItemId",
-								html:'<div style="font-weight:bold;font-size:11;color:orange;">->③区政府</div>'
+								html:'<div style="font-weight:bold;font-size:11;color:orange;"></div>'
 							},
 							{   xtype: 'tbtext',
 								margin: '0 0 0 0',
 								//width:'98px',
 							   itemId:"todoTbItemId",
-								html:'<div style="font-weight:bold;font-size:11;margin-right:50;">->④市住建局</div>'
+								html:'<div style="font-weight:bold;font-size:11;margin-right:50;">①社区->②街道办->③区政府->④市住建局</div>'
 							}
                         ]
                     }	
 				]
             }, {
                 region: 'west',//左方
-                width: '39%',
+                width: '42%',
                 items:[
 					{
                            // title: '房屋列表信息',
 							itemId: 'HouseListView-Tab-itemId',
                             autoScroll: true,
                             scrollable: true,
-                            height:450,
+                            height:358,
                             //bodyStyle : 'overflow-y:scroll',
                             // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
                             items: [

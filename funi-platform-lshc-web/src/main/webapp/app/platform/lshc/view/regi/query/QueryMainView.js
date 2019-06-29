@@ -95,7 +95,7 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
                 {type:"string",name:"communityName"},
                 {type:"string",name:"buildName"}
             ],
-            pageSize:15
+            pageSize:10
         });
         Ext.apply(me, {
 

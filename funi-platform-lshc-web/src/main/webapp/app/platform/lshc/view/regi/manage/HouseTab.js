@@ -100,7 +100,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 								},
 								layout: {
 									type: 'column',
-									columns: 11
+									columns: 2
 								},
 								items: [
 									{
@@ -219,14 +219,14 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									{
 										xtype: "textfield",name:"preSaleNo",
 
-										emptyText: "预售许可证号",fieldLabel: '预售许可证号',itemId:"ghouse-rent-contract-contract-contractNo2-itemId19"
+										emptyText: "预售许可证号",fieldLabel: '预售许可证号'
 									},
 									{
 										xtype: 'panel',
 										columnWidth:2,colspan:2,
 										margin: '5 5 0 5',
 										border: false,
-										width: "100%",
+										width: 550,
 										//title: '人口信息',
 										height:200,
 										defaults: {
@@ -239,8 +239,9 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 												itemId:'lshc-view-HousePerson-tab-itemId',
 												xtype:"lshc-view-HousePerson-xtype",
 												overflowY:'auto',
+												overflowX:'auto',
+												border: true,
 												disabled:false,
-												width:"100%",
 												height:200
 											}
 										]
@@ -321,14 +322,14 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									},
 									//{xtype: 'tbtext', text: '', colspan:1,hidden:me.config.isDetail},
 									{
-										xtype: "textfield",name:"roomNo",
+										xtype: "textfield",name:"apt",
 										hidden:me.config.isDetail,
 										colspan:1,
+										margin: '0 0 5 -165',
 										width: 70,
-										emptyText: "房号"
+										emptyText: "门牌号"
 									},
-									{xtype: 'tbtext', text: '号',hidden:me.config.isDetail,  colspan:1,hidden:me.config.isDetail,width:115,style:"text-align:left"},
-
+									{xtype: 'tbtext', text: '号',margin: '0 0 5 -95',hidden:me.config.isDetail,  colspan:1,hidden:me.config.isDetail,width:115,style:"text-align:left"},
 
 									{
 										xtype: "textfield",name:"buildNo",
@@ -358,12 +359,20 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										cls: "lessee-personal",
 										emptyText: "层",
 										hidden:me.config.isDetail,
-										width: 110,
+										width: 93,
 										colspan:1
 									},
-									{xtype: 'tbtext',hidden:me.config.isDetail, text: '层',colspan:3,hidden:me.config.isDetail,width:198,style:"text-align:left"},
-									// {xtype: 'tbtext', text: '', colspan:1,hidden:me.config.isDetail},
-									// {xtype: 'tbtext', text: '', colspan:1,hidden:me.config.isDetail},
+									{xtype: 'tbtext',hidden:me.config.isDetail, text: '层',colspan:1,hidden:me.config.isDetail,width:198,style:"text-align:left"},
+									{
+										xtype: "textfield",name:"roomNo",
+										hidden:me.config.isDetail,
+										margin: '0 0 5 -165',
+										colspan:1,
+										width: 70,
+										emptyText: "房号"
+									},
+									{xtype: 'tbtext', text: '号',margin: '0 0 5 -95',hidden:me.config.isDetail,  colspan:1,hidden:me.config.isDetail,width:115,style:"text-align:left"},
+
 									{
                                         xtype: "textfield",name:"addressDetail",
 										//columnWidth:11,
@@ -388,8 +397,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										name:"houseUse",
 										editable:false,
 										triggerAction:'all'
-										,store:useStore
-										//,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_USE')
+										// ,store:useStore
+										,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_USE')
 									},
 									{
 										colspan:4,
@@ -412,8 +421,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										name:"houseStructure",
 										editable:false,
 										triggerAction:'all'
-										,store:strStore
-										//,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_STRUCTURE')
+										// ,store:strStore
+										,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_STRUCTURE')
 									},
 									// {
 									// 	xtype: "textfield",name:"buildDate",

@@ -7,7 +7,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
 	xtype: 'lshc-view-regi-HouseDetailView',
 	itemId:"lshc-view-regi-HouseDetailView-itemId",
     layout:"fit",
-    margin:"-3 0 0 0",
+    margin:"0 0 0 0",
     requires:[
 		"app.platform.lshc.view.regi.manage.HouseTab",
 		"app.platform.lshc.view.regi.manage.FileTab",
@@ -49,6 +49,25 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
         var approveView = this.queryById("lshc-regi-approve-tabpanel-itemId");
         approveView.store.proxy.extraParams = obj;
         approveView.store.loadPage(1);
+    },
+    resetForm:function(){
+        //房屋信息 regiInfo entInfoList fileList
+        var houseView = this.queryById("lshc-regi-manage-houseInfo-form-itemId");
+        var view = Ext.ComponentQuery.query("textfield,numberfield,xcombobox,checkbox",houseView);
+        for(var j=0;j<view.length;j++){
+            view[j].setValue(null);
+        }
+
+        //房屋信息-人员列表，lshc-view-HousePerson-itemId
+        var entView = this.queryById("lshc-regi-housedetail-tabpanel-itemId").down("xgridpanel");
+        entView.store.loadData({},false);
+
+        //文件列表
+        var approveView = this.queryById("lshc-regi-file-tabpanel-itemId");
+        approveView.store.loadData({},false);
+        //审批
+        var approveView = this.queryById("lshc-regi-approve-tabpanel-itemId");
+        approveView.store.loadData({},false);
     },
     isHiddenBtn:function(btnType){//1:新建 2 批量导入 3导出 4审批 5删除 6编辑 7 批量提交
         var me = this;
@@ -164,7 +183,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                     title:'普查信息',
                     overflowY:'auto',
                     width:"100%",
-                    height:320,
+                    height:275,
                     disabled:false
                 },{
                     title:'附件',

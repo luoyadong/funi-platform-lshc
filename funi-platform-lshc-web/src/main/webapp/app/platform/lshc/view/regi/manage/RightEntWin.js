@@ -8,7 +8,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
     modal: true,
     requires:[],
     width:695,
-    height:255,
+    height:290,
     title:'添加人口信息',
     layout:"fit",
     border:true,
@@ -29,13 +29,13 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                         { xtype: "textfield",dataIndex: 'isNew',name:"isNew",value:"1",hidden:true},
                         {
                             xtype: "textfield", labelAlign:"right",
-                            emptyText: "姓名", allowBlank: false, fieldLabel: '姓名',  width:300,
+                            emptyText: "人员/单位名称", allowBlank: false, fieldLabel: '人员名称',  width:300,
                             labelWidth: 90, margin: '11 0 0 0',name:'entName'
                         },
 						 {
                             xtype: "textfield", labelAlign:"right",
                             emptyText: "证件号码", allowBlank: false, fieldLabel: '证件号码',  width:300,
-                            labelWidth: 90, margin: '11 0 0 0',name:'idNo',vtype:"idcard"
+                            labelWidth: 90, margin: '11 0 0 0',name:'idNo'//,vtype:"idcard"
                         },
                         {
                             xtype:'xcombobox',
@@ -51,7 +51,20 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             triggerAction:'all',
                             dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=GENDER')
                         },
-
+                        {
+                            xtype:'xcombobox',
+                            labelAlign:"right",
+                            itemId:'idTypeItemId',
+                            fieldLabel:'证件类型',
+                            emptyText:'全部',
+                            name:"idType",
+                            editable:false,
+                            width:300,
+                            labelWidth: 90,
+                            margin: '11 0 0 0',
+                            triggerAction:'all',
+                            dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=ID_TYPE')
+                        },
                         {
                             xtype:'xcombobox',
                             labelAlign:"right",
@@ -148,32 +161,38 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
         var formView = me.queryById("rightEntItemId").form;
         var data = formView.getValues();
         if(null == data.entName || "" == data.entName){
-            Ext.Msg.alert("提示","请输入姓名");
+            Ext.Msg.alert("提示","请输入人员名称");
             return false;
         }
         if(null == data.sex || "" == data.sex){
-            Ext.Msg.alert("提示","请输入性别！");
+            Ext.Msg.alert("提示","请选择性别！");
             return false;
         }
         if(null == data.idNo || "" == data.idNo){
             Ext.Msg.alert("提示","请输入证件号码！");
             return false;
-        }else{
-            if(me.CheckIdentityCode(data.idNo,'0-100')!=0){
-                Ext.Msg.alert('提示',me.CheckIdentityCode(data.idNo));
-                return false;
-            }
+        }
+        // else{
+        //     if(me.CheckIdentityCode(data.idNo,'0-100')!=0){
+        //         Ext.Msg.alert('提示',me.CheckIdentityCode(data.idNo));
+        //         return false;
+        //     }
+        // }
+
+        if(null == data.idType || "" == data.idType){
+            Ext.Msg.alert("提示","请选择人员类型！");
+            return false;
         }
 		  if(null == data.entNation || "" == data.entNation){
-            Ext.Msg.alert("提示","请输入民族！");
+            Ext.Msg.alert("提示","请选择民族！");
             return false;
         }
 		  if(null == data.entType || "" == data.entType){
-            Ext.Msg.alert("提示","请输入人员类别！");
+            Ext.Msg.alert("提示","请选择人员类别！");
             return false;
         }
 		  if(null == data.entNative || "" == data.entNative){
-            Ext.Msg.alert("提示","请输入籍贯！");
+            Ext.Msg.alert("提示","请选择籍贯！");
             return false;
         }
         if(null == data.tel || "" == data.tel){
@@ -181,7 +200,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
             return false;
         }
        if(null == data.marriageStatus || "" == data.marriageStatus){
-            Ext.Msg.alert("提示","请输入婚姻状况！");
+            Ext.Msg.alert("提示","请选择婚姻状况！");
             return false;
         }
         return true;
