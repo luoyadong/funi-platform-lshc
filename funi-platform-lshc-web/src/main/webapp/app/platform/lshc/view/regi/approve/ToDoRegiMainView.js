@@ -44,6 +44,12 @@ Ext.define('app.platform.lshc.view.regi.approve.ToDoRegiMainView', {
         }
         return obj;
     },
+    initHouseList:function(){
+        var me = this;
+        var gridObjStore = me.store;
+        gridObjStore.proxy.extraParams = me.getParams();
+        gridObjStore.loadPage(1);
+    },
     resetParams:function(){
         var formElements = Ext.ComponentQuery.query("textfield",this);
         var obj = new Object();

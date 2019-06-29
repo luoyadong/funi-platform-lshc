@@ -40,7 +40,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
         var formElements = Ext.ComponentQuery.query("textfield",this);
         var obj = new Object();
         for(var i=0;i<formElements.length;i++){
-			this.queryById(formElements[i].itemId).setValue(null)
+            if(null != formElements[i]){
+                this.queryById(formElements[i].itemId).setValue(null)
+            }
         }
         return obj;
     },

@@ -70,6 +70,12 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
         ExcelUtils.exportExcel({"ids":ids}, url);
         Ext.Msg.alert('提示', '数据导出结束！');
     },
+    initHouseList:function(){
+        var me = this;
+        var gridObjStore = me.store;
+        gridObjStore.proxy.extraParams = me.getParams();
+        gridObjStore.loadPage(1);
+    },
     initComponent: function () {
         var me = this;
         var mStore = Ext.create('Ext.data.Store', {
