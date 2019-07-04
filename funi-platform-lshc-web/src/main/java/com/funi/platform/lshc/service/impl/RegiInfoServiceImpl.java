@@ -61,6 +61,7 @@ public class RegiInfoServiceImpl implements RegiInfoService {
 
     @Override
     public List<ListRegiInfoVo> findRegiInfoVoList(RegiInfoQuery regiInfoQuery) {
+        regiInfoQuery.setOwner(userManager.findUser().getRoles());
         regiInfoQuery.setQueryType(CensusConstants.BUILD_QUERY_TYPE_COLLECT);
         return regiInfoMapper.selectRegiInfoVoList(regiInfoQuery);
     }

@@ -337,6 +337,16 @@
           t2.CREATE_TIME,
           ja.id as jobAcceptId,ja.type_name as businessTypeName,
           t2.house_status as auditStatus,
+          <if test="queryType == '1'.toString()">
+              (select bt.task_name from BUSINESS_TASK bt
+              where bt.business_id = t2.id
+              AND bt.owner_type = 'R'
+              AND bt.owner in
+              <foreach collection="owner" item="item" open="(" close=")" separator=",">
+                  #{item.id}
+              </foreach>
+              AND rownum =1) as nodeName,
+          </if>
           <if test="queryType == '2'.toString()">
             t4.task_name as nodeName,
           </if>
