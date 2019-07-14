@@ -7,7 +7,7 @@ public enum Conclusion {
 
     TY("同意"),
     REGION_CODE("140202"),
-    BTY("拒绝");
+    BTY("拒绝");//大同：140202 拉萨：540101
 
     private String name;
 

@@ -44,6 +44,10 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         approveView.store.loadData(formData.fileList,false);
 
         this.isShowSubmitBtn();
+
+        var hTab = this.queryById("lshc-regi-houseedit-tabpanel-itemId").queryById("lshc-regi-manage-houseInfo-itemId");
+        hTab.initEditStreet(formData.regiInfo.street);
+
     },
     resetForm:function(){
         this.config.bizId = null;

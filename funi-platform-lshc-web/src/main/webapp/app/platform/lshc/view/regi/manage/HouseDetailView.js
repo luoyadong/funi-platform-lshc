@@ -33,6 +33,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
         //房屋信息 regiInfo entInfoList fileList
         var houseView = this.queryById("lshc-regi-manage-houseInfo-form-itemId");
         houseView.getForm().setValues(formData.regiInfo);
+
 		//房屋信息-人员列表，lshc-view-HousePerson-itemId
         var entView = this.queryById("lshc-regi-housedetail-tabpanel-itemId").down("xgridpanel");
         entView.store.loadData(formData.entInfoList,false);
@@ -124,7 +125,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                                     return;
                                 }
 								var editWin = Ext.create("app.platform.lshc.view.regi.manage.NewInfoWinView",
-                                    {config:{parentContainer:me.config.parentContainer}});
+                                    {config:{parentContainer:me.config.parentContainer},title:"编辑普查"});
 							    editWin.show();
 
 								Ext.Ajax.request({

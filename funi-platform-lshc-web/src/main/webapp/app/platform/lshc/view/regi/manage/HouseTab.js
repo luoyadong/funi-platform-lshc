@@ -17,7 +17,9 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
         //主容器
         parentContainer: null,
 		//是否详情
-		isDetail:true
+		isDetail:true,
+
+		count:0
     },
     constructor: function (config) {
         var me = this;
@@ -48,6 +50,12 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
         }
         throw {message:"请填写普查信息"};
     },
+	initEditStreet:function(street){
+		var me = this
+		me.config.street = street;
+		console.log("initEdit---------");
+		console.log("initEdit---------"+me.config.street);
+	},
 
     initComponent:function()
     {
@@ -59,6 +67,15 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
                 {'name': '拉萨市',value:'拉萨市'}
             ]
         });
+		var streetStore = Ext.create("Funi.data.ListStore",{
+			url:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId'),
+			autoLoad:false,
+			fields:[
+				{type:"string",name:"name"},
+				{type:"string",name:"value"}
+			]
+			,pageSize:50
+		});
 		//房屋用途
 		var useStore = Ext.create('Ext.data.Store', {
 			fields: ['name','value'],
@@ -268,7 +285,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
                                 layout: 'vbox',
                                 border: false
                             },
-							
+
 							items: [
 								 {
                                 xtype: 'fieldset',
@@ -324,9 +341,35 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										emptyText:'街道',
 										name:"street",
 										editable:false,
+										store: streetStore,
 										hidden:me.config.isDetail,
 										triggerAction:'all',
-										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId')
+										// dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId')
+										listeners:{
+											change:function(){
+												if(me.config.count > 1){
+													me.config.street = null;
+													me.config.count = 0;
+												}
+												console.log("change----------")
+												console.log(me.config.street)
+												if(null != me.config.street
+													&& "" != me.config.street
+													&& "null" != me.config.street
+													&& "NULL" != me.config.street){
+													me.config.count += 1;
+													this.setValue(me.config.street);
+													this.setRawValue(me.config.street);
+												}
+											}
+											,afterRender:function(){
+												var combo = this;
+												console.log("sfterRender------")
+												console.log(me.config.street)
+												combo.store.loadData({name:me.config.street,value:me.config.street});
+
+											}
+										}
 									},
 									//{xtype: 'tbtext', text: '', colspan:1,hidden:me.config.isDetail},
 									{

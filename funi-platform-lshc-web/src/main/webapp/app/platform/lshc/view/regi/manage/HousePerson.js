@@ -57,7 +57,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                     itemId: 'lshc-manage-housePerson-panelList',
                     border: true,
                     minHeight: 100,
-                    width: 580,
+                    width: 720,
                     store: store,
                     margin: '0 0 20 0',
                     columnLines: true,
@@ -67,7 +67,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                         }
                     },
                     tbar: [
-                        '->', {
+                         {
                             xtype: "container",
                             defaults: {
                                 margin: '0 25 0 5'
@@ -117,7 +117,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
 						 {text: '人员名称', dataIndex: 'entName',flex: 1.3, align: 'center'},
 						 {text: '证件号码', dataIndex: 'idNo',flex: 1.5, align: 'center'},
                          {text: '证件类型', dataIndex: 'idType',flex: 1.2, align: 'center'},
-						 {text: '性别', dataIndex: 'sex',flex: 0.5, align: 'center'},
+						 {text: '性别', dataIndex: 'sex',flex: 0.8, align: 'center'},
 						 {text: '人员类别', dataIndex: 'entType',flex: 1.2, align: 'center'},
                         {text: '民族', dataIndex: 'entNation',flex: 1, align: 'center'},
                         {text: '籍贯', dataIndex: 'entNative', flex: 1, align: 'center'},

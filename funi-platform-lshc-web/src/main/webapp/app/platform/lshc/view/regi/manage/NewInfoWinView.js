@@ -36,11 +36,15 @@ Ext.define('app.platform.lshc.view.regi.manage.NewInfoWinView', {
     initComponent: function () {
         var me = this;
         me.on('close', function(){
-            // var editHouseView = me.queryById("lshc-view-regi-HouseEditView-itemId");
+
+            var editHouseView = me.queryById("lshc-regi-houseedit-parent-itemId");
+            editHouseView.destroy();
+            me.destroy();
             // //关闭清理状态
             // editHouseView.config.bizId = null;
             // editHouseView.config.parentContainer = null;
             // editHouseView.resetForm();
+
         });
         Ext.apply(me, {
 			xtype:'container',
