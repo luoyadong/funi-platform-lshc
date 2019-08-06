@@ -39,5 +39,5 @@ public interface UndoneRegiInfoService {
      * 根据普查信息ID集合执行批量审批操作
      * @param regiInfoAuditDto 批量审核普查信息数据传输对象
      */
-    void batchAuditRegiInfoList(RegiInfoAuditDto regiInfoAuditDto);
+    void batchAuditRegiInfoList(RegiInfoAuditDto regiInfoAuditDto) throws Exception;
 }

@@ -63,7 +63,7 @@ public class UndoneRegiInfoServiceImpl implements UndoneRegiInfoService {
     }
 
     @Override
-    public void batchAuditRegiInfoList(RegiInfoAuditDto regiInfoAuditDto) {
+    public void batchAuditRegiInfoList(RegiInfoAuditDto regiInfoAuditDto)throws Exception {
         List<String> ids = regiInfoAuditDto.getIds();
         String result = regiInfoAuditDto.getResult();
         for(String houseId : ids) {
@@ -100,7 +100,7 @@ public class UndoneRegiInfoServiceImpl implements UndoneRegiInfoService {
             try {
                 lshcWorkFlowService.doWorkFlow(buildAuditDto(regiInfoAuditDto,houseId),"LSHC_REGI_INFO");
             } catch (Exception e) {
-                e.printStackTrace();
+                throw e;
             }
         }
     }
