@@ -45,7 +45,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText:'全部',
                             name:"sex",
                             editable:false,
-                            allowBlank: false,
+                            // allowBlank: false,
                             width:300,
                             labelWidth: 90,
                             margin: '11 0 0 0',
@@ -60,7 +60,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText:'全部',
                             name:"idType",
                             editable:false,
-                            allowBlank: false,
+                            // allowBlank: false,
                             width:300,
                             labelWidth: 90,
                             margin: '11 0 0 0',
@@ -75,7 +75,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText:'全部',
                             name:"entType",
                             editable:false,
-                            allowBlank: false,
+                            // allowBlank: false,
                             width:300,
                             labelWidth: 90,
                             margin: '11 0 0 0',
@@ -91,7 +91,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText:'全部',
                             name:"entNation",
                             editable:false,
-                            allowBlank: false,
+                            // allowBlank: false,
                             width:300,
                             labelWidth: 90,
                             margin: '11 0 0 0',
@@ -106,7 +106,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText:'全部',
                             name:"entNative",
                             editable:false,
-                            allowBlank: false,
+                            // allowBlank: false,
                             width:300,
                             labelWidth: 90,
                             margin: '11 0 0 0',
@@ -115,7 +115,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                         },
                         {
                             xtype: "textfield", labelAlign:"right",
-                            emptyText: "联系电话", allowBlank: false, fieldLabel: '联系电话',width:300,
+                            emptyText: "联系电话", allowBlank: true, fieldLabel: '联系电话',width:300,
                             labelWidth: 90, margin: '11 0 0 0',name:'tel'
                         },
                         {
@@ -126,7 +126,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText:'全部',
                             name:"marriageStatus",
                             editable:false,
-                            allowBlank: false,
+                            // allowBlank: false,
                             width:300,
                             labelWidth: 90,
                             margin: '11 0 0 0',
@@ -170,10 +170,10 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
             Ext.Msg.alert("提示","请输入人员名称");
             return false;
         }
-        if(null == data.sex || "" == data.sex){
-            Ext.Msg.alert("提示","请选择性别！");
-            return false;
-        }
+        // if(null == data.sex || "" == data.sex){
+        //     Ext.Msg.alert("提示","请选择性别！");
+        //     return false;
+        // }
         if(null == data.idNo || "" == data.idNo){
             Ext.Msg.alert("提示","请输入证件号码！");
             return false;
@@ -185,30 +185,30 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
         //     }
         // }
 
-        if(null == data.idType || "" == data.idType){
-            Ext.Msg.alert("提示","请选择人员类型！");
-            return false;
-        }
-		  if(null == data.entNation || "" == data.entNation){
-            Ext.Msg.alert("提示","请选择民族！");
-            return false;
-        }
-		  if(null == data.entType || "" == data.entType){
-            Ext.Msg.alert("提示","请选择人员类别！");
-            return false;
-        }
-		  if(null == data.entNative || "" == data.entNative){
-            Ext.Msg.alert("提示","请选择籍贯！");
-            return false;
-        }
-        if(null == data.tel || "" == data.tel){
-            Ext.Msg.alert("提示","请输入联系电话！");
-            return false;
-        }
-       if(null == data.marriageStatus || "" == data.marriageStatus){
-            Ext.Msg.alert("提示","请选择婚姻状况！");
-            return false;
-        }
+       //  if(null == data.idType || "" == data.idType){
+       //      Ext.Msg.alert("提示","请选择人员类型！");
+       //      return false;
+       //  }
+		//   if(null == data.entNation || "" == data.entNation){
+       //      Ext.Msg.alert("提示","请选择民族！");
+       //      return false;
+       //  }
+		//   if(null == data.entType || "" == data.entType){
+       //      Ext.Msg.alert("提示","请选择人员类别！");
+       //      return false;
+       //  }
+		//   if(null == data.entNative || "" == data.entNative){
+       //      Ext.Msg.alert("提示","请选择籍贯！");
+       //      return false;
+       //  }
+       //  if(null == data.tel || "" == data.tel){
+       //      Ext.Msg.alert("提示","请输入联系电话！");
+       //      return false;
+       //  }
+       // if(null == data.marriageStatus || "" == data.marriageStatus){
+       //      Ext.Msg.alert("提示","请选择婚姻状况！");
+       //      return false;
+       //  }
         return true;
 
     },

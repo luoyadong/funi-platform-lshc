@@ -244,7 +244,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									{
 										xtype: "textfield",name:"preSaleNo",
 
-										emptyText: "预售许可证号",fieldLabel: '预售许可证号'
+										emptyText: "网签合同号",fieldLabel: '网签合同号'
 									},
 									{
 										xtype: 'panel',
@@ -489,7 +489,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									  {
                                         xtype: "numberfield",name:"houseArea",
 										colspan:4,
-                                        emptyText: "房屋面积(m²)",fieldLabel: '房屋面积(m²)',itemId:"ghouse-rent-contract-contract-contractNo2-itemId3"
+                                        emptyText: "建筑面积(m²)",fieldLabel: '建筑面积(m²)',itemId:"ghouse-rent-contract-contract-contractNo2-itemId3"
                                     },
 									  {
                                         xtype: "numberfield",name:"innerHouseArea",

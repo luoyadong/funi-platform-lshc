@@ -21,7 +21,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
 		bizId:null
 
     },
-    layout:"fit",
+    // layout:"fit",
     constructor: function (config) {
         var me = this;
         config = config || {};
@@ -232,7 +232,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                                         //组装ids
                                         for(var i=0;i< selectObjArray.length;i++){
                                             var record = selectObjArray[i].data;
-                                            if(record.auditStatus != '新建'){
+                                            if(record.auditStatus != '新建' && record.auditStatus != '初审不通过'){
                                                 Ext.MessageBox.alert("温馨提示", "房屋编号："+record.houseId+",已经提交！");
                                                 return;
                                             }
@@ -258,7 +258,8 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                         }
                     ]
                 },
-                height:355,
+                //height:355,
+                // height:'200%',
                 xtype: 'gridpanel',
                 itemId: 'houseGridpanel',
                 border: true,

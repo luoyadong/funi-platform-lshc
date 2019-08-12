@@ -169,7 +169,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         name:"region",
                                         editable:false,
                                         triggerAction:'all',
-                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllRegionList'),
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllRegionList?showALL=1'),
                                         listeners:{
                                             change:function(){
                                                 var cabinet = me.queryById("streetItemId");
@@ -190,7 +190,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         name:"street",
                                         editable:false,
                                         triggerAction:'all',
-                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId'),
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId?showALL=1'),
                                         listeners:{
                                             change:function(){
                                                 var cabinet = me.queryById("communityNameItemId");
@@ -210,7 +210,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         name:"communityName",
                                         editable:false,
                                         triggerAction:'all',
-                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllStreetListByRegionId')
+                                        dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllStreetListByRegionId?showALL=1')
                                     },
                                     {
                                         xtype:"textfield",

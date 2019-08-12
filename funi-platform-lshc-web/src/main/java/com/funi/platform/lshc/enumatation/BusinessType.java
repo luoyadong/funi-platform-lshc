@@ -5,7 +5,7 @@ package com.funi.platform.lshc.enumatation;
  */
 public enum BusinessType {
 
-    pnew("Lshc_Regi_Flow",1,"新建普查","LshcRegiFlow"),
+    pnew("Lshc_Regi_Flow",2,"新建普查","LshcRegiFlow"),
     cnew("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx"),
     cchange("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx"),
     crenew("Lshc_Regi_XXX",1,"变更普查","LshcRegiXxx"),

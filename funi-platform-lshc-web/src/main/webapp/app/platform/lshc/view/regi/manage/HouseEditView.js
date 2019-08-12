@@ -92,7 +92,9 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseEditView",{
         var me = this;
         var resetSubmitBtn = me.queryById("submitAndResetItemId")
         var submitBtn = me.queryById("submitItemId")
-        if(me.config.houseStatus != null && me.config.houseStatus != '新建'){
+        if(me.config.houseStatus != null
+            && me.config.houseStatus != '新建'
+            && me.config.houseStatus != null && me.config.houseStatus != '初审不通过'){
             resetSubmitBtn.hide();
             submitBtn.hide();
         }

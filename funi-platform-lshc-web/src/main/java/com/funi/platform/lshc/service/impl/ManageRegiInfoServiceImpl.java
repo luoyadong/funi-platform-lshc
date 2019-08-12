@@ -83,7 +83,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             if (regiInfo == null) {
                 throw new RuntimeException("普查信息不存在，请核实普查信息ID");
             }
-            if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
+            if(!CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())
+                    && !CensusConstants.HOUSE_STATUS_FIRST_APPROVAL_REJECT.equals(regiInfo.getHouseStatus())) {
                 throw new RuntimeException("普查状态异常，无法进入审批流程");
             }
             // 修改普查信息的状态，
@@ -178,7 +179,8 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
         // 编辑普查信息关联的附件信息
         modifyFileList(regiInfoDto.getFileList(), id, user);
         if(isSubmit) {
-            if(! CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())) {
+            if(!CensusConstants.HOUSE_STATUS_INPUT.equals(regiInfo.getHouseStatus())
+                    && !CensusConstants.HOUSE_STATUS_FIRST_APPROVAL_REJECT.equals(regiInfo.getHouseStatus())) {
                 throw new RuntimeException("普查状态异常，无法进入审批流程");
             }
             // 修改普查信息的状态
