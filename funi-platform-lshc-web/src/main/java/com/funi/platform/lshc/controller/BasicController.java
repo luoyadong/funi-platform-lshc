@@ -81,4 +81,14 @@ public class BasicController {
     public Object getPrintInfo() {
         return ResultVo.newResult(basicService.findCurrentUserRegionCodeString());
     }
+
+    /**
+     * 根据街道所辖社区CODE分组查询当前登录用户的数据权限CODE集合
+     * @return
+     */
+    @RequestMapping("getCurrentUserRegionCodeList")
+    @ResponseBody
+    public Object getCurrentUserRegionCodeList() {
+        return ResultVo.newResult(basicService.findCurrentUserRegionCodeListByStreet());
+    }
 }

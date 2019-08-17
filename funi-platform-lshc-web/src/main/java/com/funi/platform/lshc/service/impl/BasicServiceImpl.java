@@ -218,6 +218,40 @@ public class BasicServiceImpl implements BasicService {
         return null;
     }
 
+    @Override
+    public List<String> findCurrentUserRegionCodeListByStreet() {
+        String userId = userManager.findUser().getUserId();
+        String result = getAppInvocationResult("role.getRegionsByUserId", userId);
+        if(StringUtils.isBlank(result)) {
+            throw new BizException("获取当前登录用户所属区域code异常");
+        }
+        String data = JSONObject.parseObject(result).getString("data");
+        List<SecurityRegionDto> securityRegionDtoList = JSONObject.parseArray(data, SecurityRegionDto.class);
+        if(CollectionUtils.isEmpty(securityRegionDtoList)) {
+            throw new BizException("获取当前登录用户所属区域code异常：县区没有数据");
+        }
+        List<String> regionCodeList = new ArrayList<>();
+        for(SecurityRegionDto securityRegionDto : securityRegionDtoList) {
+            // 第一级是县区数据
+            List<LshcRegion> regionsList = securityRegionDto.getRegionsList();
+            if(CollectionUtils.isNotEmpty(regionsList)) {
+                // 第二级是街道数据
+                for(LshcRegion lshcRegion : regionsList) {
+                    // 第三级是社区数据
+                    List<LshcRegion> regionsList1 = lshcRegion.getRegionsList();
+                    if(CollectionUtils.isNotEmpty(regionsList1)) {
+                        List<String> temp = new ArrayList<>();
+                        for(LshcRegion lshcRegion1 : regionsList1) {
+                            temp.add(lshcRegion1.getCode());
+                        }
+                        regionCodeList.add("'" + StringUtils.join(temp, "','") + "'");
+                    }
+                }
+            }
+        }
+        return regionCodeList;
+    }
+
     private List<ComboboxDto> convertComboboxDto(List<LshcRegionVo> lshcRegionVoList, String showALL) {
         List<ComboboxDto> comboboxDtoList = null;
         if(CollectionUtils.isNotEmpty(lshcRegionVoList)) {

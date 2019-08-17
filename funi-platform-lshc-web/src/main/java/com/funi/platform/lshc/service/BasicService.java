@@ -68,5 +68,11 @@ public interface BasicService {
      * @return
      */
     String findCurrentUserRegionCodeString();
+
+    /**
+     * 根据街道分组查询数据权限的社区code集合
+     * @return
+     */
+    List<String> findCurrentUserRegionCodeListByStreet();
 }
 
