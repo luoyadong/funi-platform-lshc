@@ -26,8 +26,8 @@ public class BasicController {
      */
     @RequestMapping("getDictionaryListName")
     @ResponseBody
-    public List<ComboboxDto> getDictionaryListName(String type) {
-        return basicService.findDictionaryListName(type);
+    public List<ComboboxDto> getDictionaryListName(String type, String showALL) {
+        return basicService.findDictionaryListName(type, showALL);
     }
 
     /**
@@ -46,8 +46,8 @@ public class BasicController {
      */
     @RequestMapping("getAllRegionList")
     @ResponseBody
-    public List<ComboboxDto> getAllRegionList() {
-        return basicService.findAllRegionList();
+    public List<ComboboxDto> getAllRegionList(String showALL) {
+        return basicService.findAllRegionList(showALL);
     }
 
     /**
@@ -57,8 +57,8 @@ public class BasicController {
      */
     @RequestMapping("getAllBlockListByRegionId")
     @ResponseBody
-    public List<ComboboxDto> getAllBlockListByRegionId(String regionId) {
-        return basicService.findAllRegionListByCityId(regionId);
+    public List<ComboboxDto> getAllBlockListByRegionId(String regionId, String showALL) {
+        return basicService.findAllRegionListByCityId(regionId, showALL);
     }
 
     /**
@@ -68,8 +68,8 @@ public class BasicController {
      */
     @RequestMapping("getAllStreetListByRegionId")
     @ResponseBody
-    public List<ComboboxDto> getAllStreetListByRegionId(String blockId) {
-        return basicService.findAllStreetListByRegionId(blockId);
+    public List<ComboboxDto> getAllStreetListByRegionId(String blockId, String showALL) {
+        return basicService.findAllStreetListByRegionId(blockId, showALL);
     }
 
     /**

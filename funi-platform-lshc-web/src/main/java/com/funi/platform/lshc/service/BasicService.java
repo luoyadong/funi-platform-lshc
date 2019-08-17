@@ -14,7 +14,7 @@ public interface BasicService {
      * @param type
      * @return
      */
-    List<ComboboxDto> findDictionaryListName(String type);
+    List<ComboboxDto> findDictionaryListName(String type, String showALL);
 
     /**
      * 查询西藏全部市信息
@@ -26,21 +26,21 @@ public interface BasicService {
      * 查询西藏全部市信息
      * @return
      */
-    List<ComboboxDto> findAllRegionList();
+    List<ComboboxDto> findAllRegionList(String showALL);
 
     /**
      * 根据市ID查询全部区县信息
      * @param cityId
      * @return
      */
-    List<ComboboxDto> findAllRegionListByCityId(String cityId);
+    List<ComboboxDto> findAllRegionListByCityId(String cityId, String showALL);
 
     /**
      * 根据区县ID查询全部街道信息
      * @param regionId
      * @return
      */
-    List<ComboboxDto> findAllStreetListByRegionId(String regionId);
+    List<ComboboxDto> findAllStreetListByRegionId(String regionId, String showALL);
 
     /**
      * 获取当前用户所属的区域code

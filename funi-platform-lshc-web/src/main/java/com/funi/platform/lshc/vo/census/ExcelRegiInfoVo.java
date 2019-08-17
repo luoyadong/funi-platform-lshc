@@ -9,141 +9,92 @@ import java.util.Objects;
  * Created by sam on 2019/6/15.1:09 PM
  */
 public class ExcelRegiInfoVo {
-    /** 填报单位 */
     @Excel(name="填报单位")
     private String unitName;
-    /** 填报人员 */
     @Excel(name="填报人员")
     private String applyUser;
-    /** 填报时间 */
     @Excel(name="填报时间")
     private String reportDate;
-    /** 项目名称 */
     @Excel(name="项目（小区）名称")
     private String projectName;
-    /** 物管单位 */
     @Excel(name="物业管理单位")
     private String estateUnitName;
-    /** 楼栋地图编号 */
     @Excel(name="楼栋地图编号")
     private String mapCode;
-    /** 楼栋名称*/
     @Excel(name="楼栋名称")
     private String buildName;
-    /** 楼栋总层数 */
     @Excel(name="楼栋总层数")
     private String totalLayer;
-    /** 房屋编号 */
     @Excel(name="房屋编号")
     private String houseId;
-    /** 区县 */
-    @Excel(name="区县")
-    private String region;
-    /** 街道 */
-    @Excel(name="街道（乡镇）")
-    private String street;
-    /** 门牌号 */
-    @Excel(name="门牌号")
-    private String apt;
-    /** 物理楼栋 */
-    @Excel(name="栋")
-    private String buildNo;
-    /** 单元 */
-    @Excel(name="单元")
-    private String unitNo;
-    /** 楼层 */
-    @Excel(name="层")
-    private String layer;
-    /** 房屋号 */
-    @Excel(name="号")
-    private String roomNo;
-    /** 房屋坐落*/
-    @Excel(name="房屋坐落")
-    private String rightAddr;
-    /** 建筑面积 */
-    @Excel(name="建筑面积（m²）")
-    private BigDecimal houseArea;
-    /** 套内面积 */
-    @Excel(name="套内面积（m²）")
-    private BigDecimal innerHouseArea;
-    /** 房屋户型(室) */
-    @Excel(name="室")
-    private String houseRoom;
-    /** 房屋户型(厅) */
-    @Excel(name="厅")
-    private String houseHall;
-    /** 房屋户型(卫) */
-    @Excel(name="卫")
-    private String houseBathroom;
-    /** 是否办理产权 */
-    @Excel(name="是否办理产权")
-    private String isRegi;
-    /** 产权证号 */
-    @Excel(name="产权证号")
-    private String rightNo;
-    /** 建成年份 */
-    @Excel(name="建成年份")
-    private String buildDate;
-    /** 房屋类别 */
-    @Excel(name="房屋类别")
-    private String houseType;
-    /** 房屋结构 */
-    @Excel(name="房屋结构")
-    private String houseStructure;
-    /** 房屋用途 */
-    @Excel(name="房屋用途")
-    private String houseUse;
-    /** 土地性质 */
-    @Excel(name="土地性质")
-    private String landStatus;
-    /** 预售许可证号 */
-    @Excel(name="预售许可证号")
-    private String preSaleNo;
-    /** 装修状态 */
-    @Excel(name="装修状态")
-    private String fitStatus;
-    /** 是否入住 */
-    @Excel(name="是否入住")
-    private String isCheckIn;
-    /** 是否出租 */
-    @Excel(name="是否出租")
-    private String isRent;
-    /** 出租开始日期 */
-    @Excel(name="出租开始日期")
-    private String rentStartDate;
-    /** 出租截止日期 */
-    @Excel(name="出租截止日期")
-    private String rentEndDate;
-    /** 居住人口数量 */
-    @Excel(name="居住人口数量")
-    private Integer personNum;
-    /** 姓名 */
-    @Excel(name="姓名")
+    @Excel(name="权利人（共有权利人）")
     private String entName;
-    /** 人员类别 */
+    @Excel(name="权利人身份证号（统一社会信用代码）")
+    private String idNo;
     @Excel(name="人员类别")
     private String entType;
-    /** 性别 */
     @Excel(name="性别")
     private String sex;
-    /** 民族 */
     @Excel(name="民族")
     private String entNation;
-    /** 籍贯 */
     @Excel(name="籍贯")
     private String entNative;
-    /** 联系电话 */
     @Excel(name="联系电话")
     private String tel;
-    /** 婚姻状态 */
     @Excel(name="婚姻状态")
     private String marriageStatus;
-    /** 证件类型 */
-    @Excel(name="证件类型")
-    private String idType;
-    /** 证件号码 */
-    @Excel(name="证件号码")
-    private String idNo;
+    @Excel(name="区县")
+    private String region;
+    @Excel(name="街道（乡镇）")
+    private String street;
+    @Excel(name="门牌号")
+    private String apt;
+    @Excel(name="栋")
+    private String buildNo;
+    @Excel(name="单元")
+    private String unitNo;
+    @Excel(name="层")
+    private String layer;
+    @Excel(name="号")
+    private String roomNo;
+    @Excel(name="房屋坐落")
+    private String rightAddr;
+    @Excel(name="房屋面积（m²）")
+    private BigDecimal houseArea;
+    @Excel(name="套内面积（m²）")
+    private BigDecimal innerHouseArea;
+    @Excel(name="室")
+    private String houseRoom;
+    @Excel(name="厅")
+    private String houseHall;
+    @Excel(name="是否办理产权")
+    private String isRegi;
+    @Excel(name="产权证号")
+    private String rightNo;
+    @Excel(name="建成年份")
+    private String buildDate;
+    @Excel(name="房屋类别")
+    private String houseType;
+    @Excel(name="房屋结构")
+    private String houseStructure;
+    @Excel(name="房屋用途")
+    private String houseUse;
+    @Excel(name="土地性质")
+    private String landStatus;
+    @Excel(name="网签合同号")
+    private String preSaleNo;
+    @Excel(name="装修状态")
+    private String fitStatus;
+    @Excel(name="是否入住")
+    private String isCheckIn;
+    @Excel(name="是否出租")
+    private String isRent;
+    @Excel(name="出租开始日期")
+    private String rentStartDate;
+    @Excel(name="出租截止日期")
+    private String rentEndDate;
+    @Excel(name="居住人口数量")
+    private Integer personNum;
 
     @Override
     public boolean equals(Object o) {
@@ -337,14 +288,6 @@ public class ExcelRegiInfoVo {
         this.houseHall = houseHall;
     }
 
-    public String getHouseBathroom() {
-        return houseBathroom;
-    }
-
-    public void setHouseBathroom(String houseBathroom) {
-        this.houseBathroom = houseBathroom;
-    }
-
     public String getIsRegi() {
         return isRegi;
     }
@@ -511,14 +454,6 @@ public class ExcelRegiInfoVo {
 
     public void setMarriageStatus(String marriageStatus) {
         this.marriageStatus = marriageStatus;
-    }
-
-    public String getIdType() {
-        return idType;
-    }
-
-    public void setIdType(String idType) {
-        this.idType = idType;
     }
 
     public String getIdNo() {

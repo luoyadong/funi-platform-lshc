@@ -31,8 +31,12 @@ public class BasicServiceImpl implements BasicService {
     private UserManager userManager;
 
     @Override
-    public List<ComboboxDto> findDictionaryListName(String type) {
-        List<ComboboxDto> rtList = initNewSelect(true);
+    public List<ComboboxDto> findDictionaryListName(String type, String showALL) {
+        boolean isShowAll = false;
+        if(StringUtils.isNoneBlank(showALL) && CensusConstants.SHOW_ALL.equals(showALL)) {
+            isShowAll = true;
+        }
+        List<ComboboxDto> rtList = initNewSelect(isShowAll);
         if(CensusConstants.DICTIONARY_TYPE_HOUSE_STATUS.equals(type)){
             return CensusConstants.DICTIONARY_HOUSE_STATUS;
         }
@@ -54,7 +58,9 @@ public class BasicServiceImpl implements BasicService {
      */
     private List<ComboboxDto> initNewSelect(boolean addAllSelect) {
         List<ComboboxDto> rtList = new ArrayList<>();
-        rtList.add(new ComboboxDto("全部", ""));
+        if(addAllSelect) {
+            rtList.add(new ComboboxDto("全部", ""));
+        }
         return rtList;
     }
 
@@ -95,7 +101,7 @@ public class BasicServiceImpl implements BasicService {
             }
         }
         if(CollectionUtils.isNotEmpty(allRegionList)) {
-            List<ComboboxDto> comboboxDtoList = initNewSelect(true);
+            List<ComboboxDto> comboboxDtoList = initNewSelect(false);
             for(LshcRegionVo lshcRegionVo : allRegionList) {
                 comboboxDtoList.add(new ComboboxDto(lshcRegionVo.getName()));
             }
@@ -105,18 +111,18 @@ public class BasicServiceImpl implements BasicService {
     }
 
     @Override
-    public List<ComboboxDto> findAllRegionList() {
-        return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_CITY, null));
+    public List<ComboboxDto> findAllRegionList(String showALL) {
+        return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_CITY, null), showALL);
     }
 
     @Override
-    public List<ComboboxDto> findAllRegionListByCityId(String regionId) {
-        return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_REGION, regionId));
+    public List<ComboboxDto> findAllRegionListByCityId(String regionId, String showALL) {
+        return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_REGION, regionId), showALL);
     }
 
     @Override
-    public List<ComboboxDto> findAllStreetListByRegionId(String blockId) {
-        return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_COUNTY, blockId));
+    public List<ComboboxDto> findAllStreetListByRegionId(String blockId, String showALL) {
+        return convertComboboxDto(getRegionVoList(CensusConstants.REGION_TYPE_COUNTY, blockId), showALL);
     }
 
     @Override
@@ -212,10 +218,14 @@ public class BasicServiceImpl implements BasicService {
         return null;
     }
 
-    private List<ComboboxDto> convertComboboxDto(List<LshcRegionVo> lshcRegionVoList) {
+    private List<ComboboxDto> convertComboboxDto(List<LshcRegionVo> lshcRegionVoList, String showALL) {
         List<ComboboxDto> comboboxDtoList = null;
         if(CollectionUtils.isNotEmpty(lshcRegionVoList)) {
-            comboboxDtoList = initNewSelect(true);
+            boolean isShowAll = false;
+            if(StringUtils.isNoneBlank(showALL) && CensusConstants.SHOW_ALL.equals(showALL)) {
+                isShowAll = true;
+            }
+            comboboxDtoList = initNewSelect(isShowAll);
             for(LshcRegionVo lshcRegionVo : lshcRegionVoList) {
                 comboboxDtoList.add(new ComboboxDto(lshcRegionVo));
             }

@@ -125,4 +125,6 @@ public class CensusConstants {
 
     /** 默认城市名称*/
     public static final String DEFAULT_CITY_NAME = "拉萨";
+    /** 前端查询下拉列表，展示全部*/
+    public static final String SHOW_ALL = "1";
 }
