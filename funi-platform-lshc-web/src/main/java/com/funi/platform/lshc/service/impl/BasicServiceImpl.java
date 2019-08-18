@@ -244,7 +244,8 @@ public class BasicServiceImpl implements BasicService {
                         for(LshcRegion lshcRegion1 : regionsList1) {
                             temp.add(lshcRegion1.getCode());
                         }
-                        regionCodeList.add("'" + StringUtils.join(temp, "','") + "'");
+//                        regionCodeList.add("'" + StringUtils.join(temp, "','") + "'");
+                        regionCodeList.add("" + StringUtils.join(temp, ",") + "");
                     }
                 }
             }
