@@ -49,20 +49,78 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
     },
     initStore:function(){
         var me = this
-        var record = {"rpName":"Lshc_PuChaTongJi.cpt","rpInChinese":"调查统计表"};
+        var record = {};
+
+        //报表权限控制
+        var report1 = "AUTH_LSHC_REPORT_TABLE_1";//报表1
+        var report2 = "AUTH_LSHC_REPORT_TABLE_2";//报表2
+        var report3 = "AUTH_LSHC_REPORT_TABLE_3";//报表3
+        var t1Flag = Funi.core.Context.hasAccess(report1);
+        var t2Flag = Funi.core.Context.hasAccess(report2);
+        var t3Flag = Funi.core.Context.hasAccess(report3);
+
         if(me.config.bizTypeId == 1){
             var store = me.down("gridpanel").getStore();
-            store.add(record);
+            //权限控制
+            if(t1Flag == true){
+                record = {"rpName":"Lshc_JiChuLouPan.cpt","rpInChinese":"表1：基础楼盘汇总表"};
+                store.add(record);
+            }
+            if(t2Flag == true){
+                record = {"rpName":"Lshc_LouPanMingXi.cpt","rpInChinese":"表2：楼盘明细表"};
+                store.add(record);
+            }
+            if(t3Flag == true){
+                record = {"rpName":"Lshc_PuChaTongJi.cpt","rpInChinese":"表3：普查统计表"};
+                store.add(record);
+            }
+
         }
+
+        //查询片区列表
+        //加载普查详情tabs
+        Ext.Ajax.request({
+            url: app.platform.lshc.view.base.RequestUtils.url("/basic/getCurrentUserRegionCodeList"),
+            method: "post",
+            async: false,
+            params: {},
+            success: function (response) {
+                var data = JSON.parse(response.responseText);
+                console.log("-----get region code List:")
+                console.log(data)
+
+                //初始化区域列表
+                if(null != data){
+                    // var codeList = data.codeList;
+                    // if(null != codeList && codeList.length >0){
+                    //     for(var kk=0;kk<codeList.length;kk++){
+                    //         var code = codeList[kk];
+                    //         me.config.logicRegionCode += code+",";
+                    //     }
+                    //     if(me.config.logicRegionCode.indexOf(",") != -1){
+                    //         var endChar = me.config.logicRegionCode.length-2;
+                    //         me.config.logicRegionCode = me.config.logicRegionCode.substr(0,endChar);
+                    //     }
+                    // }
+                    me.config.logicRegionCode = data;//data.codeList;
+                }
+
+            },
+            failure: function () {
+                Ext.MessageBox.alert("温馨提示", "服务器异常,请稍后重试!");
+            }
+        });
+
     },
     // ====视图构建========================================================================
     initComponent: function () {
         var me = this;
         //必须输入重要参数
-        var checkFlag = me._checkInputParam();
-        if(!checkFlag){
-            return checkFlag;
-        }
+        // var checkFlag = me._checkInputParam();
+        // if(!checkFlag){
+        //     return checkFlag;
+        // }
+
         //校验输入参数
         var printInfoStore = Ext.create("Funi.data.ListStore",{
             //url:"/",
@@ -120,14 +178,52 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
                             Ext.Msg.alert('错误', '无选择打印的报表项');
                             return;
                         }else{
+
+                            //check
+                            // for(var i = 0; i < selList.length; i++) {
+                            //     var name = selList[i].data.rpName;
+                            //     if("Lshc_PuChaTongJi.cpt" == name && Ext.isEmpty(me.config.bizId)){
+                            //         Ext.Msg.alert('提示', '打印报表包含[表3：普查统计表]，需要先选择一条普查数据!');
+                            //         return false;
+                            //     }
+                            // }
+
                             me.query("#printBtnItemid")[0].setDisabled(true);
                             var url = [];
 
-                            var printer = me.query("#frprintItemid")[0];
-
                             for(var i = 0; i < selList.length; i++){
                                 var name = selList[i].data.rpName;
-                                url.push({'reportlet':name,'bizId':me.config.bizId});
+
+                                if("Lshc_JiChuLouPan.cpt" == name){
+                                    var codeList = me.config.logicRegionCode;
+                                    if(null != codeList && codeList.length >0){
+                                        for(var kk=0;kk<codeList.length;kk++){
+                                            var code = codeList[kk];
+                                            url.push({'reportlet':name,'bizId':'','regionCode':code});
+                                        }
+                                    }
+                                }
+
+                                if("Lshc_LouPanMingXi.cpt" == name){
+                                    var codeList = me.config.logicRegionCode;
+                                    if(null != codeList && codeList.length >0){
+                                        for(var kk=0;kk<codeList.length;kk++){
+                                            var codes = codeList[kk];
+                                            if(!Ext.isEmpty(codes)){
+                                                var codeArray = codes.split(",");
+                                                for(var jj=0;jj<codeArray.length;jj++){
+                                                    var code = codeArray[jj];
+                                                    if(!Ext.isEmpty(code)){
+                                                        url.push({'reportlet':name,'bizId':'','regionCode':code});
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if("Lshc_PuChaTongJi.cpt" == name){
+                                    url.push({'reportlet':name,'bizId':me.config.bizId,'regionCode':''});
+                                }
                             }
 
                             var printer = me.query("#frprintItemid")[0];

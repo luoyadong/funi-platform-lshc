@@ -154,8 +154,12 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                             xtype:'button',text:"打印",glyph: 'xf02f@FontAwesome',itemId:"commit",
                             //margin:"4 0 0 0",
                             handler:function(){
-                                if(me.config.bizId == null){
-                                    Ext.MessageBox.alert("温馨提示","请选择左侧的房屋数据！");
+                                //报表权限控制
+                                var report3 = "AUTH_LSHC_REPORT_TABLE_3";//报表3
+                                var t3Flag = Funi.core.Context.hasAccess(report3);
+
+                                if(t3Flag == true && me.config.bizId == null){
+                                    Ext.MessageBox.alert("温馨提示","请选择左侧的房屋数据,以便预览、打印对应的报表[拉萨市城镇住房普查统计表（三）]！");
                                     return;
                                 }
                                 var id = me.config.bizId ;
