@@ -29,7 +29,7 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
         this.callParent(arguments);
     },
     title: null,
-
+    height:'100%',
     exportExcel:function(){
         var me = this
         var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
@@ -258,8 +258,8 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                         }
                     ]
                 },
-                //height:355,
-                // height:'200%',
+                // height:455,
+                height:'100%',
                 xtype: 'gridpanel',
                 itemId: 'houseGridpanel',
                 border: true,

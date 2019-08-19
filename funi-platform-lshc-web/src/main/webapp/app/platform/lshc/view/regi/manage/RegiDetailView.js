@@ -26,6 +26,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     //     this.callParent(arguments);
     // },
     title: null,
+    height:'100%',
     getParams:function(){
         var me = this;
         var formElements = Ext.ComponentQuery.query("textfield",this);
@@ -365,7 +366,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 				
 			 items: [{
                 region: 'north',//指定组建具体位置，上方
-                //height: 40,
+                height: '10%',
 				items:[
 				 {
                         xtype: 'toolbar', columnWidth: 1,scope: me, itemId: 'search',
@@ -428,14 +429,14 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
             }, {
                 region: 'west',//左方
                 width: '42%',
-                 height:'100%',
+                 height:'90%',
                 items:[
 					{
                            // title: '房屋列表信息',
 							itemId: 'HouseListView-Tab-itemId',
                             autoScroll: true,
                             scrollable: true,
-                            // height:358,
+                            height:'90%',
                             //bodyStyle : 'overflow-y:scroll',
                             // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
                             items: [
@@ -445,6 +446,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 				]
             }, {
                 region: 'center',
+                 height:'90%',
                 items:[
 					{
                             itemId: 'tab2',
