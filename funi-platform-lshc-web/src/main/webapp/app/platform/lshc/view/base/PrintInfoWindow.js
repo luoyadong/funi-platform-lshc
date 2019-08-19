@@ -90,19 +90,8 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
                 console.log(data)
 
                 //初始化区域列表
-                if(null != data){
-                    // var codeList = data.codeList;
-                    // if(null != codeList && codeList.length >0){
-                    //     for(var kk=0;kk<codeList.length;kk++){
-                    //         var code = codeList[kk];
-                    //         me.config.logicRegionCode += code+",";
-                    //     }
-                    //     if(me.config.logicRegionCode.indexOf(",") != -1){
-                    //         var endChar = me.config.logicRegionCode.length-2;
-                    //         me.config.logicRegionCode = me.config.logicRegionCode.substr(0,endChar);
-                    //     }
-                    // }
-                    me.config.logicRegionCode = data;//data.codeList;
+                if(null != data && null != data.result){
+                    me.config.logicRegionCode = data.result;//data.codeList;
                 }
 
             },
@@ -175,7 +164,7 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
                     handler: function ($cmp) {
                         var selList = me.down('gridpanel').getSelection();
                         if(selList.length < 1){
-                            Ext.Msg.alert('错误', '无选择打印的报表项');
+                            Ext.Msg.alert('错误', '请选择需要预览或打印的报表项！');
                             return;
                         }else{
 
