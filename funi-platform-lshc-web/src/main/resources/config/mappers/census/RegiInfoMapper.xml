@@ -152,6 +152,9 @@
       <if test="roomNo != null">
         AND ROOM_NO = #{roomNo,jdbcType=VARCHAR}
       </if>
+      <if test="common != null and common != ''">
+            AND COMMON in (#{common})
+      </if>
     </where>
   </select>
   <select id="generateHouseId" resultType="java.lang.String">

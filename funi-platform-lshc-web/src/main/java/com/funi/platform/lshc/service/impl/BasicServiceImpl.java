@@ -7,6 +7,8 @@ import com.funi.framework.biz.BizException;
 import com.funi.platform.lshc.dto.ComboboxDto;
 import com.funi.platform.lshc.dto.LshcRegion;
 import com.funi.platform.lshc.dto.SecurityRegionDto;
+import com.funi.platform.lshc.entity.census.RegiInfo;
+import com.funi.platform.lshc.mapper.census.RegiInfoMapper;
 import com.funi.platform.lshc.mapper.census.SysConfigMapper;
 import com.funi.platform.lshc.service.BasicService;
 import com.funi.platform.lshc.support.CensusConstants;
@@ -29,6 +31,8 @@ public class BasicServiceImpl implements BasicService {
     private SysConfigMapper sysConfigMapper;
     @Resource
     private UserManager userManager;
+    @Resource
+    private RegiInfoMapper regiInfoMapper;
 
     @Override
     public List<ComboboxDto> findDictionaryListName(String type, String showALL) {
@@ -66,10 +70,10 @@ public class BasicServiceImpl implements BasicService {
 
     private String getDictionaryTable(String type) {
         switch (type){
-            case CensusConstants.DICTIONARY_TYPE_HOUSE_STRUCTURE :
-                return "A12_D";
-            case CensusConstants.DICTIONARY_TYPE_HOUSE_USE :
-                return "A14_D";
+//            case CensusConstants.DICTIONARY_TYPE_HOUSE_STRUCTURE :
+//                return "A12_D";
+//            case CensusConstants.DICTIONARY_TYPE_HOUSE_USE :
+//                return "A14_D";
             case CensusConstants.DICTIONARY_TYPE_ID_TYPE :
                 return "A34_D";
             case CensusConstants.DICTIONARY_TYPE_GENDER :
@@ -244,8 +248,22 @@ public class BasicServiceImpl implements BasicService {
                         for(LshcRegion lshcRegion1 : regionsList1) {
                             temp.add(lshcRegion1.getCode());
                         }
-//                        regionCodeList.add("'" + StringUtils.join(temp, "','") + "'");
-                        regionCodeList.add("" + StringUtils.join(temp, ",") + "");
+//                      regionCodeList.add("'" + StringUtils.join(temp, "','") + "'");
+                        //在普查中有的才返回
+                        String regionStr = StringUtils.join(temp, ",");
+                        RegiInfo rInfo = new RegiInfo();
+                        rInfo.setCommon(regionStr);
+                        List<RegiInfo> regList = regiInfoMapper.selectRegiInfoByUniqueQuery(rInfo);
+                        if(null != regList && regList.size() > 0){
+                            temp.clear();
+                            for(RegiInfo r:regList){
+                                if(null != r && !"".equals(r.getCommon())){
+                                    temp.add(r.getCommon());
+                                }
+                            }
+                            regionCodeList.add("" + StringUtils.join(temp, ",") + "");
+                        }
+
                     }
                 }
             }
