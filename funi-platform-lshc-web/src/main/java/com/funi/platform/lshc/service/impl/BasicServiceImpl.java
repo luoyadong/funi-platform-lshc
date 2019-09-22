@@ -248,16 +248,19 @@ public class BasicServiceImpl implements BasicService {
                         for(LshcRegion lshcRegion1 : regionsList1) {
                             temp.add(lshcRegion1.getCode());
                         }
+                        RegiInfo rInfo = new RegiInfo();
+                        rInfo.setCommons(temp);
 //                      regionCodeList.add("'" + StringUtils.join(temp, "','") + "'");
                         //在普查中有的才返回
-                        String regionStr = StringUtils.join(temp, ",");
-                        RegiInfo rInfo = new RegiInfo();
-                        rInfo.setCommon(regionStr);
+//                        String regionStr = "'"+StringUtils.join(temp, "','")+"'";
+//                        RegiInfo rInfo = new RegiInfo();
+//                        rInfo.setCommon(regionStr);
                         List<RegiInfo> regList = regiInfoMapper.selectRegiInfoByUniqueQuery(rInfo);
                         if(null != regList && regList.size() > 0){
                             temp.clear();
                             for(RegiInfo r:regList){
-                                if(null != r && !"".equals(r.getCommon())){
+                                if(null != r && !"".equals(r.getCommon())
+                                        && !temp.contains(r.getCommon())){
                                     temp.add(r.getCommon());
                                 }
                             }

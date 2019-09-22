@@ -31,7 +31,10 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
         roleCode:'',
         moduleCode:'',
         logicRegionCode:'',//片区编码,eg:"123,345,456"
-        bizId:''//普查Id
+        bizId:'',//普查Id
+        showReport3:true,//是否展示报表3
+        showReport2:false,//是否展示报表2
+        bizParams:null//一般查询参数
     },
 
     layout: {
@@ -66,11 +69,11 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
                 record = {"rpName":"Lshc_JiChuLouPan.cpt","rpInChinese":"表1：基础楼盘汇总表"};
                 store.add(record);
             }
-            if(t2Flag == true){
+            if(t2Flag == true || true == me.config.showReport2){
                 record = {"rpName":"Lshc_LouPanMingXi.cpt","rpInChinese":"表2：楼盘明细表"};
                 store.add(record);
             }
-            if(t3Flag == true){
+            if(t3Flag == true && false != me.config.showReport3){
                 record = {"rpName":"Lshc_PuChaTongJi.cpt","rpInChinese":"表3：普查统计表"};
                 store.add(record);
             }
@@ -100,6 +103,19 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
             }
         });
 
+    },
+    buildParam:function(reportName,code){
+        var me = this;
+        var queryParam = {};
+        queryParam['reportlet'] = reportName;
+        queryParam['bizId'] = '';
+        queryParam['regionCode'] = code;
+        if(null !=me.config.bizParams){
+            for(var key in me.config.bizParams){
+                queryParam[key] = me.config.bizParams[key];
+            }
+        }
+        return queryParam;
     },
     // ====视图构建========================================================================
     initComponent: function () {
@@ -188,7 +204,7 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
                                     if(null != codeList && codeList.length >0){
                                         for(var kk=0;kk<codeList.length;kk++){
                                             var code = codeList[kk];
-                                            url.push({'reportlet':name,'bizId':'','regionCode':code});
+                                            url.push(me.buildParam(name,code));//{'reportlet':name,'bizId':'','regionCode':code}
                                         }
                                     }
                                 }
@@ -203,7 +219,7 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
                                                 for(var jj=0;jj<codeArray.length;jj++){
                                                     var code = codeArray[jj];
                                                     if(!Ext.isEmpty(code)){
-                                                        url.push({'reportlet':name,'bizId':'','regionCode':code});
+                                                        url.push(me.buildParam(name,code));
                                                     }
                                                 }
                                             }
@@ -214,6 +230,16 @@ Ext.define('app.platform.lshc.view.base.PrintInfoWindow', {
                                     url.push({'reportlet':name,'bizId':me.config.bizId,'regionCode':''});
                                 }
                             }
+
+                            if(null == url || [] == url || url.length <=0){
+                                Ext.Msg.alert('错误', '打印区域不详，暂不能打印！');
+                                return;
+                            }
+
+                            // var tempP = Ext.create("app.platform.lshc.view.base.ReportWindow",
+                            //     {config:{rPaths:url},title:"报表"});
+                            // tempP._showPages();
+                            // tempP.show();
 
                             var printer = me.query("#frprintItemid")[0];
                             printer.print({

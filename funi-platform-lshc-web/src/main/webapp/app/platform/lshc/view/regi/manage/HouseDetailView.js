@@ -20,7 +20,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
         //主容器
         parentContainer: null,
 		//普查主表ID
-		bizId:null
+		bizId:null,
+        contHeight:200
     },
     constructor: function (config) {
         var me = this;
@@ -31,6 +32,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
 	fillForm:function(formData){
         this.config.houseStatus = formData.regiInfo.houseStatus;
         //房屋信息 regiInfo entInfoList fileList
+
         var houseView = this.queryById("lshc-regi-manage-houseInfo-form-itemId");
         houseView.getForm().setValues(formData.regiInfo);
 
@@ -98,6 +100,10 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseDetailView",{
                 return false;
             }
         }
+    },
+    initHeight:function(){
+        var hTab = this.queryById("lshc-regi-housedetail-tabpanel-itemId")
+        hTab.setHeight(this.config.contHeight);
     },
     initComponent: function () {
         var me = this;

@@ -475,50 +475,54 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										// ,store:strStore
 										,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_STRUCTURE')
 									},
-									// {
-									// 	xtype: "textfield",name:"buildDate",
-									// 	//width:180,
-									// 	emptyText: "房屋建成年份",fieldLabel: '房屋建成年份'
-									// },
 									{
-										xtype:'datefield',colspan:4,
+										xtype: "textfield",
+										name:"buildDate",
+										colspan:4,
 										margin:'0 0 0 -10',
-										fieldLabel:'房屋建成年份', name:"buildDate", cls:"renew",
-										format:'Y-m-d'
+										//width:180,
+										emptyText: "房屋建成年份",
+										fieldLabel: '房屋建成年份'
 									},
+									// {
+									// 	xtype:'datefield',colspan:4,
+									// 	margin:'0 0 0 -10',
+									// 	fieldLabel:'房屋建成年份', name:"buildDate", cls:"renew",
+									// 	format:'Y-m-d'
+									// },
 									  {
                                         xtype: "numberfield",name:"houseArea",
 										colspan:4,
                                         emptyText: "建筑面积(m²)",fieldLabel: '建筑面积(m²)',itemId:"ghouse-rent-contract-contract-contractNo2-itemId3"
-                                    },
-									  {
-                                        xtype: "numberfield",name:"innerHouseArea",
-										colspan:4,
-										margin:'0 0 0 -10',
-										//width:180,
-                                        emptyText: "套内面积(m²)",fieldLabel: '套内面积(m²)',itemId:"ghouse-rent-contract-contract-contractNo2-itemId4"
-                                    },
-									{
-										xtype: "numberfield",
-										name: "houseRoom",
-										cls: "lessee-personal",
-										emptyText: "室",
-										width: 170,
-										fieldLabel: '房屋户型',
-										labelWidth: 100,
-										colspan:1
-									},
-
-									{xtype: 'tbtext', text: '室',colspan:1},
-									{
-										xtype: "numberfield",
-										name: "houseHall",
-										cls: "lessee-personal",
-										emptyText: "厅",
-										width: 70,
-										colspan:1
-									},
-									{xtype: 'tbtext', text: '厅', colspan:1}
+                                    }
+                                    // ,{
+                                    //     xtype: "numberfield",name:"innerHouseArea",
+										// colspan:4,
+										// margin:'0 0 0 -10',
+										// //width:180,
+                                    //     emptyText: "套内面积(m²)",fieldLabel: '套内面积(m²)',itemId:"ghouse-rent-contract-contract-contractNo2-itemId4"
+                                    // }
+									// ,{
+									// 	xtype: "numberfield",
+									// 	name: "houseRoom",
+									// 	cls: "lessee-personal",
+									// 	emptyText: "室",
+									// 	width: 170,
+									// 	fieldLabel: '房屋户型',
+									// 	labelWidth: 100,
+									// 	colspan:1
+									// },
+                                    //
+									// {xtype: 'tbtext', text: '室',colspan:1},
+									// {
+									// 	xtype: "numberfield",
+									// 	name: "houseHall",
+									// 	cls: "lessee-personal",
+									// 	emptyText: "厅",
+									// 	width: 70,
+									// 	colspan:1
+									// },
+									// {xtype: 'tbtext', text: '厅', colspan:1}
                                 ]
                             }
 							]
@@ -577,17 +581,17 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										xtype: "textfield",name:"personNum",
 										//width:180,
 										emptyText: "居住人员数量",fieldLabel: '居住人员数量（含未成年人）'
-									},
-									{
-										xtype:'datefield',
-										fieldLabel:'出租开始时间', name:"rentStartDate", cls:"renew",
-										format:'Y-m-d'
-									},
-									{
-										xtype:'datefield',
-										fieldLabel:'出租结束时间', name:"rentEndDate", cls:"renew",
-										format:'Y-m-d'
 									}
+									// ,{
+									// 	xtype:'datefield',
+									// 	fieldLabel:'出租开始时间', name:"rentStartDate", cls:"renew",
+									// 	format:'Y-m-d'
+									// },
+									// {
+									// 	xtype:'datefield',
+									// 	fieldLabel:'出租结束时间', name:"rentEndDate", cls:"renew",
+									// 	format:'Y-m-d'
+									// }
 								]
 							}
 						]

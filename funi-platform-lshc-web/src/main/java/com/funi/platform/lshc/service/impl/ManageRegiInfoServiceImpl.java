@@ -215,7 +215,12 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
 //        regiInfo.setApplyUser(userInfo.getName());
 //        regiInfo.setReportDate(DateUtils.getCurrentDate());
         // 设置普查信息的提交人区域编码
-        regiInfo.setCommon(basicService.findCurrentUserRegionCode(userInfo.getUserId()));
+        String rCode = basicService.findCurrentUserRegionCode(userInfo.getUserId());
+        regiInfo.setCommon(rCode);
+        //设置楼栋编码
+        String mapNo = rCode+regiInfo.getMapCode();
+        regiInfo.setMapCode(mapNo);
+
         // 保存房屋数据
         regiInfoMapper.insert(regiInfo);
         // 保存或更新楼栋信息

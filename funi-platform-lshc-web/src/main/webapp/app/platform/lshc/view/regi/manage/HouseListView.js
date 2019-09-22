@@ -18,7 +18,9 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
         //主容器
         parentContainer: null,
 		//普查主表ID
-		bizId:null
+		bizId:null,
+        //高度
+        contHeight:200
 
     },
     // layout:"fit",
@@ -29,7 +31,6 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
         this.callParent(arguments);
     },
     title: null,
-    height:'100%',
     exportExcel:function(){
         var me = this
         var selectObjArray = me.down("gridpanel").getSelectionModel().getSelection();
@@ -258,8 +259,8 @@ Ext.define('app.platform.lshc.view.regi.manage.HouseListView', {
                         }
                     ]
                 },
-                // height:455,
-                height:'100%',
+                // height:me.config.contHeight,
+                height:300,
                 xtype: 'gridpanel',
                 itemId: 'houseGridpanel',
                 border: true,

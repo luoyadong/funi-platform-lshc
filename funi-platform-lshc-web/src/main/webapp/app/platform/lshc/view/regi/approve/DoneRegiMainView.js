@@ -15,6 +15,7 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
         'app.platform.lshc.view.regi.manage.HouseListView',
         'app.platform.lshc.view.regi.manage.HouseDetailView'//房屋详情
         ,'app.platform.lshc.view.base.ExcelUtils'
+        ,'app.platform.lshc.view.base.PrintInfoWindow'
     ],
     config: {
         //主容器
@@ -110,7 +111,7 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
                 {type:"string",name:"communityName"},
                 {type:"string",name:"buildName"}
             ],
-            pageSize:10
+            pageSize:18
         });
         Ext.apply(me, {
 
@@ -265,6 +266,33 @@ Ext.define('app.platform.lshc.view.regi.approve.DoneRegiMainView', {
                                         glyph: 0xf1c3,
                                         handler: function () {
                                             me.exportExcel();
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',text:"打印",glyph: 'xf02f@FontAwesome',itemId:"donePrintBtnItemId",
+                                        handler:function(){
+                                            var selectObjArray = me.getSelectionModel().getSelection();
+                                            if(selectObjArray.length < 1){
+                                                Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
+                                                return;
+                                            }
+                                            var ids = "";
+                                            //组装ids
+                                            for(var i=0;i< selectObjArray.length;i++){
+                                                var record = selectObjArray[i].data;
+                                                ids = ids + record.id+",";
+                                            }
+                                            if("" != ids && ids.indexOf(",") != -1){
+                                                ids = ids.substr(0,ids.length - 1);
+                                            }
+
+                                            var   printInfoWin = Ext.create("app.platform.lshc.view.base.PrintInfoWindow", {
+                                                bizTypeId: '1',
+                                                showReport3:false,
+                                                bizParams:{'buildIds':ids}
+                                            });
+                                            printInfoWin.initStore();
+                                            printInfoWin.show();
                                         }
                                     }
                                 ]

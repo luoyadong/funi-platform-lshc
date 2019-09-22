@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 普查信息
@@ -150,6 +151,16 @@ public class RegiInfo extends SuperEntity implements Serializable {
     private String communityName;
     /** 总层数 */
     private String totalLayer;
+
+    private List<String> commons;
+
+    public List<String> getCommons() {
+        return commons;
+    }
+
+    public void setCommons(List<String> commons) {
+        this.commons = commons;
+    }
 
     private static final long serialVersionUID = 1L;
 

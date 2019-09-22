@@ -239,4 +239,11 @@ WHERE
 	AND t2.ISVALIDE = '1'
 	AND t1.COMMON IN ( '54010200401', '54010200401' )
 ORDER BY
-	REPORT_DATE
+	REPORT_DATE DESC
+
+  delete from LSHC_BUILD_INFO;
+  delete from LSHC_ENT_INFO;
+  delete from LSHC_FILE;
+  delete from LSHC_JOB_ACCEPT;
+  delete from LSHC_JOB_LOG;
+  delete from LSHC_REGI_INFO;

@@ -15,6 +15,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         'app.platform.lshc.view.regi.manage.HouseListView',
         'app.platform.lshc.view.regi.manage.HouseDetailView',//房屋详情
         'app.platform.lshc.view.base.ExcelUtils'
+        ,'app.platform.lshc.view.base.PrintInfoWindow'
     ],
     config: {
         //主容器
@@ -120,8 +121,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
             autoLoad: true,
             data: [
                 {'name': '全部', value: ''},
-                {'name': '城关区',value:0},
-                {'name': '市辖区',value:1},
+                {'name': '未提交',value:0},
+                {'name': '已提交',value:1}
             ]
         });
         var mStore2 = Ext.create('Ext.data.Store', {
@@ -148,7 +149,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                 {type:"string",name:"communityName"},
                 {type:"string",name:"buildName"}
             ],
-            pageSize:10
+            pageSize:18
         });
         Ext.apply(me, {
 
@@ -222,8 +223,20 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         width:200,
                                         emptyText:"小区名称"
                                     },
+                                    {
+                                        xtype:'xcombobox',
+                                        itemId:'auditStatusItemId',
+                                        fieldLabel:'提交状态',
+                                        labelWidth:56,
+                                        emptyText:'全部',
+                                        width:136,
+                                        store:mStore,
+                                        name:"auditStatus",
+                                        editable:false,
+                                        triggerAction:'all'
+                                    },
                                     {xtype: 'button',
-                                        margin:'0 0 0 105',
+                                        margin:'0 0 0 5',
                                         text:"查询",glyph:0xf002,handler:function(){
                                         console.log(me.getParams())
                                         store.proxy.extraParams = me.getParams();//获取列表store
@@ -347,6 +360,34 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                                         glyph: 0xf1c3,
                                         handler: function () {
                                             me.exportExcel();
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',text:"打印",glyph: 'xf02f@FontAwesome',itemId:"managePrintBtnItemId",
+                                        handler:function(){
+                                            var selectObjArray = me.getSelectionModel().getSelection();
+                                            if(selectObjArray.length < 1){
+                                                Ext.MessageBox.alert("温馨提示", "请选择楼栋!");
+                                                return;
+                                            }
+                                            var ids = "";
+                                            //组装ids
+                                            for(var i=0;i< selectObjArray.length;i++){
+                                                var record = selectObjArray[i].data;
+                                                ids = ids + record.id+",";
+                                            }
+                                            if("" != ids && ids.indexOf(",") != -1){
+                                                ids = ids.substr(0,ids.length - 1);
+                                            }
+
+                                            var   printInfoWin = Ext.create("app.platform.lshc.view.base.PrintInfoWindow", {
+                                                bizTypeId: '1',
+                                                showReport2:true,
+                                                showReport3:false,
+                                                bizParams:{'buildIds':ids}
+                                            });
+                                            printInfoWin.initStore();
+                                            printInfoWin.show();
                                         }
                                     }
                                 ]

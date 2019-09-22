@@ -83,8 +83,8 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
             autoLoad: true,
             data: [
                 {'name': '全部', value: ''},
-                {'name': '城关区',value:0},
-                {'name': '市辖区',value:1},
+                {'name': '未审核',value:0},
+                {'name': '已审核',value:1}
             ]
         });
         var mStore2 = Ext.create('Ext.data.Store', {
@@ -111,7 +111,7 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
                 {type:"string",name:"communityName"},
                 {type:"string",name:"buildName"}
             ],
-            pageSize:10
+            pageSize:18
         });
         Ext.apply(me, {
 
@@ -185,8 +185,20 @@ Ext.define('app.platform.lshc.view.regi.query.QueryMainView', {
                                         width:200,
                                         emptyText:"小区名称"
                                     },
+                                    {
+                                        xtype:'xcombobox',
+                                        itemId:'auditStatusItemId',
+                                        fieldLabel:'审核状态',
+                                        labelWidth:56,
+                                        emptyText:'全部',
+                                        width:156,
+                                        store:mStore,
+                                        name:"auditStatus",
+                                        editable:false,
+                                        triggerAction:'all'
+                                    },
                                     {xtype: 'button',
-                                        margin:'0 0 0 105',
+                                        margin:'0 0 0 5',
                                         text:"查询",glyph:0xf002,handler:function(){
                                         console.log(me.getParams())
                                         store.proxy.extraParams = me.getParams();//获取列表store

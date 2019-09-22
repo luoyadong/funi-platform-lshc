@@ -110,7 +110,7 @@ Ext.define('app.platform.lshc.view.regi.approve.ToDoRegiMainView', {
                 {type:"string",name:"communityName"},
                 {type:"string",name:"buildName"}
             ],
-            pageSize:10
+            pageSize:18
         });
         Ext.apply(me, {
 

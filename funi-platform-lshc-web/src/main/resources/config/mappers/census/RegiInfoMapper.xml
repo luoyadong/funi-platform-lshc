@@ -152,6 +152,12 @@
       <if test="roomNo != null">
         AND ROOM_NO = #{roomNo,jdbcType=VARCHAR}
       </if>
+      <if test="commons != null and commons.size > 0">
+        and COMMON in
+        <foreach collection="commons" index="idx" item="comm" open="(" close=")" separator=",">
+            #{comm}
+        </foreach>
+      </if>
       <if test="common != null and common != ''">
             AND COMMON in (#{common})
       </if>

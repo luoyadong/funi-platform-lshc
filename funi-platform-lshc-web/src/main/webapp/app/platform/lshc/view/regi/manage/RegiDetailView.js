@@ -26,7 +26,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
     //     this.callParent(arguments);
     // },
     title: null,
-    height:'100%',
+    // height:'100%',
     getParams:function(){
         var me = this;
         var formElements = Ext.ComponentQuery.query("textfield",this);
@@ -57,6 +57,14 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
         var addressTb = me.queryById("addressTbItemId");
 		addressTb.setHtml(  '<div style="font-weight:bold;font-size:10;margin-left:10;float:right">'+address+'</div>');
 
+        //初始化高度
+        var hList = me.queryById("HouseListView-Tab-itemId");
+        hList.down("gridpanel").setHeight(me.queryById("westItemId").getHeight()-20);
+
+        var houseDetalPanel = me.queryById("lshc-view-regi-HouseDetailView-itemId");
+        houseDetalPanel.config.contHeight = me.queryById("westItemId").getHeight() - 112;
+        houseDetalPanel.initHeight();
+
 		//初始化房屋列表,HouseListView-Tab-itemId  lshc-view-regi-HouseListView-itemId
         me.initHouseList();
 	},
@@ -66,6 +74,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
             Ext.MessageBox.alert("温馨提示","操作类型不明确！");
             return
         }
+
         gridObjStore = me.getHouseListStore();
         if(me.config.srcType == 1){//综合
             gridObjStore.proxy.url = app.platform.lshc.view.base.RequestUtils.url("/regiInfo/getRegiInfoVoList");
@@ -353,8 +362,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
                 ]
             },
 	          // xtype:'container',
-				height: '100%',
-				width:'100%',
+				// height: '100%',
+				// width:'100%',
                 padding:"0 0 0 5",
 			   layout:{
 					type:'border'
@@ -366,7 +375,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 				
 			 items: [{
                 region: 'north',//指定组建具体位置，上方
-                height: '10%',
+                height: '200',
 				items:[
 				 {
                         xtype: 'toolbar', columnWidth: 1,scope: me, itemId: 'search',
@@ -429,14 +438,16 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
             }, {
                 region: 'west',//左方
                 width: '42%',
-                 height:'90%',
+                 itemId:'westItemId',
+                // height:'90%',
                 items:[
 					{
                            // title: '房屋列表信息',
 							itemId: 'HouseListView-Tab-itemId',
                             autoScroll: true,
                             scrollable: true,
-                            height:'90%',
+                            // autoHeight:true,
+                            // height:'300',
                             //bodyStyle : 'overflow-y:scroll',
                             // bodyStyle : 'overflow-x:hidden; overflow-y:scroll',
                             items: [
@@ -446,7 +457,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
 				]
             }, {
                 region: 'center',
-                 height:'90%',
+                // height:'90%',
                 items:[
 					{
                             itemId: 'tab2',

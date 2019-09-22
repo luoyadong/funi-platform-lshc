@@ -33,6 +33,8 @@ public class BuildInfoQuery extends BaseQuery {
     private String idNo;
     /** 房屋编号*/
     private String houseId;
+    /** 审核状态*/
+    private String auditStatus;
 
     public String getRegion() {
         return region;
@@ -128,5 +130,13 @@ public class BuildInfoQuery extends BaseQuery {
 
     public void setHouseId(String houseId) {
         this.houseId = houseId;
+    }
+
+    public String getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(String auditStatus) {
+        this.auditStatus = auditStatus;
     }
 }
