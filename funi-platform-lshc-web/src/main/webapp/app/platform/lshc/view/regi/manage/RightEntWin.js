@@ -177,13 +177,16 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
         if(null == data.idNo || "" == data.idNo){
             Ext.Msg.alert("提示","请输入证件号码！");
             return false;
+        }else{
+            if(me.CheckIdentityCode(data.idNo,'0-100')!=0){
+                Ext.Msg.alert('提示',me.CheckIdentityCode(data.idNo));
+                return false;
+            }
         }
-        // else{
-        //     if(me.CheckIdentityCode(data.idNo,'0-100')!=0){
-        //         Ext.Msg.alert('提示',me.CheckIdentityCode(data.idNo));
-        //         return false;
-        //     }
-        // }
+
+         if( null != data.tel && "" != data.tel && !me.checkTel(data.tel)){
+             return false;
+         }
 
        //  if(null == data.idType || "" == data.idType){
        //      Ext.Msg.alert("提示","请选择人员类型！");
@@ -212,6 +215,15 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
         return true;
 
     },
+    checkTel:function(num){
+        var tel = num;
+        if(!/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/.test(tel)){
+            Ext.Msg.alert("提示",'输入联系电话格式有误，请重填!');
+            return false;
+        }else{
+            return true;
+        }
+    },
     CheckIdentityCode:function(code, rangeAge) {
         var cityArr = { 11: "北京", 12: "天津", 13: "河北", 14: "山西", 15: "内蒙古", 21: "辽宁", 22: "吉林", 23: "黑龙江", 31: "上海", 32: "江苏", 33: "浙江", 34: "安徽", 35: "福建", 36: "江西", 37: "山东", 41: "河南", 42: "湖北", 43: "湖南", 44: "广东", 45: "广西", 46: "海南", 50: "重庆", 51: "四川", 52: "贵州", 53: "云南", 54: "西藏", 61: "陕西", 62: "甘肃", 63: "青海", 64: "宁夏", 65: "新疆" }//, 71: "台湾", 81: "香港", 82: "澳门", 91: "国外"
 
@@ -221,16 +233,16 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
         var info = ""
         reg = /(^\d{15}$)|(^\d{17}([0-9]|X)$)/i;
         if (!reg.test(code)) {
-            return "产权身份证格式不正确！";
+            return "身份证格式不正确！";
         }
         code = code.replace(/x$/i, "a");
         if (cityArr[parseInt(code.substr(0, 2))] == null) {
-            return "产权身份证格式不正确！";
+            return "身份证格式不正确！";
         }
         birthDay = code.substr(6, 4) + "-" + Number(code.substr(10, 2)) + "-" + Number(code.substr(12, 2));
         var d = new Date(birthDay.replace(/-/g, "/"));
         if (birthDay != (d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate())) {
-            return "产权身份证格式不正确！";
+            return "身份证格式不正确！";
         }
         return this.GetAge(birthDay, rangeAge);
         //alert(cityArr[parseInt(code.substr(0, 2))] + "," + birthDay + "," + (code.substr(16, 1) % 2 ? "男" : "女") + " 年龄：" + age);
@@ -253,7 +265,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
             max = parseInt(rangeAge.split('-')[1]);
         } catch (e) { }
         if ((min != 0 || max != 0) && (age < min || age > max))
-            msg = "产权身份证格式不正确年龄必须满" + min + "~" + max + "周岁！";
+            msg = "身份证格式不正确年龄必须满" + min + "~" + max + "周岁！";
         return msg;
     }
 })

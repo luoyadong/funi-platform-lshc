@@ -29,6 +29,10 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
     },
     getData:function(){
         var form = this.down("form");
+		if(!form.isValid()){
+			throw {message:"请输入普查必填信息！"};
+		}
+
 		var entView = this.queryById("lshc-view-HousePerson-tab-itemId");
         var rtJson = {};
         if(form.isValid()){
@@ -131,15 +135,21 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									{
 										margin:'5 0 0 0',
 										xtype: "textfield",name:"unitName",
+										allowBlank:false,
+										blankText:'请输入填报单位',
 										emptyText: "填报单位",fieldLabel: '填报单位'
 									}, {
 										margin:'5 0 0 0',
 										xtype: "textfield", name:"applyUser",
+										allowBlank:false,
+										blankText:'请输入填报人员',
 										emptyText: "填报人员",fieldLabel: '填报人员'
 									}
 									,{
 										margin:'5 0 0 0',
 										xtype:'datefield',
+										allowBlank:false,
+										blankText:'请选择填报时间',
 										fieldLabel:'填报时间', name:"reportDate",
 										format:'Y-m-d'
 									}
@@ -168,6 +178,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
                                 items: [
 									{
 										xtype: "textfield",name:"projectName",
+										allowBlank:false,
+										blankText:'请输入小区(项目)名称',
 										emptyText: "小区(项目)名称",fieldLabel: '小区(项目)名称'
 									},
 									{
@@ -175,6 +187,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										//columnWidth:2,
 										//width:510,
 										//colspan:4,
+										allowBlank:false,
+										blankText:'请输入楼栋地图编号',
                                         emptyText: "楼栋地图编号",fieldLabel: '楼栋地图编号'
                                     },
 									{
@@ -223,6 +237,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										emptyText:'全部',
 										name:"isRegi",
 										editable:false,
+										allowBlank:false,
+										blankText:'请选择是否办理产权',
 										triggerAction:'all',
 										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=WHETHER')
 									},
@@ -238,6 +254,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										emptyText:'全部',
 										name:"landStatus",
 										editable:false,
+										allowBlank:false,
+										blankText:'请选择土地性质',
 										triggerAction:'all',
 										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=LAND_NATURE')
 									},
@@ -322,6 +340,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										,colspan:2,
 										name:"region",
 										editable:false,
+										allowBlank:false,
+										blankText:'请选择区县',
 										triggerAction:'all',
 										hidden:me.config.isDetail,
 										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllRegionList'),
@@ -342,6 +362,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										name:"street",
 										editable:false,
 										store: streetStore,
+										allowBlank:false,
+										blankText:'请选择街道',
 										hidden:me.config.isDetail,
 										triggerAction:'all',
 										// dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getAllBlockListByRegionId')
@@ -378,6 +400,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										colspan:1,
 										margin: '0 0 5 -165',
 										width: 70,
+										allowBlank:false,
+										blankText:'请输入门牌号',
 										emptyText: "门牌号"
 									},
 									{xtype: 'tbtext', text: '号',margin: '0 0 5 -95',hidden:me.config.isDetail,  colspan:1,hidden:me.config.isDetail,width:115,style:"text-align:left"},
@@ -388,6 +412,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										hidden:me.config.isDetail,
 										labelWidth: 100,
 										fieldLabel: ' ',
+										allowBlank:false,
+										blankText:'请输入楼栋号',
 										width: 170,
 										emptyText: "栋"
 									},
@@ -398,6 +424,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										name: "unitNo",
 										cls: "lessee-personal",
 										emptyText: "单元",
+										allowBlank:false,
+										blankText:'请输入单元号',
 										hidden:me.config.isDetail,
 										width: 70,
 										colspan:1
@@ -447,6 +475,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										emptyText:'全部',
 										name:"houseUse",
 										editable:false,
+										allowBlank:false,
+										blankText:'请选择房屋用途',
 										triggerAction:'all'
 										// ,store:useStore
 										,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_USE')
@@ -459,6 +489,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										fieldLabel:'房屋类别',
 										emptyText:'全部',
 										name:"houseType",
+										allowBlank:false,
+										blankText:'请输选择房屋类别',
 										editable:false,
 										triggerAction:'all',
 										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_TYPE')
@@ -471,6 +503,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										emptyText:'全部',
 										name:"houseStructure",
 										editable:false,
+										allowBlank:false,
+										blankText:'请选择房屋结构',
 										triggerAction:'all'
 										// ,store:strStore
 										,dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=HOUSE_STRUCTURE')
@@ -493,6 +527,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									  {
                                         xtype: "numberfield",name:"houseArea",
 										colspan:4,
+										  allowBlank:false,
+										  blankText:'请输入建筑面积',
                                         emptyText: "建筑面积(m²)",fieldLabel: '建筑面积(m²)',itemId:"ghouse-rent-contract-contract-contractNo2-itemId3"
                                     }
                                     // ,{
