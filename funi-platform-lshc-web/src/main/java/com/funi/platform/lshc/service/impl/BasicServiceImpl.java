@@ -76,8 +76,8 @@ public class BasicServiceImpl implements BasicService {
 //                return "A14_D";
             case CensusConstants.DICTIONARY_TYPE_ID_TYPE :
                 return "A34_D";
-            case CensusConstants.DICTIONARY_TYPE_GENDER :
-                return "A38_D";
+//            case CensusConstants.DICTIONARY_TYPE_GENDER :
+//                return "A38_D";
             default:
                 return "LSHC_DICTIONARY";
         }

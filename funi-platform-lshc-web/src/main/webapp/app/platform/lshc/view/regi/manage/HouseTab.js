@@ -400,8 +400,6 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										colspan:1,
 										margin: '0 0 5 -165',
 										width: 70,
-										allowBlank:false,
-										blankText:'请输入门牌号',
 										emptyText: "门牌号"
 									},
 									{xtype: 'tbtext', text: '号',margin: '0 0 5 -95',hidden:me.config.isDetail,  colspan:1,hidden:me.config.isDetail,width:115,style:"text-align:left"},
@@ -412,8 +410,6 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										hidden:me.config.isDetail,
 										labelWidth: 100,
 										fieldLabel: ' ',
-										allowBlank:false,
-										blankText:'请输入楼栋号',
 										width: 170,
 										emptyText: "栋"
 									},
@@ -424,8 +420,6 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										name: "unitNo",
 										cls: "lessee-personal",
 										emptyText: "单元",
-										allowBlank:false,
-										blankText:'请输入单元号',
 										hidden:me.config.isDetail,
 										width: 70,
 										colspan:1

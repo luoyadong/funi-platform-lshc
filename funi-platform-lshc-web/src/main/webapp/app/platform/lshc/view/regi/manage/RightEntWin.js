@@ -60,7 +60,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
                             emptyText:'全部',
                             name:"idType",
                             editable:false,
-                            // allowBlank: false,
+                            allowBlank:false,
+                            blankText:'请选择证件类型',
                             width:300,
                             labelWidth: 90,
                             margin: '11 0 0 0',
@@ -174,13 +175,19 @@ Ext.define('app.platform.lshc.view.regi.manage.RightEntWin', {
         //     Ext.Msg.alert("提示","请选择性别！");
         //     return false;
         // }
+         if(null == data.idType || "" == data.idType){
+             Ext.Msg.alert("提示","请选择证件类型！");
+             return false;
+         }
         if(null == data.idNo || "" == data.idNo){
             Ext.Msg.alert("提示","请输入证件号码！");
             return false;
         }else{
-            if(me.CheckIdentityCode(data.idNo,'0-100')!=0){
-                Ext.Msg.alert('提示',me.CheckIdentityCode(data.idNo));
-                return false;
+            if("身份证" == data.idType){
+                if(me.CheckIdentityCode(data.idNo,'0-100')!=0){
+                    Ext.Msg.alert('提示',me.CheckIdentityCode(data.idNo));
+                    return false;
+                }
             }
         }
 
