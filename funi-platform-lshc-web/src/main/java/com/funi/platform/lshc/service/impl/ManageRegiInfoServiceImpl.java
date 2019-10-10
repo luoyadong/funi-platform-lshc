@@ -505,9 +505,12 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             ExcelRegiInfoVo currentExcelRegiInfoVo = excelRegiInfoVoList.get(i);
             // 获取房屋编号，并校验有效性
             String houseId = currentExcelRegiInfoVo.getHouseId();
+            if(StringUtils.isBlank(houseId)){
+                throw new RuntimeException("第" + rowNo + "行，房屋编号[" + houseId + "]为空，请核实！");
+            }
             RegiInfo regiInfo = regiInfoMapper.selectByHouseId(houseId);
-            if (regiInfo == null) {
-                throw new RuntimeException("房屋编号为" + houseId + ",的普查信息在系统中不存在，请核实");
+            if (regiInfo != null) {
+                throw new RuntimeException("第" + rowNo + "行，房屋编号为[" + houseId + "]的普查信息在系统中已存在，请核实调整后重试");
             }
             for(int j = i+1; j < excelRegiInfoVoList.size(); j ++) {
                 int loopRowNo = j + CensusConstants.EXCEL_CONTENT_HEAD_ROWS_NO + 1;

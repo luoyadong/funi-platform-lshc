@@ -24,6 +24,16 @@ public class RegiInfoQuery extends BaseQuery {
     /** 证件号码*/
     private String idNo;
 
+    private String auditStatus;
+
+    public String getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(String auditStatus) {
+        this.auditStatus = auditStatus;
+    }
+
     public String getHouseStatus() {
         return houseStatus;
     }

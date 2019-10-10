@@ -19,7 +19,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
     ],
     config: {
         //主容器
-        parentContainer: null
+        parentContainer: null,
+        auditStatus:''
     },
     constructor: function (config) {
         var me = this;
@@ -35,6 +36,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
         gridObjStore.loadPage(1);
     },
     getParams:function(){
+        var me = this;
         var formElements = Ext.ComponentQuery.query("textfield",this);
         var obj = new Object();
         for(var i=0;i<formElements.length;i++){
@@ -48,6 +50,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
                 obj[formElements[i].name] = this.queryById(formElements[i].name+"ItemId").getRawValue()
             }else{
                 obj[formElements[i].name] =formElements[i].value;
+            }
+            if(formElements[i].name =='auditStatus'){
+                me.config.auditStatus = formElements[i].value;
             }
         }
 
@@ -121,8 +126,8 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
             autoLoad: true,
             data: [
                 {'name': '全部', value: ''},
-                {'name': '未提交',value:0},
-                {'name': '已提交',value:1}
+                {'name': '未提交',value:10},
+                {'name': '已提交',value:11}
             ]
         });
         var mStore2 = Ext.create('Ext.data.Store', {
@@ -447,7 +452,7 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiMainView', {
 
                             //参数不可乱传，穿错参数会导致无法渲染
                             var createContractView = Ext.create("app.platform.lshc.view.regi.manage.RegiDetailView",{
-                                config:{parentContainer:me,bizId:record.data.id}
+                                config:{parentContainer:me,bizId:record.data.id,auditStatus:me.config.auditStatus}
                             });
 
                             var currentActiveTab =  Ext.mainFrame.queryById("centerBox").getActiveTab();

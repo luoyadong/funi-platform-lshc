@@ -32,6 +32,9 @@ Ext.define('app.platform.lshc.view.regi.manage.RegiDetailView', {
         var formElements = Ext.ComponentQuery.query("textfield",this);
         var obj = new Object();
         obj["buildId"] = me.config.bizId;
+        if(null != me.config.auditStatus){
+            obj["auditStatus"] = me.config.auditStatus;
+        }
         for(var i=0;i<formElements.length;i++){
             obj[formElements[i].name] =formElements[i].value;
         }

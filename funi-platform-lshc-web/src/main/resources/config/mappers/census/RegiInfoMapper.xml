@@ -375,7 +375,15 @@
           AND t2.DELETED = 0
           AND t3.id = #{buildId}
           <if test="queryType == '0'.toString()">
-              AND t2.house_status in ('新建','初审不通过')
+              <if test="auditStatus == 10">
+                  AND t2.house_status in ('新建')
+              </if>
+              <if test="auditStatus == 11">
+                  AND t2.house_status not in ('新建')
+              </if>
+              <if test="auditStatus == null or auditStatus == ''">
+                  AND t2.house_status in ('新建','初审不通过')
+              </if>
           </if>
           <if test="queryType == '0'.toString() or queryType == '1'.toString() or queryType == '2'.toString()">
               <if test="authorityList != null and authorityList.size > 0">

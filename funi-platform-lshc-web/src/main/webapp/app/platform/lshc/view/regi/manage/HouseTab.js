@@ -590,7 +590,7 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 									{
 										xtype:'xcombobox',
 										itemId:'isCheckInItemId',
-										fieldLabel:'是否入住',
+										fieldLabel:'是否使用',
 										emptyText:'全部',
 										name:"isCheckIn",
 										editable:false,

@@ -76,10 +76,10 @@
           AND t2.ISVALIDE = '1'
           AND t2.DELETED =0
           <if test="queryType == '0'.toString()">
-            <if test="auditStatus == 0">
+            <if test="auditStatus == 10">
               AND t2.house_status in ('新建')
             </if>
-            <if test="auditStatus == 1">
+            <if test="auditStatus == 11">
               AND t2.house_status not in ('新建')
             </if>
             <if test="auditStatus == null or auditStatus == ''">
