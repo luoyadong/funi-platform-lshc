@@ -29,6 +29,8 @@ public class ExcelRegiInfoVo {
     private String houseId;
     @Excel(name="权利人（共有权利人）")
     private String entName;
+    @Excel(name="证件类型")
+    private String idType;
     @Excel(name="权利人身份证号（统一社会信用代码）")
     private String idNo;
     @Excel(name="人员类别")
@@ -118,6 +120,14 @@ public class ExcelRegiInfoVo {
     @Override
     public int hashCode() {
         return Objects.hash(getMapCode(), getRegion(), getStreet(), getApt(), getBuildNo(), getUnitNo(), getLayer(), getRoomNo());
+    }
+
+    public String getIdType() {
+        return idType;
+    }
+
+    public void setIdType(String idType) {
+        this.idType = idType;
     }
 
     public String getUnitName() {

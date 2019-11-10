@@ -110,7 +110,7 @@ Ext.define('app.platform.lshc.view.base.ExcelUtils', {
                                                             Ext.Msg.alert('提示', '导入失败，请重新导入');
                                                             return false;
                                                         }
-                                                        if(rtJson.success && rtJson.success == true){
+                                                        if(rtJson.success && (rtJson.success == true || rtJson.success == 'true')){
                                                             //Ext.Msg.alert('提示', '导入成功');
                                                             var dataList = rtJson.result
                                                             if(rtJson.result != null && rtJson.message != null

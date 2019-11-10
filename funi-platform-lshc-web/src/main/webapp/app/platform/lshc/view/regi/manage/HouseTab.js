@@ -608,8 +608,8 @@ Ext.define("app.platform.lshc.view.regi.manage.HouseTab",{
 										dataSourceUrl:app.platform.lshc.view.base.RequestUtils.url('/basic/getDictionaryListName?type=WHETHER')
 									},
 									{
-										xtype: "textfield",name:"personNum",
-										//width:180,
+										xtype: "numberfield",name:"personNum",
+										//width:180,numberfield
 										emptyText: "居住人员数量",fieldLabel: '居住人员数量（含未成年人）'
 									}
 									// ,{

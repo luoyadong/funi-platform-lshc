@@ -92,18 +92,19 @@ Ext.define('app.platform.lshc.view.regi.manage.HousePerson', {
                                     disabled: false,
                                     cls: "selected-action",
                                     handler: function (cmp) {
-                                        var orgRecord = me.queryById("ghouse-manage-HousePropety-resident").getSelectionModel().getSelection()[0];
+                                        var orgRecord = me.queryById("lshc-manage-housePerson-panelList").getSelectionModel().getSelection()[0];
                                         Ext.MessageBox.confirm("确认", '确认删除：' + orgRecord.data.entName, function (btn, text) {
                                             if (btn === "yes") {
-                                                Funi.core.Http.post({
-                                                    url: Funi.core.Context.path("ghouse", "/house/deleteRightEnt"),
-                                                    params: {id:orgRecord.data.id},
-                                                    //请求成功的回调函数
-                                                    success: function (response, opts) {
-                                                        me.queryById("ghouse-manage-HousePropety-resident").store.remove(orgRecord);
-                                                        //store.reload();
-                                                    }
-                                                });
+                                                me.queryById("lshc-manage-housePerson-panelList").store.remove(orgRecord);
+                                                // Funi.core.Http.post({
+                                                //     url: Funi.core.Context.path("lshc", "/house/deleteRightEnt"),
+                                                //     params: {id:orgRecord.data.id},
+                                                //     //请求成功的回调函数
+                                                //     success: function (response, opts) {
+                                                //         me.queryById("lshc-manage-housePerson-panelList").store.remove(orgRecord);
+                                                //         //store.reload();
+                                                //     }
+                                                // });
                                             }
                                         })
                                     }

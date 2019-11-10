@@ -57,11 +57,11 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                     if(allowTips){
                         var data = JSON.parse(response.responseText);
                         message = data.result != null?data.result:data.message;
-                        if(data.success){
+                        if(data.success == true || data.success == "true"){
                             Ext.Msg.alert('温馨提示', "操作成功！");
                         }else{
                             flag = false;
-                            Ext.Msg.alert('温馨提示', data.result);
+                            Ext.Msg.alert('温馨提示', message);
                         }
                     }
                 },
@@ -93,12 +93,12 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 dataType: 'json',
                 success: function (response) {
                     var data = JSON.parse(response.responseText);
-                    if(data.success){
-                        message = data.result
+                    message = data.result != null?data.result:data.message;
+                    if(data.success == true || data.success == "true"){
                         Ext.Msg.alert('温馨提示', "操作成功！");
                     }else{
                         flag = false;
-                        Ext.Msg.alert('温馨提示', data.result);
+                        Ext.Msg.alert('温馨提示', message);
                     }
                 },
                 failure: function () {
@@ -127,7 +127,7 @@ Ext.define('app.platform.lshc.view.base.RequestUtils', {
                 dataType: 'json',
                 success: function (response) {
                     var data = JSON.parse(response.responseText);
-                    if (!data.success || data.success == 'false') {
+                    if (data.success = false || data.success == 'false') {
                         message = data.result;
                         if (data.result) {
                             //返回false,result里面有值 视为通过数据展示异常信息

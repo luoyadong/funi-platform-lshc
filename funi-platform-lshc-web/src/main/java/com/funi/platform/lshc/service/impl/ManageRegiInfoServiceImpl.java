@@ -505,12 +505,11 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             ExcelRegiInfoVo currentExcelRegiInfoVo = excelRegiInfoVoList.get(i);
             // 获取房屋编号，并校验有效性
             String houseId = currentExcelRegiInfoVo.getHouseId();
-            if(StringUtils.isBlank(houseId)){
-                throw new RuntimeException("第" + rowNo + "行，房屋编号[" + houseId + "]为空，请核实！");
-            }
-            RegiInfo regiInfo = regiInfoMapper.selectByHouseId(houseId);
-            if (regiInfo != null) {
-                throw new RuntimeException("第" + rowNo + "行，房屋编号为[" + houseId + "]的普查信息在系统中已存在，请核实调整后重试");
+            if(StringUtils.isNotBlank(houseId)){
+                RegiInfo regiInfo = regiInfoMapper.selectByHouseId(houseId);
+                if(null == regiInfo){
+                    throw new RuntimeException("第" + rowNo + "行，房屋编号[" + houseId + "]的普查信息，在系统中不存在，请核实重试！");
+                }
             }
             for(int j = i+1; j < excelRegiInfoVoList.size(); j ++) {
                 int loopRowNo = j + CensusConstants.EXCEL_CONTENT_HEAD_ROWS_NO + 1;
@@ -541,6 +540,9 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
             BeanUtils.copyProperties(excelRegiInfoVo, regiInfo);
             // 拷贝入住人员属性
             BeanUtils.copyProperties(excelRegiInfoVo, entInfo);
+            if(StringUtils.isBlank(entInfo.getIdType())){
+                entInfo.setIdType("其他");
+            }
             // 使用普查信息编号是否为空来判断是新增还是编辑操作
             String houseId = regiInfo.getHouseId();
             CurrentUser userInfo = userManager.findUser();
@@ -559,6 +561,9 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
                 updateRegiInfo(regiInfo, existRegiInfo, userInfo);
                 if(entInfo != null) {
                     List<EntInfo> entInfoList = new ArrayList<>();
+                    if(null != existRegiInfo){
+                        entInfo.setHcId(existRegiInfo.getId());
+                    }
                     entInfoList.add(entInfo);
                     // 编辑普查信息关联的入住人信息
                     modifyEntInfoList(entInfoList, houseId, userInfo);
