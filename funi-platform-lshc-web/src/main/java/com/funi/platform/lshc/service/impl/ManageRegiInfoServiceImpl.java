@@ -561,9 +561,6 @@ public class ManageRegiInfoServiceImpl implements ManageRegiInfoService {
                 updateRegiInfo(regiInfo, existRegiInfo, userInfo);
                 if(entInfo != null) {
                     List<EntInfo> entInfoList = new ArrayList<>();
-                    if(null != existRegiInfo){
-                        entInfo.setHcId(existRegiInfo.getId());
-                    }
                     entInfoList.add(entInfo);
                     // 编辑普查信息关联的入住人信息
                     modifyEntInfoList(entInfoList, houseId, userInfo);
