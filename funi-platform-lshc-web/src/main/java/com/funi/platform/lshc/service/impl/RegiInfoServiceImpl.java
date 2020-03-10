@@ -52,6 +52,8 @@ public class RegiInfoServiceImpl implements RegiInfoService {
     @Override
     public void exportBuildInfoVoList(List<String> ids, HttpServletResponse response) throws Exception {
         BuildRegiQuery buildRegiQuery = new BuildRegiQuery(ids, CensusConstants.BUILD_QUERY_TYPE_COLLECT);
+        buildRegiQuery.setPage(1);
+        buildRegiQuery.setLimit(50000);//目前最多支持单次导出50000条记录
         List<ExcelRegiInfoVo> excelRegiInfoVoList = regiInfoMapper.exportBuildInfoVoList(buildRegiQuery);
         if(CollectionUtils.isEmpty(excelRegiInfoVoList)) {
             throw new RuntimeException("没有满足条件的数据");

@@ -344,7 +344,8 @@
           t2.LAYER AS layer,
           t2.room_no AS roomNo,
           t2.CREATE_TIME,
-          ja.id as jobAcceptId,ja.type_name as businessTypeName,
+          FIRST_VALUE (ja.id) over(partition by ja.service_num order by ja.create_time desc) as jobAcceptId,
+          FIRST_VALUE (ja.type_name) over(partition by ja.service_num order by ja.create_time desc) as businessTypeName,
           t2.house_status as auditStatus,
           <if test="queryType == '1'.toString()">
               (select bt.task_name from BUSINESS_TASK bt
@@ -359,9 +360,9 @@
           <if test="queryType == '2'.toString()">
             t4.task_name as nodeName,
           </if>
-          count( t1.id ) over ( partition BY t2.id ) AS fileCount
+         (select count(h.id) from LSHC_FILE h where h.hc_id = t2.id and h.ISVALIDE = '1' AND h.DELETED = 0) AS fileCount
       FROM
-          LSHC_REGI_INFO t2 LEFT JOIN LSHC_FILE t1 ON t1.HC_ID = t2.id AND t1.ISVALIDE = '1' AND t1.DELETED = 0
+          LSHC_REGI_INFO t2
           LEFT JOIN LSHC_BUILD_INFO t3 ON t2.map_code = t3.map_code
           left  join lshc_job_accept ja on t2.id=ja.service_num
       <if test="queryType == '2'.toString()">
